@@ -1,14 +1,17 @@
 #include <windows.h>
 #include <stdio.h>
-#include "affichageMenu.h"
+#include "ecran.h"
+
 //hugo
 //penser à faire une fonction pour free les malloc
+
+Ecran* definirEcran() {
+
+}
 int tailleEcran() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
-    int* largeur;
-    int* hauteur;
-    largeur = malloc(sizeof(int));
-    hauteur = malloc(sizeof(int));
+    Ecran* ecran = malloc(sizeof(Ecran));
+    
     if (largeur == NULL || hauteur == NULL) { //sécurisation
         return 0;
     }
