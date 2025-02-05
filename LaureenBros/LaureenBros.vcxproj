@@ -133,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AffichageMenuDefFct.c" />
+    <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="fonctions.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="print.c" />

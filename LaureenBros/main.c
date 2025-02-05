@@ -3,8 +3,11 @@
 #include <windows.h>
 #include <conio.h>
 #include "header.h"
+#include "affichageMenu.h"
+#include "ecran.h"
 
 
-//int main() {
-//	
-//}
+int main() {
+	Ecran* ecran = definirEcran();
+
+}

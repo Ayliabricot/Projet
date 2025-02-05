@@ -1,5 +1,5 @@
-#define LAUREENBROS
-#ifndef LAUREENBROS
+#ifndef LAUREENBROS_H
+#define LAUREENBROS_H
 
 
 

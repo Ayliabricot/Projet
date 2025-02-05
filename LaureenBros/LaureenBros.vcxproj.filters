@@ -38,5 +38,8 @@
     <ClCompile Include="AffichageMenuDefFct.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="ecranDefFct.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

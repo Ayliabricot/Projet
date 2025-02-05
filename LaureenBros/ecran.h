@@ -1,12 +1,13 @@
+#ifndef ECRAN_H
+#define ECRAN_H
 
-#ifndef LAUREENBROS
-#define LAUREENBROS
 typedef struct{
+	int hauteur;
 	int largeur;
-	int longueur;
 }Ecran;
 
-
-int tailleEcran(void);
+Ecran* definir(void);
+void tailleEcran();
+void libererEcran();
 
 #endif
