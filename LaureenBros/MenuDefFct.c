@@ -4,3 +4,8 @@
 #include <conio.h>
 
 
+
+
+void menu() {
+	
+}

@@ -128,12 +128,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
+    <ClInclude Include="menu.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AffichageMenu.h" />
     <ClCompile Include="AffichageMenuDefFct.c" />
+    <ClCompile Include="ASCII.c" />
     <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="fonctions.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="MenuDefFct.c" />
     <ClCompile Include="print.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

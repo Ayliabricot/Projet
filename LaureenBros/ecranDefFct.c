@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "ecran.h"
+#include "AffichageMenu.h"
 
 //hugo
 //penser à faire une fonction pour free les malloc

@@ -9,7 +9,7 @@ typedef struct{
 Ecran* definirEcran(void);
 void tailleEcran(Ecran* ecran);
 void libererEcran(Ecran* ecran);
-void contourEcran(Ecran* ecran);
+
 
 
 #endif

@@ -18,6 +18,9 @@
     <ClInclude Include="ecran.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
+    <ClInclude Include="menu.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.c">
@@ -33,6 +36,15 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="ecranDefFct.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="AffichageMenu.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+    <ClCompile Include="ASCII.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuDefFct.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
