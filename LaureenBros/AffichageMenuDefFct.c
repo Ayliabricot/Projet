@@ -10,7 +10,7 @@ int tailleEcran() {
     largeur = malloc(sizeof(int));
     hauteur = malloc(sizeof(int));
     if (largeur == NULL || hauteur == NULL) { //sécurisation
-        return 0
+        return 0;
     }
 
     // Récupérer les infos de la console
