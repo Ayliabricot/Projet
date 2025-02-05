@@ -6,8 +6,10 @@ typedef struct{
 	int largeur;
 }Ecran;
 
-Ecran* definir(void);
-void tailleEcran();
-void libererEcran();
+Ecran* definirEcran(void);
+void tailleEcran(Ecran* ecran);
+void libererEcran(Ecran* ecran);
+void contourEcran(Ecran* ecran);
+
 
 #endif
