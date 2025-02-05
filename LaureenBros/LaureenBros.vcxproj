@@ -127,9 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="affichageMenu.h" />
     <ClInclude Include="header.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AffichageMenuDefFct.c" />
     <ClCompile Include="fonctions.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="print.c" />
