@@ -5,9 +5,7 @@
 //hugo
 //penser à faire une fonction pour free les malloc
 
-Ecran* definirEcran() {
 
-}
 int tailleEcran() {
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     Ecran* ecran = malloc(sizeof(Ecran));
