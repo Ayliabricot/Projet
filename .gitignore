@@ -16,10 +16,7 @@
 *.sdf
 *.opensdf
 *.sln.docstates
-*.vcxproj.user
-*.filters
 *.vs/
-*.sln
 # Ignore les dossiers de build
 Debug/
 Release/
