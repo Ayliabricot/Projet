@@ -1,9 +1,10 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef AFFICHEMENU_H
+#define AFFICHEMENU_H
 
 #include "ecran.h"
 
 void contourEcran(Ecran* ecran);
+void afficherMenu();
 
 
 #endif
