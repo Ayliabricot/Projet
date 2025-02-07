@@ -1,6 +1,7 @@
 #include <windows.h>
 #include <stdio.h>
 #include "ecran.h"
+#include "placementTexte.h"
 
 void contourEcran(Ecran* ecran) {
 	tailleEcran(ecran);
@@ -22,29 +23,38 @@ void contourEcran(Ecran* ecran) {
 		printf("\n");
 	}
 }
-void afficherMenu() {
+
+void afficherMenu(Ecran* ecran) {
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
 
-	while (1) {
+	
 		int choix = 0;
 		char touche;
-		printf("\n\n\n\n\n\n             *****  LAUREEN   BROS  *****");
+		int x = 1;
+
+		int y = 1;
+		coordonne(x, y);
+		for (int a = 1; a < ecran->largeur - 1; a++) {
+			printf("*");
+		}
+		printf("\n\n\n\n\n\n             *****  LAUREEN   BROS  *****\n");
 		char option[6][40] = { "1. Entre le pseudo du joueur","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
 		for (int i = 0; i < 6; i++) {
 			if (choix == i) {
-				printf("\x1b[30m\x1b[47m %s \x1b[0m", option[i]);
+				printf("\x1b[30m\x1b[47m %s \x1b[0m\n", option[i]);
 			}
 			else {
-				printf("%s",option[i]);
+				printf("%s\n",option[i]);
 			}
 		}
 		
 
 		printf("Choisissez une option : ");
-		/*system("cls");*/
-		Sleep(5000);
-	}
+		
+		SetConsoleOutputCP(GetOEMCP());
+		SetConsoleCP(GetOEMCP());
+	
 }
 
 
@@ -61,7 +71,7 @@ void afficherMenu() {
 //	return 0;
 //}
 
-//void gotoxy(int x, int y) {
+//void coordonne(int x, int y) {
 //	COORD coord;
 //	coord.X = x;  // position X
 //	coord.Y = y;  // position Y
@@ -70,11 +80,11 @@ void afficherMenu() {
 //
 //int main() {
 //
-//	gotoxy(10, 5);
+//	coordonne(10, 5);
 //	printf("Ceci est un texte à la position (10, 5)\n");
 //
 //
-//	gotoxy(20, 10);
+//	coordonne(20, 10);
 //	printf("Un autre texte à la position (20, 10)\n");
 //
 //	return 0;

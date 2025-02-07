@@ -8,12 +8,21 @@
 #include <time.h>
 
 int main() {
-	/*afficherMenu();*/
 	
+	Ecran* ecran = definirEcran();
+	while (1) {
 
 
-	// Affichage de caractères spéciaux avec wprintf
+		contourEcran(ecran);
+		afficherMenu(ecran);
+		
+		Sleep(1500);
+		system("cls");
+	}
 
-	printf("♥ ♫ ☺ ★ ☃ ⌘ ∆ © • ☼ ∞\n");
+	return 0;
+
+
+	/*printf("♥ ♫ ☺ ★ ☃ ⌘ ∆ © • ☼ ∞\n");*/
 
 }

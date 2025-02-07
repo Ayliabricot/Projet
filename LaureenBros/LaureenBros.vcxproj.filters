@@ -53,8 +53,17 @@
     <ClCompile Include="MenuDefFct.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="jeu.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+=======
+    <ClCompile Include="placementTexteDefFCT.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="placementTexte.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
+>>>>>>> 4adb901a404cea6577b0937ad8059a934c2c725b
   </ItemGroup>
 </Project>

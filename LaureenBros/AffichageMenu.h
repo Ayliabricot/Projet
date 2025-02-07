@@ -4,7 +4,7 @@
 #include "ecran.h"
 
 void contourEcran(Ecran* ecran);
-void afficherMenu();
+void afficherMenu(Ecran* ecran);
 
 
 #endif
