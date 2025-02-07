@@ -1,12 +1,15 @@
-#ifndef PROJET
-#define PROJET
+#ifndef ECRAN_H
+#define ECRAN_H
 
 typedef struct{
+	int hauteur;
 	int largeur;
-	int longueur;
 }Ecran;
 
 Ecran* definirEcran(void);
-int tailleEcran(void);
+void tailleEcran(Ecran* ecran);
+void libererEcran(Ecran* ecran);
+
+
 
 #endif

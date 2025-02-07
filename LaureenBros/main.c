@@ -2,9 +2,17 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include "header.h"
+#include "ecran.h"
+#include "AffichageMenu.h"
+#include <string.h>
+
+int main() {
+	/*afficherMenu();*/
+	
 
 
-//int main() {
-//	
-//}
+	// Affichage de caractères spéciaux avec wprintf
+
+	printf("♥ ♫ ☺ ★ ☃ ⌘ ∆ © • ☼ ∞\n");
+
+}
