@@ -1,5 +1,5 @@
-#define LAUREENBROS
-#ifndef LAUREENBROS
+#ifndef PROJET
+#define PROJET
 
 typedef struct{
 	int largeur;
