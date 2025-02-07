@@ -128,7 +128,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
+    <ClInclude Include="jeu.h" />
     <ClInclude Include="menu.h" />
+    <ClInclude Include="scores.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AffichageMenu.h" />
@@ -136,6 +138,7 @@
     <ClCompile Include="ASCII.c" />
     <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="fonctions.c" />
+    <ClCompile Include="jeu.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MenuDefFct.c" />
     <ClCompile Include="print.c" />

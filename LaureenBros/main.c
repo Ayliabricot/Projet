@@ -5,6 +5,7 @@
 #include "ecran.h"
 #include "AffichageMenu.h"
 #include <string.h>
+#include <time.h>
 
 int main() {
 	/*afficherMenu();*/
