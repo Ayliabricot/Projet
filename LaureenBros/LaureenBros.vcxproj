@@ -138,6 +138,8 @@
     <ClCompile Include="fonctions.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="MenuDefFct.c" />
+    <ClCompile Include="placementTexte.h" />
+    <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="print.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

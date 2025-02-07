@@ -47,5 +47,11 @@
     <ClCompile Include="MenuDefFct.c">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="placementTexteDefFCT.c">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="placementTexte.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
