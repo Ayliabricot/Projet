@@ -26,23 +26,25 @@ void contourEcran(Ecran* ecran) {
 	}
 }
 
-void afficherMenu(Ecran* ecran, int touche) {
+void afficherMenu(Ecran* ecran, int touche, int* choix) {
 	contourEcran(ecran);
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
 
 
-	int choix = 2;
-	int* pChoix = &choix;
+	
 
-
+	if (touche == 115 || touche == 122) {
+		definirChoix(touche, choix);
+		/*system("cls");*/
+	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
 		afficherTexte(a, 1, "*");
 
 	}
 	afficherTexte(ecran->largeur / 2 - 29 / 2, 3, "*****  LAUREEN   BROS  *****");
-	/*printf("*****  LAUREEN   BROS  *****\n");*/
+	
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
 		afficherTexte(a, 5, "*");
@@ -50,23 +52,20 @@ void afficherMenu(Ecran* ecran, int touche) {
 
 	char option[6][40] = { "1. Entre le pseudo du joueur","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
 	for (int i = 0; i < 6; i++) {
-		if (choix == i) {
+		if (*choix == i) {
 			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
-			/*printf("\x1b[30m\x1b[47m %s \x1b[0m", option[i]);*/
+			
 		}
 		else {
 			afficherTexte(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
-			/*printf("%s",option[i]);*/
+		
 		}
 	}
 
 	afficherTexte(ecran->largeur / 2 - 22 / 2, ecran->hauteur - 5, "Choisissez une option");
 
-	;
-	if (touche == 115 || touche == 122) {
-		definirChoix(touche, pChoix);
-		system("cls");
-	}
+	
+	
 
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
@@ -88,35 +87,5 @@ void definirChoix(int touche, int* choix) {
 	}
 }
 
-//int main() {
-//	Ecran* ecran = definirEcran();
-//	while (1) {
-//
-//
-//		contourEcran(ecran);
-//		Sleep(500);
-//		system("cls");
-//	}
-//
-//	return 0;
-//}
 
-//void coordonne(int x, int y) {
-//	COORD coord;
-//	coord.X = x;  // position X
-//	coord.Y = y;  // position Y
-//	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-//}
-//
-//int main() {
-//
-//	coordonne(10, 5);
-//	printf("Ceci est un texte à la position (10, 5)\n");
-//
-//
-//	coordonne(20, 10);
-//	printf("Un autre texte à la position (20, 10)\n");
-//
-//	return 0;
-//}
 
