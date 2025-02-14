@@ -5,26 +5,7 @@
 #include "placementTexte.h"
 #include "affichageMenu.h"
 
-void contourEcran(Ecran* ecran) {
-	tailleEcran(ecran);
-	char c = 219;
-	int largeur = ecran->largeur - 1;
-	int hauteur = ecran->hauteur - 1;
-	for (int i = 0; i < ecran->hauteur; i++) {
-		for (int j = 0; j < ecran->largeur; j++) {
-			if ((i == 0 || i == hauteur)) {
-				printf("%c", c);
-			}
-			else if (j == 0 || j == largeur) {
-				printf("%c", c);
-			}
-			else {
-				printf(" ");
-			}
-		}
-		printf("\n");
-	}
-}
+
 
 void afficherMenu(Ecran* ecran, int touche, int* choix) {
 	contourEcran(ecran);
@@ -36,7 +17,7 @@ void afficherMenu(Ecran* ecran, int touche, int* choix) {
 
 	if (touche == 115 || touche == 122) {
 		definirChoix(touche, choix);
-		/*system("cls");*/
+		
 	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
@@ -63,6 +44,7 @@ void afficherMenu(Ecran* ecran, int touche, int* choix) {
 	}
 
 	afficherTexte(ecran->largeur / 2 - 22 / 2, ecran->hauteur - 5, "Choisissez une option");
+	afficherTexte(ecran->largeur / 2 - 22 / 2, ecran->hauteur - 3,"(press to adjust)");
 
 	
 	
@@ -87,5 +69,33 @@ void definirChoix(int touche, int* choix) {
 	}
 }
 
+/*
+main pour affciher le menu
+
+Ecran* ecran = definirEcran();
+int touche = 0;
+int* choix = malloc(sizeof(int));
+if (choix == NULL) {
+	printf("Erreur d'allocation mémoire\n");
+	return 1;
+}
+*choix = 2;
 
 
+afficherMenu(ecran, touche, choix);
+
+while (1) {
+	if (_kbhit()) {
+		touche = _getch();
+
+
+		system("cls");
+		afficherMenu(ecran, touche, choix);
+	}
+
+
+}
+free(choix);
+return 0;
+
+*/

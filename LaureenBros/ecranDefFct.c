@@ -26,6 +26,27 @@ void tailleEcran(Ecran* ecran) {
     }
 }
 
+void contourEcran(Ecran* ecran) {
+	tailleEcran(ecran);
+	char c = 219;
+	int largeur = ecran->largeur - 1;
+	int hauteur = ecran->hauteur - 1;
+	for (int i = 0; i < ecran->hauteur; i++) {
+		for (int j = 0; j < ecran->largeur; j++) {
+			if ((i == 0 || i == hauteur)) {
+				printf("%c", c);
+			}
+			else if (j == 0 || j == largeur) {
+				printf("%c", c);
+			}
+			else {
+				printf(" ");
+			}
+		}
+		printf("\n");
+	}
+}
+
 void libererEcran(Ecran* ecran) {
     free(ecran);
     ecran = NULL;
