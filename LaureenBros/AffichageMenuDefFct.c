@@ -1,7 +1,9 @@
+
 #include <windows.h>
 #include <stdio.h>
 #include "ecran.h"
 #include "placementTexte.h"
+#include "affichageMenu.h"
 
 void contourEcran(Ecran* ecran) {
 	tailleEcran(ecran);
@@ -11,10 +13,10 @@ void contourEcran(Ecran* ecran) {
 	for (int i = 0; i < ecran->hauteur; i++) {
 		for (int j = 0; j < ecran->largeur; j++) {
 			if ((i == 0 || i == hauteur)) {
-				printf("%c",c);
+				printf("%c", c);
 			}
 			else if (j == 0 || j == largeur) {
-				printf("%c",c);
+				printf("%c", c);
 			}
 			else {
 				printf(" ");
@@ -24,39 +26,67 @@ void contourEcran(Ecran* ecran) {
 	}
 }
 
-void afficherMenu(Ecran* ecran) {
+void afficherMenu(Ecran* ecran, int touche) {
+	contourEcran(ecran);
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
 
-	
-		int choix = 0;
-		char touche;
-		int x = 1;
 
-		int y = 1;
-		coordonne(x, y);
-		for (int a = 1; a < ecran->largeur - 1; a++) {
-			printf("*");
-		}
-		printf("\n\n\n\n\n\n             *****  LAUREEN   BROS  *****\n");
-		char option[6][40] = { "1. Entre le pseudo du joueur","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
-		for (int i = 0; i < 6; i++) {
-			if (choix == i) {
-				printf("\x1b[30m\x1b[47m %s \x1b[0m\n", option[i]);
-			}
-			else {
-				printf("%s\n",option[i]);
-			}
-		}
-		
+	int choix = 2;
+	int* pChoix = &choix;
 
-		printf("Choisissez une option : ");
-		
-		SetConsoleOutputCP(GetOEMCP());
-		SetConsoleCP(GetOEMCP());
-	
+
+
+	for (int a = 1; a < ecran->largeur - 1; a++) {
+		afficherTexte(a, 1, "*");
+
+	}
+	afficherTexte(ecran->largeur / 2 - 29 / 2, 3, "*****  LAUREEN   BROS  *****");
+	/*printf("*****  LAUREEN   BROS  *****\n");*/
+
+	for (int a = 1; a < ecran->largeur - 1; a++) {
+		afficherTexte(a, 5, "*");
+	}
+
+	char option[6][40] = { "1. Entre le pseudo du joueur","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
+	for (int i = 0; i < 6; i++) {
+		if (choix == i) {
+			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
+			/*printf("\x1b[30m\x1b[47m %s \x1b[0m", option[i]);*/
+		}
+		else {
+			afficherTexte(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
+			/*printf("%s",option[i]);*/
+		}
+	}
+
+	afficherTexte(ecran->largeur / 2 - 22 / 2, ecran->hauteur - 5, "Choisissez une option");
+
+	;
+	if (touche == 115 || touche == 122) {
+		definirChoix(touche, pChoix);
+		system("cls");
+	}
+
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
+
 }
 
+void definirChoix(int touche, int* choix) {
+	if (touche == 122 && *choix != 0) {
+		*choix = *choix - 1;
+	}
+	else if (touche == 122 && *choix == 0) {
+		*choix = 5;
+	}
+	else if (touche == 115 && *choix != 5) {
+		*choix = *choix + 1;
+	}
+	else if (touche == 115 && *choix == 5) {
+		*choix = 0;
+	}
+}
 
 //int main() {
 //	Ecran* ecran = definirEcran();
