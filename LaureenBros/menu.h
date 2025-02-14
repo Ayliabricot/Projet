@@ -2,8 +2,8 @@
 #define MENU_H
 
 #include "ecran.h"
-void quitterJeu(Ecran* ecran, int touche);
-void quitterJeuContain(Ecran* ecran);
+int quitterJeu(Ecran* ecran, int touche, char opti[4]);
+int quitterJeuContain(Ecran* ecran,char opti[4]);
 
 
 #endif

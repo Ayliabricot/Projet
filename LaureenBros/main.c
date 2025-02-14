@@ -13,10 +13,16 @@
 
 
 int main() {
+	char opti[4] = "oui";
 	while (1) {
 		Ecran* ecran = definirEcran();
-		quitterJeuContain(ecran);
+		quitterJeuContain(ecran, opti);
+
+
+		
 	}
+	printf("ca passe");
+	return 0;
 }
 
 

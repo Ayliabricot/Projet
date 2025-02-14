@@ -6,12 +6,25 @@
 #include "ecran.h"
 #include "placementTexte.h"
 
-void confirmerChoix() {
+int confirmerChoix(char opti[4]) {
+	int touche;
+	if (_kbhit) {
+		touche = _getch();
+		if (touche == 13 && strcmp(opti, "oui") == 0) {
+			printf("oui");
+			exit(0);
+		}
+		else if (touche == 13 && strcmp(opti, "non") == 0) {
+			printf("ok");
+			return 0;
 
+		}
+	}
+	return 1;
 }
 
 
-void quitterJeu(Ecran* ecran, int touche) {
+int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	
     contourEcran(ecran);
 	SetConsoleOutputCP(1252);
@@ -25,7 +38,7 @@ void quitterJeu(Ecran* ecran, int touche) {
 	
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
-	char opti[4] = "oui";
+
 	if (_kbhit) {
 		if (touche == 'd') {
 		
@@ -35,7 +48,16 @@ void quitterJeu(Ecran* ecran, int touche) {
 			
 			strcpy_s(opti,sizeof(opti), "oui");
 		}
-    
+		if (touche == 13 && strcmp(opti, "oui") == 0) {
+			  printf("Vous avez choisi 'oui'. Quitter...\n");
+			exit(0);
+		}
+		else if (touche == 13 && strcmp(opti, "non") == 0) {
+			return 0;
+
+
+		}
+		
 	}
 	if (strcmp(opti, "oui") == 0) {
 		afficherTexteHighlight(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
@@ -46,11 +68,13 @@ void quitterJeu(Ecran* ecran, int touche) {
 		afficherTexteHighlight(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");
 	}
 	
+		
 
+	return 1;
 }
 
-void quitterJeuContain(Ecran* ecran) {
-	quitterJeu(ecran, 0);
+void quitterJeuContain(Ecran* ecran, char opti[4]) {
+	quitterJeu(ecran, 0, opti);
 	while (1) {
 		int touche;
 		if (_kbhit()) {
@@ -58,7 +82,7 @@ void quitterJeuContain(Ecran* ecran) {
 
 			
 			system("cls");
-			quitterJeu(ecran, touche);
+			quitterJeu(ecran, touche, opti);
 		}
 	}
 }

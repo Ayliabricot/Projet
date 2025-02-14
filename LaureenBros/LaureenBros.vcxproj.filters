@@ -1,69 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Fichiers sources">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Fichiers d%27en-tête">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="Fichiers de ressources">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
+    <ClCompile Include="AffichageMenu.h" />
+    <ClCompile Include="AffichageMenuDefFct.c" />
+    <ClCompile Include="ASCII.c" />
+    <ClCompile Include="ecranDefFct.c" />
+    <ClCompile Include="fonctions.c" />
+    <ClCompile Include="jeu.c" />
+    <ClCompile Include="main.c" />
+    <ClCompile Include="MenuDefFct.c" />
+    <ClCompile Include="placementTexte.h" />
+    <ClCompile Include="placementTexteDefFCT.c" />
+    <ClCompile Include="ceQuiDoitEtreFree.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ecran.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="menu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="scores.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-    <ClInclude Include="jeu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="fonctions.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="print.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="AffichageMenuDefFct.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="ecranDefFct.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="AffichageMenu.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClCompile>
-    <ClCompile Include="ASCII.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="MenuDefFct.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-<<<<<<< HEAD
-    <ClCompile Include="jeu.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-=======
-    <ClCompile Include="placementTexteDefFCT.c">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="placementTexte.h">
-      <Filter>Fichiers d%27en-tête</Filter>
-    </ClCompile>
->>>>>>> 4adb901a404cea6577b0937ad8059a934c2c725b
+    <ClInclude Include="ecran.h" />
+    <ClInclude Include="jeu.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="scores.h" />
   </ItemGroup>
 </Project>
