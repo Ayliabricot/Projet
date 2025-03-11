@@ -9,8 +9,7 @@
 #include <string.h>
 #include "placementTexte.h"
 #include <time.h>
-#include "quitterJeu.h"
-#include "menu."
+#include "menu.h"
 
 
 int main() {
