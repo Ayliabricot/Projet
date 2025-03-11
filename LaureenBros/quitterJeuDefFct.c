@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-
+#include "quitterJeu.h"
 #include "ecran.h"
 #include "placementTexte.h"
 
@@ -34,7 +34,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 , "vouloir quitter ? ");
 	//afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
 
-	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");
+	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");\n'oui'. Quitter...\n"
 	
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
@@ -49,7 +49,9 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 			strcpy_s(opti,sizeof(opti), "oui");
 		}
 		if (touche == 13 && strcmp(opti, "oui") == 0) {
-			  printf("\nVous avez choisi \n'oui'. Quitter...\n");
+			afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 +2, "vous avez choisi:");
+			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 3, "'oui'");
+			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 4, "Quitter...");
 			exit(0);
 		}
 		else if (touche == 13 && strcmp(opti, "non") == 0) {
@@ -86,3 +88,15 @@ void quitterJeuContain(Ecran* ecran, char opti[4]) {
 		}
 	}
 }
+
+/*char opti[4] = "oui";
+while (1) {
+	Ecran* ecran = definirEcran();
+	quitterJeuContain(ecran, opti);
+
+
+
+}
+
+return 0;
+*/

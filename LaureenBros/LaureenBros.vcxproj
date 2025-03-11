@@ -129,7 +129,7 @@
   <ItemGroup>
     <ClInclude Include="ecran.h" />
     <ClInclude Include="jeu.h" />
-    <ClInclude Include="menu.h" />
+    <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
   </ItemGroup>
   <ItemGroup>
@@ -140,7 +140,7 @@
     <ClCompile Include="fonctions.c" />
     <ClCompile Include="jeu.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="MenuDefFct.c" />
+    <ClCompile Include="quitterJeuDefFct.c" />
     <ClCompile Include="placementTexte.h" />
     <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="ceQuiDoitEtreFree.c" />
