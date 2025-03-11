@@ -49,7 +49,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 			strcpy_s(opti,sizeof(opti), "oui");
 		}
 		if (touche == 13 && strcmp(opti, "oui") == 0) {
-			  printf("Vous avez choisi 'oui'. Quitter...\n");
+			  printf("\nVous avez choisi \n'oui'. Quitter...\n");
 			exit(0);
 		}
 		else if (touche == 13 && strcmp(opti, "non") == 0) {
