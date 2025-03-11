@@ -127,15 +127,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="menu.h" />
     <ClInclude Include="ecran.h" />
     <ClInclude Include="jeu.h" />
-    <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AffichageMenu.h" />
     <ClCompile Include="AffichageMenuDefFct.c" />
     <ClCompile Include="ASCII.c" />
+    <ClCompile Include="difficulteDefFct.c" />
     <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="fonctions.c" />
     <ClCompile Include="jeu.c" />

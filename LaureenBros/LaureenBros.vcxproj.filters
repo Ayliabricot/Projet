@@ -12,11 +12,12 @@
     <ClCompile Include="placementTexte.h" />
     <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="ceQuiDoitEtreFree.c" />
+    <ClCompile Include="difficulteDefFct.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
     <ClInclude Include="jeu.h" />
-    <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
+    <ClInclude Include="menu.h" />
   </ItemGroup>
 </Project>

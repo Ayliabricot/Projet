@@ -10,37 +10,18 @@
 #include "placementTexte.h"
 #include <time.h>
 #include "quitterJeu.h"
+#include "menu."
 
 
 int main() {
-
-	Ecran* ecran = definirEcran();
-	int touche = 0;
-	int* choix = malloc(sizeof(int));
-	if (choix == NULL) {
-		printf("Erreur d'allocation mémoire\n");
-		return 1;
-	}
-	*choix = 2;
-
-
-	afficherMenu(ecran, touche, choix);
-
 	while (1) {
-		if (_kbhit()) {
-			touche = _getch();
 
-
-			system("cls");
-			afficherMenu(ecran, touche, choix);
-		}
-
-
+       system("cls");
+		Ecran* ecran = definirEcran();
+		affichageDifficulte(ecran);
+		
+		Sleep(6000);
 	}
-	free(choix);
-	choix = NULL;
-	return 0;
-
 }
 
 

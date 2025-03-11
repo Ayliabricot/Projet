@@ -34,7 +34,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 , "vouloir quitter ? ");
 	//afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
 
-	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");\n'oui'. Quitter...\n"
+	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");
 	
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
