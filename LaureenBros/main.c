@@ -9,20 +9,38 @@
 #include <string.h>
 #include "placementTexte.h"
 #include <time.h>
-#include "menu.h"
+#include "quitterJeu.h"
 
 
 int main() {
-	char opti[4] = "oui";
-	while (1) {
-		Ecran* ecran = definirEcran();
-		quitterJeuContain(ecran, opti);
 
-
-		
+	Ecran* ecran = definirEcran();
+	int touche = 0;
+	int* choix = malloc(sizeof(int));
+	if (choix == NULL) {
+		printf("Erreur d'allocation mémoire\n");
+		return 1;
 	}
-	printf("ca passe");
+	*choix = 2;
+
+
+	afficherMenu(ecran, touche, choix);
+
+	while (1) {
+		if (_kbhit()) {
+			touche = _getch();
+
+
+			system("cls");
+			afficherMenu(ecran, touche, choix);
+		}
+
+
+	}
+	free(choix);
+	choix = NULL;
 	return 0;
+
 }
 
 
@@ -30,7 +48,7 @@ int main() {
 
 
 
-
+//mettre des while(valeur= ...)  ca va dans un menu
 
 
 
