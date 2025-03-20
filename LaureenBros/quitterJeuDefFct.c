@@ -49,9 +49,12 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 			strcpy_s(opti,sizeof(opti), "oui");
 		}
 		if (touche == 13 && strcmp(opti, "oui") == 0) {
-			afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 +2, "vous avez choisi:");
+			afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 +2, "Vous avez choisi:");
 			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 3, "'oui'");
-			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 4, "Quitter...");
+			afficherTexte(ecran->largeur / 2 - 10 / 2, ecran->hauteur / 2 + 4, "Quitter...");
+			afficherTexte(ecran->largeur / 2 - 32 / 2, ecran->hauteur - 6, "Pressez une touche pour sortir");
+			getchar();
+			system("cls");
 			exit(0);
 		}
 		else if (touche == 13 && strcmp(opti, "non") == 0) {
@@ -75,6 +78,8 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 }
 
 int quitterJeuContain(Ecran* ecran, char opti[4]) {
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
 	system("cls");
 	int valeur;
 	valeur=quitterJeu(ecran, 0, opti);
