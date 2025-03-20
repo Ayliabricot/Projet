@@ -17,7 +17,7 @@ void lancer_ecran(int* choix, char option[6][40]) {
 		while (*choix == 0) {
 			touche = 0;
 			afficherMenu(ecran, touche, choix,option);
-			while (*choix == 0) {
+			while (1) {
 				if (_kbhit()) {
 					touche = _getch();
 
