@@ -13,6 +13,7 @@
 
 
 int main() {
+	char option[6][40] = { "1. Entre le pseudo du joueur","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
 
 	Ecran* ecran = definirEcran();
 	int touche = 0;
@@ -21,10 +22,10 @@ int main() {
 		printf("Erreur d'allocation mémoire\n");
 		return 1;
 	}
-	*choix = 2;
+	*choix = 0;
 
 
-	afficherMenu(ecran, touche, choix);
+	afficherMenu(ecran, touche, choix,option);
 
 	while (1) {
 		if (_kbhit()) {
@@ -32,7 +33,7 @@ int main() {
 
 
 			system("cls");
-			afficherMenu(ecran, touche, choix);
+			afficherMenu(ecran, touche, choix,option);
 		}
 
 

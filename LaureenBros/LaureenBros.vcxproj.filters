@@ -5,13 +5,13 @@
     <ClCompile Include="AffichageMenuDefFct.c" />
     <ClCompile Include="ASCII.c" />
     <ClCompile Include="ecranDefFct.c" />
-    <ClCompile Include="fonctions.c" />
     <ClCompile Include="jeu.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="quitterJeuDefFct.c" />
     <ClCompile Include="placementTexte.h" />
     <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="ceQuiDoitEtreFree.c" />
+    <ClCompile Include="liens.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />

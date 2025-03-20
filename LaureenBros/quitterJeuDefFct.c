@@ -55,9 +55,8 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 			exit(0);
 		}
 		else if (touche == 13 && strcmp(opti, "non") == 0) {
+
 			return 0;
-
-
 		}
 		
 	}
@@ -75,28 +74,24 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	return 1;
 }
 
-void quitterJeuContain(Ecran* ecran, char opti[4]) {
-	quitterJeu(ecran, 0, opti);
+int quitterJeuContain(Ecran* ecran, char opti[4]) {
+	system("cls");
+	int valeur;
+	valeur=quitterJeu(ecran, 0, opti);
 	while (1) {
 		int touche;
 		if (_kbhit()) {
 			touche = _getch();
 
 			
+
+			
 			system("cls");
-			quitterJeu(ecran, touche, opti);
+			valeur=quitterJeu(ecran, touche, opti);
+			if (valeur == 0) {
+				return valeur;
+			}
 		}
 	}
+	return valeur;
 }
-
-/*char opti[4] = "oui";
-while (1) {
-	Ecran* ecran = definirEcran();
-	quitterJeuContain(ecran, opti);
-
-
-
-}
-
-return 0;
-*/
