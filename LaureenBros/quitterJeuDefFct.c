@@ -25,6 +25,10 @@ int confirmerChoix(char opti[4]) {
 
 
 int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
+	if (!ecran) {
+		printf("problème d'allocation");
+		return 0;
+	}
 	
     contourEcran(ecran);
 	SetConsoleOutputCP(1252);
@@ -76,6 +80,10 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 }
 
 void quitterJeuContain(Ecran* ecran, char opti[4]) {
+	if (!ecran) {
+		printf("problème d'allocation");
+		return 0;
+	}
 	quitterJeu(ecran, 0, opti);
 	while (1) {
 		int touche;

@@ -11,17 +11,10 @@
 #include <time.h>
 #include "menu.h"
 
-
-int main() {
-	while (1) {
-
-       system("cls");
-		Ecran* ecran = definirEcran();
-		affichageDifficulte(ecran);
-		
-		Sleep(6000);
-	}
-}
+//
+//int main() {
+//	
+//}
 
 
 

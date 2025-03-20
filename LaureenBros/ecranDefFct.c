@@ -12,6 +12,10 @@ Ecran* definirEcran() {
 }
 
 void tailleEcran(Ecran* ecran) {
+	if (!ecran) {
+		printf("problème d'allocation");
+		return 0;
+	}
     CONSOLE_SCREEN_BUFFER_INFO csbi;
 
     // Récupérer les infos de la console
@@ -27,6 +31,10 @@ void tailleEcran(Ecran* ecran) {
 }
 
 void contourEcran(Ecran* ecran) {
+	if (!ecran) {
+		printf("problème d'allocation");
+		return 0;
+	}
 	tailleEcran(ecran);
 	char c = 219;
 	int largeur = ecran->largeur - 1;
@@ -48,6 +56,10 @@ void contourEcran(Ecran* ecran) {
 }
 
 void libererEcran(Ecran* ecran) {
+	if (!ecran) {
+		printf("problème d'allocation");
+		return 0;
+	}
     free(ecran);
     ecran = NULL;
     return 0;

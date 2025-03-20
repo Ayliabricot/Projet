@@ -138,7 +138,6 @@
     <ClCompile Include="ASCII.c" />
     <ClCompile Include="difficulteDefFct.c" />
     <ClCompile Include="ecranDefFct.c" />
-    <ClCompile Include="fonctions.c" />
     <ClCompile Include="jeu.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="quitterJeuDefFct.c" />

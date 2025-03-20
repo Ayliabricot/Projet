@@ -9,11 +9,11 @@ void gotoxy(int x, int y) {
 }
 
 // Fonction pour afficher un texte à une position donnée
-void afficherTexte(int x, int y, const char* texte) {
+void afficherTexte(int x, int y, char* texte) {
     gotoxy(x, y);
     printf("%s", texte);
 }
-void afficherTexteHighlight(int x, int y, const char* texte) {
+void afficherTexteHighlight(int x, int y,char* texte) {
     gotoxy(x, y);
     printf("\x1b[30m\x1b[47m %s \x1b[0m", texte);
 }
