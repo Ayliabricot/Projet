@@ -7,7 +7,7 @@
 #include "placementTexte.h"
 
 
-void affichageDifficulte(Ecran* ecran, int choixDiff) {
+void affichageDifficulte(Ecran* ecran, int *difficulte) {
 	if (!ecran) {
 		printf("problème d'allocation");
 		return 0;
@@ -19,85 +19,96 @@ void affichageDifficulte(Ecran* ecran, int choixDiff) {
 	afficherTexte(ecran->largeur / 2 - 32 / 2, ecran->hauteur /4, "Choississez votre difficulté :");
 
 
-	afficherTexte(ecran->largeur / 3+6, ecran->hauteur / 3, "  ------+--------+-------");
-	if (choixDiff == 0) {
-		afficherTexte(ecran->largeur / 3 + 6, ecran->hauteur / 3 + 1, " |\x1b[30m\x1b[47m Easy \x1b[0m | Medium | Hard | ");
+	afficherTexte(ecran->largeur / 3+6, ecran->hauteur / 3, "  ------+--------+------");
+	if (*difficulte == 0) {
+		afficherTexte(ecran->largeur / 3 + 6, ecran->hauteur / 3 + 1, " |\x1b[30m\x1b[47m Easy \x1b[0m| Medium | Hard | ");
+		afficherTexte(ecran->largeur / 4 + 10, ecran->hauteur / 2 + 4, "< Difficulté easy ? pfff...looser");
 	}
-	else if (choixDiff == 1) {
-		afficherTexte(ecran->largeur / 3 + 6, ecran->hauteur / 3 + 1, " | Easy |\x1b[30m\x1b[47m Medium \x1b[0m | Hard | ");
+	else if (*difficulte == 1) {
+		afficherTexte(ecran->largeur / 3 + 6, ecran->hauteur / 3 + 1, " | Easy |\x1b[30m\x1b[47m Medium \x1b[0m| Hard | ");
+		afficherTexte(ecran->largeur / 4 + 10, ecran->hauteur / 2 + 4, "< Difficulté Medium ? moe basique ");
 	}
-	else if (choixDiff == 2) {
-		afficherTexte(ecran->largeur / 3 + 6, ecran->hauteur / 3 + 1, " | Easy | Medium |\x1b[30m\x1b[47m Hard \x1b[0m | ");
+	else if (*difficulte == 2) {
+		afficherTexte(ecran->largeur / 3 + 6, ecran->hauteur / 3 + 1, " | Easy | Medium |\x1b[30m\x1b[47m Hard \x1b[0m| ");
+		afficherTexte(ecran->largeur / 4 + 10, ecran->hauteur / 2 + 4, "< Difficulté Hard? ah ouais l'ego du gars quoi...");
 	}
 	
-	afficherTexte(ecran->largeur / 3+6, ecran->hauteur / 3 + 2, "  ------+--------+-------");
+	afficherTexte(ecran->largeur / 3+6, ecran->hauteur / 3 + 2, "  ------+--------+------");
 	afficherTexte(ecran->largeur / 4  , ecran->hauteur / 2+3, " /)/)");
 	afficherTexte(ecran->largeur / 4 , ecran->hauteur / 2+4, "( -.-)");
+	
 	afficherTexte(ecran->largeur / 4 , ecran->hauteur / 2+5, " o_(µ)(µ)");
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
 }
 
-int choisirDifficulte() {
-	int choixDiff = 0;
-	char toucheDiff;
-	if (_kbhit) {
-		toucheDiff = _getch();
-		if (toucheDiff == 'd'&&choixDiff !=2) {
+int* choisirDifficulte(int toucheDiff, int *difficulte) {
+	
+	
+	/*if (_kbhit) */
+		
+		if (toucheDiff == 'd'&&(*difficulte !=2)) {
 
-			choixDiff += choixDiff;
+			(*difficulte)++;
 		}
-		else if (toucheDiff == 'q'&&choixDiff !=0) {
+		else if (toucheDiff == 'q'&&(*difficulte !=0)) {
 
-			choixDiff -= choixDiff;
+			(*difficulte)--;
 		}
-		else if (toucheDiff == 'd' && choixDiff == 2) {
-			choixDiff = 0;
+		else if (toucheDiff == 'd' && (*difficulte == 2)) {
+			*difficulte = 0;
 		}
-		else if (toucheDiff == 'q' && choixDiff == 0) {
-			choixDiff = 2;
+		else if (toucheDiff == 'q' && (*difficulte == 0)) {
+			*difficulte = 2;
 
 
 		}
-		return choixDiff;
+		
+		return *difficulte;
 
-	}
+	
 
-	else {
-		return choixDiff;
-	}
+	/*else {
+		return *difficulte;
+	}*/
 
 	
 
 }
 
 
-void choisirDifficulteContain(Ecran* ecran) {
+void choisirDifficulteContain(Ecran* ecran, int* difficulte) {
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
 	if (!ecran) {
 		printf("problème d'allocation");
 			return 0;
 	}
-	int choixDiff=0;
-	void affichageDifficulte(ecran, choixDiff);
+	
+	affichageDifficulte(ecran, difficulte);
+	int toucheDiff;
 	while (1) {
-		int touche;
+		
 		if (_kbhit()) {
-			touche = _getch();
-
-
 			system("cls");
-			quitterJeu(ecran, touche, opti);
+			toucheDiff = _getch();
+			if (toucheDiff == 13) {
+				return 0;
+			}
+			*difficulte = choisirDifficulte(toucheDiff, difficulte);
+			affichageDifficulte(ecran, difficulte);
+			
+			
 		}
 	}
 }
 int main() {
 	while (1) {
 
-		system("cls");
+		int difficulte=0;
 		Ecran* ecran = definirEcran();
-		int choixDiff = choisirDifficulte();
-		affichageDifficulte(ecran,choixDiff);
+		choisirDifficulteContain(ecran, &difficulte);
 
-		Sleep(600);
+		
 	}
 }
