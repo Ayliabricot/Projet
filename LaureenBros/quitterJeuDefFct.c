@@ -74,7 +74,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	
 		
 
-	return 5;
+	return 1;
 }
 
 int quitterJeuContain(Ecran* ecran, char opti[4]) {
