@@ -13,7 +13,7 @@
 
 
 int main() {
-	char option[6][40] = { "1. Choisir difficulté","2. Nouvelle partie","3. Continuer partie","4. Accéder au tableau des scores","5. Quitter le jeu" };
+	char option[6][40] = { "1. Règles du jeu","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
 
 	Ecran* ecran = definirEcran();
 	int touche = 0;
