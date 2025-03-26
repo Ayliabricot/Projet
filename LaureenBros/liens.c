@@ -15,8 +15,9 @@ void lancer_ecran(int* choix, char option[6][40]) {
 	int touche = 0;
 	int* difficulte = 0;
 	while (1) {
-		while (*choix == 0) {
+		while (*choix == -1) {
 			touche = 0;
+			*choix = 0;
 			afficherMenu(ecran, touche, choix,option);
 			while (1) {
 				if (_kbhit()) {
@@ -27,6 +28,11 @@ void lancer_ecran(int* choix, char option[6][40]) {
 					afficherMenu(ecran, touche, choix, option);
 				}
 			}
+		}
+		if (*choix == 0) {
+			Ecran* ecran = definirEcran();
+			*choix = afficher_regles(ecran);
+			system("cls");
 		}
 		while (*choix == 5) {
 			char opti[4] = "oui";

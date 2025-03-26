@@ -59,7 +59,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 		}
 		else if (touche == 13 && strcmp(opti, "non") == 0) {
 
-			return 0;
+			return -1;
 		}
 		
 	}
@@ -74,7 +74,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	
 		
 
-	return 1;
+	return 5;
 }
 
 int quitterJeuContain(Ecran* ecran, char opti[4]) {
@@ -93,7 +93,7 @@ int quitterJeuContain(Ecran* ecran, char opti[4]) {
 			
 			system("cls");
 			valeur=quitterJeu(ecran, touche, opti);
-			if (valeur == 0) {
+			if (valeur == -1) {
 				return valeur;
 			}
 		}
