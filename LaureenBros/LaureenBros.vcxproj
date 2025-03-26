@@ -136,6 +136,7 @@
     <ClCompile Include="AffichageMenu.h" />
     <ClCompile Include="AffichageMenuDefFct.c" />
     <ClCompile Include="ASCII.c" />
+    <ClCompile Include="difficulte.c" />
     <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="jeu.c" />
     <ClCompile Include="liens.c" />
