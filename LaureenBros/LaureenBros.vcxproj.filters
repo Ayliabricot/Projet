@@ -12,6 +12,7 @@
     <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="ceQuiDoitEtreFree.c" />
     <ClCompile Include="liens.c" />
+    <ClCompile Include="regles.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
