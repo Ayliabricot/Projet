@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include "quitterJeu.h"
 #include "ecran.h"
 #include "placementTexte.h"
+#include "quitterJeu.h"
 
 int confirmerChoix(char opti[4]) {
 	int touche;

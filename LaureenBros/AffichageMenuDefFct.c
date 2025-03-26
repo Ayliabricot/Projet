@@ -33,7 +33,7 @@ void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40]) {
 		afficherTexte(a, 5, "*");
 	}
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 5; i++) {
 		if (*choix == i) {
 			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
 			
@@ -60,12 +60,12 @@ void definirChoix(int touche, int* choix) {
 		*choix = *choix - 1;
 	}
 	else if (touche == 122 && *choix == 0) {
-		*choix = 5;
+		*choix = 4;
 	}
-	else if (touche == 115 && *choix != 5) {
+	else if (touche == 115 && *choix != 4) {
 		*choix = *choix + 1;
 	}
-	else if (touche == 115 && *choix == 5) {
+	else if (touche == 115 && *choix == 4) {
 		*choix = 0;
 	}
 }
