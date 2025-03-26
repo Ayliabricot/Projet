@@ -102,13 +102,13 @@ void choisirDifficulteContain(Ecran* ecran, int* difficulte) {
 		}
 	}
 }
-int main() {
-	while (1) {
-
-		int difficulte=0;
-		Ecran* ecran = definirEcran();
-		choisirDifficulteContain(ecran, &difficulte);
-
-		
-	}
-}
+//int main() {
+//	while (1) {
+//
+//		int difficulte=0;
+//		Ecran* ecran = definirEcran();
+//		choisirDifficulteContain(ecran, &difficulte);
+//
+//		
+//	}
+//}

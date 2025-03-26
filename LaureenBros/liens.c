@@ -7,7 +7,7 @@
 #include <string.h>
 #include "placementTexte.h"
 #include <time.h>
-#include "quitterJeu.h"
+
 
 
 void lancer_ecran(int* choix, char option[6][40]) {
