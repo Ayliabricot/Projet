@@ -28,9 +28,9 @@ void lancer_ecran(int* choix, char option[6][40]) {
 				}
 			}
 		}
-		while (*choix == 4) {
+		while (*choix == 5) {
 			char opti[4] = "oui";
-			while (*choix == 4) {
+			while (*choix == 5) {
 				Ecran* ecran = definirEcran();
 				*choix = quitterJeuContain(ecran, opti);
 			}
