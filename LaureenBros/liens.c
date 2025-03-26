@@ -29,9 +29,15 @@ void lancer_ecran(int* choix, char option[6][40]) {
 				}
 			}
 		}
-		if (*choix == 0) {
+		while (*choix == 0) {
 			Ecran* ecran = definirEcran();
 			*choix = afficher_regles(ecran);
+			system("cls");
+		}
+		while (*choix == 1) {
+			int difficulte = 0;
+			Ecran* ecran = definirEcran();
+			*choix=choisirDifficulteContain(ecran, &difficulte);
 			system("cls");
 		}
 		while (*choix == 5) {

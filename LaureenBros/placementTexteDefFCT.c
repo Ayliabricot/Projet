@@ -1,10 +1,16 @@
-#include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <conio.h>
+#include "ecran.h"
+#include "AffichageMenu.h"
+#include <string.h>
+#include "placementTexte.h"
+#include <time.h>
+#include "quitterJeu.h"
 
 void gotoxy(int x, int y) {
-    COORD coord;
-    coord.X = x;
-    coord.Y = y;
+    COORD coord = { x, y };
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 

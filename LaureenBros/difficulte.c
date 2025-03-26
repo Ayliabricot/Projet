@@ -2,15 +2,18 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include "quitterJeu.h"
 #include "ecran.h"
+#include "AffichageMenu.h"
+#include <string.h>
 #include "placementTexte.h"
+#include <time.h>
+#include "quitterJeu.h"
 
 
 void affichageDifficulte(Ecran* ecran, int* difficulte) {
 	if (!ecran) {
 		printf("problème d'allocation");
-		return 0;
+		return;
 	}
 	contourEcran(ecran);
 	SetConsoleOutputCP(1252);
@@ -77,7 +80,8 @@ int* choisirDifficulte(int toucheDiff, int* difficulte) {
 }
 
 
-void choisirDifficulteContain(Ecran* ecran, int* difficulte) {
+int choisirDifficulteContain(Ecran* ecran, int* difficulte) {
+	system("cls");
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
 	if (!ecran) {
@@ -93,7 +97,7 @@ void choisirDifficulteContain(Ecran* ecran, int* difficulte) {
 			system("cls");
 			toucheDiff = _getch();
 			if (toucheDiff == 13) {
-				return 0;
+				return -1;
 			}
 			*difficulte = choisirDifficulte(toucheDiff, difficulte);
 			affichageDifficulte(ecran, difficulte);
