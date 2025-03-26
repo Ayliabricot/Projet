@@ -5,6 +5,7 @@
 #include "menu.h"
 #include "ecran.h"
 #include "placementTexte.h"
+#include "quitterJeu.h"
 
 int confirmerChoix(char opti[4]) {
 	int touche;
@@ -38,7 +39,7 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 , "vouloir quitter ? ");
 	//afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
 
-	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");
+	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");\n'oui'. Quitter...\n"
 	
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
@@ -81,8 +82,12 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	return 1;
 }
 
-void quitterJeuContain(Ecran* ecran, char opti[4]) {
-	quitterJeu(ecran, 0, opti);
+int quitterJeuContain(Ecran* ecran, char opti[4]) {
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
+	system("cls");
+	int valeur;
+	valeur=quitterJeu(ecran, 0, opti);
 	while (1) {
 		int touche;
 		if (_kbhit()) {
