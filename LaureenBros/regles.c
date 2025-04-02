@@ -10,6 +10,8 @@
 #include "quitterJeu.h"
 
 int afficher_regles(Ecran* ecran) {
+		int continuer = 1;
+		
 		SetConsoleOutputCP(GetOEMCP());
 		SetConsoleCP(GetOEMCP());
 		system("cls");
@@ -24,13 +26,22 @@ int afficher_regles(Ecran* ecran) {
 		afficherTexte(ecran->largeur / 2 - 50, ecran->hauteur / 2 - 1, "5. Vous pouvez quitter la partie grâce au menu, une sauvegarde sera créée.");
 		afficherTexte(ecran->largeur / 2 - 50, ecran->hauteur / 2 + 3, "A vous de jouer!");
 		
-		getchar();
+		afficherTexte(ecran->largeur / 2 - 20 , ecran->hauteur - 4, "(Pressez une touche pour retourner au menu)");
+		
+		SetConsoleOutputCP(GetOEMCP());
+		SetConsoleCP(GetOEMCP());
+
+		while (continuer == 1) {
+			if (_kbhit()) {
+				int touche = getch();
+				continuer = 0;
+			}
+		}
+	
 		//afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
 
 		//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");\n'oui'. Quitter...\n"
 
-		SetConsoleOutputCP(GetOEMCP());
-		SetConsoleCP(GetOEMCP());
 
 
 		return -1;

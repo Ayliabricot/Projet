@@ -10,7 +10,7 @@
 #include "quitterJeu.h"
 
 
-void lancer_ecran(int* choix, char option[6][40]) {
+void lancer_ecran(int* choix, char option[6][40],Partie** tableau) {
 	Ecran* ecran = definirEcran();
 	int touche = 0;
 	int* difficulte = 0;
@@ -18,14 +18,14 @@ void lancer_ecran(int* choix, char option[6][40]) {
 		while (*choix == -1) {
 			touche = 0;
 			*choix = 0;
-			afficherMenu(ecran, touche, choix,option);
+			afficherMenu(ecran, touche, choix,option,tableau);
 			while (1) {
 				if (_kbhit()) {
 					touche = _getch();
 
 
 					system("cls");
-					afficherMenu(ecran, touche, choix, option);
+					afficherMenu(ecran, touche, choix, option,tableau);
 				}
 			}
 		}

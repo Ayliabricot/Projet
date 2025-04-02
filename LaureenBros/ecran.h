@@ -1,6 +1,8 @@
 #ifndef ECRAN_H
 #define ECRAN_H
 
+#include "gererParties.h"
+
 typedef struct{
 	int hauteur;
 	int largeur;

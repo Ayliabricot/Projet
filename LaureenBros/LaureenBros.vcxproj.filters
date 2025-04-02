@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="AffichageMenu.h" />
     <ClCompile Include="AffichageMenuDefFct.c" />
-    <ClCompile Include="ASCII.c" />
     <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="jeu.c" />
     <ClCompile Include="main.c" />
@@ -13,11 +12,15 @@
     <ClCompile Include="ceQuiDoitEtreFree.c" />
     <ClCompile Include="liens.c" />
     <ClCompile Include="regles.c" />
+    <ClCompile Include="difficulte.c" />
+    <ClCompile Include="nouvellePartie.c" />
+    <ClCompile Include="gererPartie.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
     <ClInclude Include="jeu.h" />
     <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
+    <ClInclude Include="gererParties.h" />
   </ItemGroup>
 </Project>

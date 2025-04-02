@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
+    <ClInclude Include="gererParties.h" />
     <ClInclude Include="jeu.h" />
     <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
@@ -135,12 +136,13 @@
   <ItemGroup>
     <ClCompile Include="AffichageMenu.h" />
     <ClCompile Include="AffichageMenuDefFct.c" />
-    <ClCompile Include="ASCII.c" />
     <ClCompile Include="difficulte.c" />
     <ClCompile Include="ecranDefFct.c" />
+    <ClCompile Include="gererPartie.c" />
     <ClCompile Include="jeu.c" />
     <ClCompile Include="liens.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="nouvellePartie.c" />
     <ClCompile Include="quitterJeuDefFct.c" />
     <ClCompile Include="placementTexte.h" />
     <ClCompile Include="placementTexteDefFCT.c" />

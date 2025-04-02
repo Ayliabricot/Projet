@@ -7,7 +7,7 @@
 
 
 
-void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40]) {
+void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40],Partie** tableau) {
 	contourEcran(ecran);
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
@@ -19,7 +19,7 @@ void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40]) {
 		definirChoix(touche, choix);
 	}
 	else if (touche == 13) {
-		lancer_ecran(choix,option);
+		lancer_ecran(choix,option,tableau);
 	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
