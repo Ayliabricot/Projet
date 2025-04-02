@@ -1,20 +1,102 @@
-#include <windows.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <windows.h>
+#include <conio.h>
+#include "quitterJeu.h"
+#include "ecran.h"
+#include "placementTexte.h"
 
-void gotoxy(int x, int y) {
-    COORD coord;
-    coord.X = x;
-    coord.Y = y;
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+int confirmerChoix(char opti[4]) {
+	int touche;
+	if (_kbhit) {
+		touche = _getch();
+		if (touche == 13 && strcmp(opti, "oui") == 0) {
+			printf("oui");
+			exit(0);
+		}
+		else if (touche == 13 && strcmp(opti, "non") == 0) {
+			printf("ok");
+			return 0;
+
+		}
+	}
+	return 1;
 }
 
-// Fonction pour afficher un texte à une position donnée
-void afficherTexte(int x, int y, const char* texte) {
-    gotoxy(x, y);
-    printf("%s", texte);
-}
-void afficherTexteHighlight(int x, int y, const char* texte) {
-    gotoxy(x, y);
-    printf("\x1b[30m\x1b[47m %s \x1b[0m", texte);
+
+int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
+	
+    contourEcran(ecran);
+	SetConsoleOutputCP(1252);
+	SetConsoleCP(1252);
+	afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur/2-1, "ï¿½tes vous sï¿½r de");
+	
+	afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 , "vouloir quitter ? ");
+	//afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
+
+	//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");\n'oui'. Quitter...\n"
+	
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
+
+	if (_kbhit) {
+		if (touche == 'd') {
+		
+			strcpy_s(opti, sizeof(opti), "non");
+		}
+		else if (touche == 'q') {
+			
+			strcpy_s(opti,sizeof(opti), "oui");
+		}
+		if (touche == 13 && strcmp(opti, "oui") == 0) {
+			afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 +2, "vous avez choisi:");
+			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 3, "'oui'");
+			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 4, "Quitter...");
+			exit(0);
+		}
+		else if (touche == 13 && strcmp(opti, "non") == 0) {
+			return 0;
+
+
+		}
+		
+	}
+	if (strcmp(opti, "oui") == 0) {
+		afficherTexteHighlight(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
+		afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");
+	}
+	else {
+		afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
+		afficherTexteHighlight(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");
+	}
+	
+		
+
+	return 1;
 }
 
+void quitterJeuContain(Ecran* ecran, char opti[4]) {
+	quitterJeu(ecran, 0, opti);
+	while (1) {
+		int touche;
+		if (_kbhit()) {
+			touche = _getch();
+
+			
+			system("cls");
+			quitterJeu(ecran, touche, opti);
+		}
+	}
+}
+
+/*char opti[4] = "oui";
+while (1) {
+	Ecran* ecran = definirEcran();
+	quitterJeuContain(ecran, opti);
+
+
+
+}
+
+return 0;
+*/

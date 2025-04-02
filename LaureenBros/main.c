@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -10,7 +8,6 @@
 #include "placementTexte.h"
 #include <time.h>
 #include "quitterJeu.h"
-#include 
 
 
 int main() {
@@ -19,7 +16,7 @@ int main() {
 	int touche = 0;
 	int* choix = malloc(sizeof(int));
 	if (choix == NULL) {
-		printf("Erreur d'allocation memoire\n");
+		printf("Erreur d'allocation m�moire\n");
 		return 1;
 	}
 	*choix = 2;
@@ -50,13 +47,3 @@ int main() {
 
 
 //mettre des while(valeur= ...)  ca va dans un menu
-
-
-
-
-
-
-
-
-
-
