@@ -2,48 +2,46 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
+#include <string.h>
+#include <time.h>
+
 #include "ecran.h"
 #include "AffichageMenu.h"
-#include <string.h>
 #include "placementTexte.h"
-#include <time.h>
 #include "quitterJeu.h"
-
+#include "musique.h"
 
 int main() {
+    if (!initialiserAudio()) {
+        return 1;
+    }
 
-	Ecran* ecran = definirEcran();
-	int touche = 0;
-	int* choix = malloc(sizeof(int));
-	if (choix == NULL) {
-		printf("Erreur d'allocation m�moire\n");
-		return 1;
-	}
-	*choix = 2;
+    jouerMusique("SDL2/sons/Super Mario Bros (NES) Music - Overworld Theme.mp3");
 
+    Ecran* ecran = definirEcran();
+    int touche = 0;
+    int* choix = malloc(sizeof(int));
+    if (choix == NULL) {
+        printf("Erreur d'allocation mémoire\n");
+        return 1;
+    }
+    *choix = 2;
 
-	afficherMenu(ecran, touche, choix);
+    afficherMenu(ecran, touche, choix);
 
-	while (1) {
-		if (_kbhit()) {
-			touche = _getch();
+    while (1) {
+        if (_kbhit()) {
+            touche = _getch();
+            system("cls");
+            afficherMenu(ecran, touche, choix);
+        }
+    }
 
+    free(choix);
+    choix = NULL;
 
-			system("cls");
-			afficherMenu(ecran, touche, choix);
-		}
+    arreterMusique();
+    libererAudio();
 
-
-	}
-	free(choix);
-	choix = NULL;
-	return 0;
-
+    return 0;
 }
-
-
-
-
-
-
-//mettre des while(valeur= ...)  ca va dans un menu
