@@ -10,6 +10,7 @@
 #include "placementTexte.h"
 #include <time.h>
 #include "quitterJeu.h"
+#include 
 
 
 int main() {
@@ -18,7 +19,7 @@ int main() {
 	int touche = 0;
 	int* choix = malloc(sizeof(int));
 	if (choix == NULL) {
-		printf("Erreur d'allocation mémoire\n");
+		printf("Erreur d'allocation memoire\n");
 		return 1;
 	}
 	*choix = 2;
