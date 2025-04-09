@@ -11,15 +11,13 @@
 #include "gererParties.h"
 
 Partie** creerTableau(void) {
-	Partie** tableau = malloc(sizeof(Partie*));
+	Partie** tableau = malloc(10*sizeof(Partie*));
 
-	tableau[0] = NULL;
+	for (int i = 0; i < 10; i++) {
+		tableau[i] = NULL;
+	}
 
 	return tableau;
-}
-
-void adapterMemoire(Partie** tableau,int nbParties) {
-	tableau = realloc(tableau, nbParties * sizeof(Partie*));
 }
 
 Partie* nouvelle_partie(void) {

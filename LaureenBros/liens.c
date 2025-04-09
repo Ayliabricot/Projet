@@ -36,8 +36,6 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 		}
 		while (*choix == 1) {
 			Ecran* ecran = definirEcran();
-			adapterMemoire(tableau, *nbParties + 1);
-			printf("ok");
 			tableau[*nbParties]=nouvelle_partie();
 			demanderPseudo(ecran, tableau[*nbParties]);
 			
@@ -49,7 +47,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 		}
 		while (*choix == 4) {
 			char opti[4] = "oui";
-			while (*choix == 5) {
+			while (*choix == 4) {
 				Ecran* ecran = definirEcran();
 				*choix = quitterJeuContain(ecran, opti);
 			}
