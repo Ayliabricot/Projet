@@ -1,8 +1,8 @@
-#ifndef PARTIES
-#define PARTIES
+#ifndef PARTIES_H
+#define PARTIES_H
 
 typedef struct {
-	char pseudo[50];
+	char pseudo[30];
 	int objet;
 	int score;
 	int difficulte;

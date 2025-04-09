@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="cJSON.h" />
     <ClInclude Include="ecran.h" />
     <ClInclude Include="gererParties.h" />
     <ClInclude Include="jeu.h" />
@@ -136,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="AffichageMenu.h" />
     <ClCompile Include="AffichageMenuDefFct.c" />
+    <ClCompile Include="cJSON.c" />
     <ClCompile Include="difficulte.c" />
     <ClCompile Include="ecranDefFct.c" />
     <ClCompile Include="gererPartie.c" />
@@ -148,6 +150,7 @@
     <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="ceQuiDoitEtreFree.c" />
     <ClCompile Include="regles.c" />
+    <ClCompile Include="save.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
