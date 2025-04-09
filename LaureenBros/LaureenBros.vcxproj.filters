@@ -13,7 +13,6 @@
     <ClCompile Include="liens.c" />
     <ClCompile Include="regles.c" />
     <ClCompile Include="difficulte.c" />
-    <ClCompile Include="nouvellePartie.c" />
     <ClCompile Include="gererPartie.c" />
   </ItemGroup>
   <ItemGroup>

@@ -8,23 +8,27 @@
 #include "placementTexte.h"
 #include <time.h>
 #include "quitterJeu.h"
+#include "gererParties.h"
 
 
 int main() {
+
 	Partie** tableau = creerTableau();
-	char option[6][40] = { "1. Règles du jeu","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
+
+	char option[5][40] = { "1. Règles du jeu","2. Nouvelle partie","3. Continuer partie","4. Accéder au tableau des scores","5. Quitter le jeu" };
 
 	Ecran* ecran = definirEcran();
 	int touche = 0;
+	int* nbParties = malloc(sizeof(int));
 	int* choix = malloc(sizeof(int));
-	if (choix == NULL) {
+	if (choix == NULL || nbParties==NULL) {
 		printf("Erreur d'allocation mémoire\n");
 		return 1;
 	}
+	*nbParties = 0;
 	*choix = 0;
 
-
-	afficherMenu(ecran, touche, choix,option,tableau);
+	afficherMenu(ecran, touche, choix,option,tableau,nbParties);
 
 	while (1) {
 		if (_kbhit()) {
@@ -32,11 +36,18 @@ int main() {
 
 
 			system("cls");
-			afficherMenu(ecran, touche, choix,option,tableau);
+			afficherMenu(ecran, touche, choix,option,tableau,nbParties);
 		}
 
 
 	}
+
+	for (int i = 0; i < *nbParties; i++) {
+		free(tableau[i]);
+		tableau[i] == NULL;
+	}
+	free(tableau);
+	tableau = NULL;
 	free(choix);
 	choix = NULL;
 	return 0;

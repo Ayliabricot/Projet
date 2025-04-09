@@ -11,4 +11,8 @@ typedef struct {
 	int y;
 }Ennemi;
 
+void genererPersonnage(Personnage* personnage, Ecran* ecran);
+void genererEnnemi(Ennemi* ennemi, Ecran* ecran);
+void deplacementEnnemi(Ennemi* ennemi);
+
 #endif
