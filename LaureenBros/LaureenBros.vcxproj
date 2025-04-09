@@ -152,6 +152,9 @@
     <ClCompile Include="regles.c" />
     <ClCompile Include="save.c" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="lapin.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

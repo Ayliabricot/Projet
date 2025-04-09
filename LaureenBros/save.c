@@ -3,6 +3,7 @@
 #include "cJSON.h"
 #include "gererParties.h"
 
+
 cJSON* creer_JSON(Partie* partie) {
     cJSON* root = cJSON_CreateObject();
     cJSON_AddStringToObject(root, "pseudo", partie->pseudo);
