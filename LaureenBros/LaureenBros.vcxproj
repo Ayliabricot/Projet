@@ -144,7 +144,6 @@
     <ClCompile Include="jeu.c" />
     <ClCompile Include="liens.c" />
     <ClCompile Include="main.c" />
-    <ClCompile Include="nouvellePartie.c" />
     <ClCompile Include="quitterJeuDefFct.c" />
     <ClCompile Include="placementTexte.h" />
     <ClCompile Include="placementTexteDefFCT.c" />

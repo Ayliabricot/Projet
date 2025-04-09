@@ -1,6 +1,8 @@
 #ifndef PARTIES_H
 #define PARTIES_H
 
+#include "ecran.h"
+
 typedef struct {
 	char pseudo[30];
 	int objet;
@@ -14,5 +16,6 @@ typedef struct {
 Partie** creerTableau(void);
 void adapterMemoire(Partie** tableau, int nbParties);
 Partie* nouvelle_partie(void);
+void demanderPseudo(Ecran* ecran, Partie* partie);
 
 #endif
