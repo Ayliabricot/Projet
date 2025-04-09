@@ -7,7 +7,7 @@
 
 
 
-void afficherMenu(Ecran* ecran, int touche, int* choix) {
+void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40],Partie** tableau) {
 	contourEcran(ecran);
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
@@ -17,7 +17,9 @@ void afficherMenu(Ecran* ecran, int touche, int* choix) {
 
 	if (touche == 115 || touche == 122) {
 		definirChoix(touche, choix);
-		
+	}
+	else if (touche == 13) {
+		lancer_ecran(choix,option,tableau);
 	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
@@ -31,7 +33,6 @@ void afficherMenu(Ecran* ecran, int touche, int* choix) {
 		afficherTexte(a, 5, "*");
 	}
 
-	char option[6][40] = { "1. Entre le pseudo du joueur","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
 	for (int i = 0; i < 6; i++) {
 		if (*choix == i) {
 			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
@@ -44,7 +45,7 @@ void afficherMenu(Ecran* ecran, int touche, int* choix) {
 	}
 
 	afficherTexte(ecran->largeur / 2 - 22 / 2, ecran->hauteur - 5, "Choisissez une option");
-	afficherTexte(ecran->largeur / 2 - 22 / 2, ecran->hauteur - 3,"(press to adjust)");
+	afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur - 4,"(press to adjust)");
 
 	
 	

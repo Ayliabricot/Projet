@@ -4,5 +4,5 @@ tout ce qui doit etre free ici
   int choix
   struct personnage
   struct ennemis
-
+  cJSON_Delete(root)
 */

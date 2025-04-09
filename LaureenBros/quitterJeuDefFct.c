@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
-#include "quitterJeu.h"
 #include "ecran.h"
 #include "placementTexte.h"
+#include "quitterJeu.h"
 
 int confirmerChoix(char opti[4]) {
 	int touche;
@@ -49,15 +49,17 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 			strcpy_s(opti,sizeof(opti), "oui");
 		}
 		if (touche == 13 && strcmp(opti, "oui") == 0) {
-			afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 +2, "vous avez choisi:");
+			afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 +2, "Vous avez choisi:");
 			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 3, "'oui'");
-			afficherTexte(ecran->largeur / 2 - 9 / 2, ecran->hauteur / 2 + 4, "Quitter...");
+			afficherTexte(ecran->largeur / 2 - 10 / 2, ecran->hauteur / 2 + 4, "Quitter...");
+			afficherTexte(ecran->largeur / 2 - 32 / 2, ecran->hauteur - 6, "Pressez une touche pour sortir");
+			getchar();
+			system("cls");
 			exit(0);
 		}
 		else if (touche == 13 && strcmp(opti, "non") == 0) {
-			return 0;
 
-
+			return -1;
 		}
 		
 	}
@@ -75,28 +77,26 @@ int quitterJeu(Ecran* ecran, int touche, char opti[4]) {
 	return 1;
 }
 
-void quitterJeuContain(Ecran* ecran, char opti[4]) {
-	quitterJeu(ecran, 0, opti);
+int quitterJeuContain(Ecran* ecran, char opti[4]) {
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
+	system("cls");
+	int valeur;
+	valeur=quitterJeu(ecran, 0, opti);
 	while (1) {
 		int touche;
 		if (_kbhit()) {
 			touche = _getch();
 
 			
+
+			
 			system("cls");
-			quitterJeu(ecran, touche, opti);
+			valeur=quitterJeu(ecran, touche, opti);
+			if (valeur == -1) {
+				return valeur;
+			}
 		}
 	}
+	return valeur;
 }
-
-/*char opti[4] = "oui";
-while (1) {
-	Ecran* ecran = definirEcran();
-	quitterJeuContain(ecran, opti);
-
-
-
-}
-
-return 0;
-*/

@@ -3,9 +3,16 @@
 
 #include "ecran.h"
 
-
-void afficherMenu(Ecran* ecran,  int touche,  int* choix);
+void afficherMenu(Ecran* ecran,  int touche,  int* choix, char option[6][40],Partie** tableau);
 void definirChoix(int touche, int* choix);
+void lancer_ecran(int* choix, char option[6][40],Partie** tableau);
+
+int afficher_regles(Ecran* ecran);
+
+int choisirDifficulteContain(Ecran* ecran, int* difficulte);
+void affichageDifficulte(Ecran* ecran, int* difficulte);
+int* choisirDifficulte(int toucheDiff, int* difficulte);
+
 
 
 #endif

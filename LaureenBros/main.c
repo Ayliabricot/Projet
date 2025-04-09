@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
@@ -13,6 +11,8 @@
 
 
 int main() {
+	Partie** tableau = creerTableau();
+	char option[6][40] = { "1. Règles du jeu","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
 
 	Ecran* ecran = definirEcran();
 	int touche = 0;
@@ -21,10 +21,10 @@ int main() {
 		printf("Erreur d'allocation mémoire\n");
 		return 1;
 	}
-	*choix = 2;
+	*choix = 0;
 
 
-	afficherMenu(ecran, touche, choix);
+	afficherMenu(ecran, touche, choix,option,tableau);
 
 	while (1) {
 		if (_kbhit()) {
@@ -32,7 +32,7 @@ int main() {
 
 
 			system("cls");
-			afficherMenu(ecran, touche, choix);
+			afficherMenu(ecran, touche, choix,option,tableau);
 		}
 
 
