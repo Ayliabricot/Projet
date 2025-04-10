@@ -8,24 +8,25 @@
 #include "placementTexte.h"
 #include <time.h>
 #include "quitterJeu.h"
+#include "gererParties.h"
+#include "openClose.h"
 
 
-void lancer_ecran(int* choix, char option[6][40],Partie** tableau) {
+void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties) {
 	Ecran* ecran = definirEcran();
 	int touche = 0;
-	int* difficulte = 0;
 	while (1) {
 		while (*choix == -1) {
 			touche = 0;
 			*choix = 0;
-			afficherMenu(ecran, touche, choix,option,tableau);
+			afficherMenu(ecran, touche, choix,option,tableau,nbParties);
 			while (1) {
 				if (_kbhit()) {
 					touche = _getch();
 
 
 					system("cls");
-					afficherMenu(ecran, touche, choix, option,tableau);
+					afficherMenu(ecran, touche, choix, option,tableau,nbParties);
 				}
 			}
 		}
@@ -35,18 +36,29 @@ void lancer_ecran(int* choix, char option[6][40],Partie** tableau) {
 			system("cls");
 		}
 		while (*choix == 1) {
-			int difficulte = 0;
 			Ecran* ecran = definirEcran();
-			*choix=choisirDifficulteContain(ecran, &difficulte);
+			tableau[*nbParties]=nouvelle_partie();
+			demanderPseudo(ecran, tableau[*nbParties]);
+			
+			system("cls");
+			ecran = definirEcran();
+			*choix = choisirDifficulteContain(ecran, tableau[*nbParties]);
+			*nbParties = *nbParties + 1;
 			system("cls");
 		}
-		while (*choix == 5) {
+		while (*choix == 4) {
 			char opti[4] = "oui";
-			while (*choix == 5) {
+			while (*choix == 4) {
 				Ecran* ecran = definirEcran();
 				*choix = quitterJeuContain(ecran, opti);
 			}
 			system("cls");
+		}
+		while (*choix == 5) {
+			
+		   ouvrirConsoleSDL();
+		   *choix = -1;
+		  
 		}
 	}
 }
