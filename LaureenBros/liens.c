@@ -40,6 +40,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			tableau[*nbParties]=nouvelle_partie();
 			demanderPseudo(ecran, tableau[*nbParties]);
 			cacherCurseur();
+
 			system("cls");
 			ecran = definirEcran();
 			*choix = choisirDifficulteContain(ecran, tableau[*nbParties]);
