@@ -30,7 +30,7 @@ int afficher_regles(Ecran* ecran) {
 		afficherTexte(ecran->largeur / 2 - 30, ecran->hauteur / 2 + 4, "( •.• )");
 		afficherTexte(ecran->largeur / 2 - 30, ecran->hauteur / 2 + 5, "(<    )");
 
-		afficherTexte(ecran->largeur / 2 - 20 , ecran->hauteur - 5, "(Pressez une touche pour retourner au menu)");
+		afficherTexte(ecran->largeur / 2 - 15 , ecran->hauteur - 5, "(Pressez une touche pour sortir)");
 	
 		SetConsoleOutputCP(GetOEMCP());
 		SetConsoleCP(GetOEMCP());
