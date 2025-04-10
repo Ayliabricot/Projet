@@ -14,4 +14,7 @@ int choisirDifficulteContain(Ecran* ecran, Partie* partie);
 void affichageDifficulte(Ecran* ecran, int difficulte);
 int choisirDifficulte(int toucheDiff, int difficulte);
 
+void cacherCurseur(void);
+void afficherCurseur(void);
+
 #endif

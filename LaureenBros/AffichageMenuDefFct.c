@@ -70,33 +70,18 @@ void definirChoix(int touche, int* choix) {
 	}
 }
 
-/*
-main pour affciher le menu
-
-Ecran* ecran = definirEcran();
-int touche = 0;
-int* choix = malloc(sizeof(int));
-if (choix == NULL) {
-	printf("Erreur d'allocation mémoire\n");
-	return 1;
+void cacherCurseur(void) {
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = FALSE;
+	SetConsoleCursorInfo(consoleHandle, &info);
 }
-*choix = 2;
 
-
-afficherMenu(ecran, touche, choix);
-
-while (1) {
-	if (_kbhit()) {
-		touche = _getch();
-
-
-		system("cls");
-		afficherMenu(ecran, touche, choix);
-	}
-
-
+void afficherCurseur(void) {
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = TRUE;
+	SetConsoleCursorInfo(consoleHandle, &info);
 }
-free(choix);
-return 0;
-
-*/
