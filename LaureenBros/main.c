@@ -31,6 +31,7 @@ int main() {
 		printf("Erreur d'allocation mémoire\n");
 		return 1;
 	}
+	cacherCurseur();
 	*nbParties = 0;
 	*choix = 0;
 
@@ -56,6 +57,8 @@ int main() {
 	tableau = NULL;
 	free(choix);
 	choix = NULL;
+
+	afficherCurseur();
 	return 0;
 
 }
