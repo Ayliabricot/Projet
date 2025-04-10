@@ -54,10 +54,10 @@ void demanderPseudo(Ecran* ecran, Partie* partie) {
 
 	afficherTexte(ecran->largeur / 2-12, ecran->hauteur / 3 + 1, "-> ");
 	afficherTexte(ecran->largeur / 2 - 12, ecran->hauteur / 3 + 2, "-------------------------");
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3, " /)/)");
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3 + 1, "( -.-)");
-
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3 + 2, " o_(µ)(µ)");
+	
+	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3, " (\\(\\");
+	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3 + 1, " (='.')");
+	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3 + 2, "o(_\")\")");
 	
 	char pseudo[50];
 	gotoxy(ecran->largeur / 2-9, ecran->hauteur / 3 + 1);

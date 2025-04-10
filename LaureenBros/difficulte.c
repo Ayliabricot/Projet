@@ -40,7 +40,7 @@ void affichageDifficulte(Ecran* ecran, int difficulte) {
 	afficherTexte(ecran->largeur / 4, ecran->hauteur / 2 + 3, " /)/)");
 	afficherTexte(ecran->largeur / 4, ecran->hauteur / 2 + 4, "( -.-)");
 
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 2 + 5, " o_(µ)(µ)");
+	afficherTexte(ecran->largeur / 4-1, ecran->hauteur / 2 + 5, "o_(µ)(µ)");
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
 }
