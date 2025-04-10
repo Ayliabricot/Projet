@@ -9,6 +9,7 @@
 #include <time.h>
 #include "quitterJeu.h"
 #include "gererParties.h"
+#include "openClose.h"
 
 
 void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties) {
@@ -52,6 +53,11 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 				*choix = quitterJeuContain(ecran, opti);
 			}
 			system("cls");
+		}
+		while (*choix == 5) {
+			
+		   ouvrirConsoleSDL();
+		  
 		}
 	}
 }

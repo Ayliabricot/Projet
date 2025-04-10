@@ -9,9 +9,15 @@
 #include <time.h>
 #include "quitterJeu.h"
 #include "gererParties.h"
+#include <SDL.h>
+#include <SDL_ttf.h>
+
 
 
 int main() {
+
+	
+
 
 	Partie** tableau = creerTableau();
 

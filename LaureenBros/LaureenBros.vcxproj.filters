@@ -16,6 +16,7 @@
     <ClCompile Include="gererPartie.c" />
     <ClCompile Include="cJSON.c" />
     <ClCompile Include="save.c" />
+    <ClCompile Include="openClose.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecran.h" />
@@ -24,5 +25,9 @@
     <ClInclude Include="scores.h" />
     <ClInclude Include="gererParties.h" />
     <ClInclude Include="cJSON.h" />
+    <ClInclude Include="openClose.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="lapin.txt" />
   </ItemGroup>
 </Project>

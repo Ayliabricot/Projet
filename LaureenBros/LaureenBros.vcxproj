@@ -104,10 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\vclib\SDL2_image-devel-2.8.8-VC\SDL2_image-2.8.8\include;C:\vclib\SDL2_mixer-devel-2.8.1-VC\SDL2_mixer-2.8.1\include;C:\vclib\SDL2_ttf-devel-2.24.0-VC\SDL2_ttf-2.24.0\include;C:\vclib\SDL2-devel-2.32.4-VC\SDL2-2.32.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalUsingDirectories>%(AdditionalUsingDirectories)</AdditionalUsingDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\vclib\SDL2_image-devel-2.8.8-VC\SDL2_image-2.8.8\lib\x64;C:\vclib\SDL2_mixer-devel-2.8.1-VC\SDL2_mixer-2.8.1\lib\x64;C:\vclib\SDL2_ttf-devel-2.24.0-VC\SDL2_ttf-2.24.0\lib\x64;C:\vclib\SDL2-devel-2.32.4-VC\SDL2-2.32.4\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;SDL2_image.lib;SDL2test.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,6 +135,7 @@
     <ClInclude Include="ecran.h" />
     <ClInclude Include="gererParties.h" />
     <ClInclude Include="jeu.h" />
+    <ClInclude Include="openClose.h" />
     <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
   </ItemGroup>
@@ -150,6 +155,7 @@
     <ClCompile Include="ceQuiDoitEtreFree.c" />
     <ClCompile Include="regles.c" />
     <ClCompile Include="save.c" />
+    <ClCompile Include="openClose.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="lapin.txt" />
