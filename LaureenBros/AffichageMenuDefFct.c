@@ -8,7 +8,11 @@
 
 
 void afficherMenu(Ecran* ecran, int touche, int* choix, char option[5][40],Partie** tableau,int* nbParties) {
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
+
 	contourEcran(ecran);
+
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
 
@@ -23,23 +27,23 @@ void afficherMenu(Ecran* ecran, int touche, int* choix, char option[5][40],Parti
 	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
-		afficherTexte(a, 1, "*");
+		afficherTexte(a, 2, "*");
 
 	}
-	afficherTexte(ecran->largeur / 2 - 29 / 2, 3, "*****  LAUREEN   BROS  *****");
+	afficherTexte(ecran->largeur / 2 - 29 / 2, 4, "*****  LAUREEN   BROS  *****");
 	
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
-		afficherTexte(a, 5, "*");
+		afficherTexte(a, 6, "*");
 	}
 
 	for (int i = 0; i < 5; i++) {
 		if (*choix == i) {
-			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
+			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i +1, option[i]);
 			
 		}
 		else {
-			afficherTexte(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
+			afficherTexte(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i + 1, option[i]);
 		
 		}
 	}

@@ -21,6 +21,6 @@ void afficherTexte(int x, int y, const char* texte) {
 }
 void afficherTexteHighlight(int x, int y, const char* texte) {
     gotoxy(x, y);
-    printf("\x1b[30m\x1b[47m %s \x1b[0m", texte);
+    printf("\x1b[30m\x1b[47m%s\x1b[0m", texte);
 }
 
