@@ -253,20 +253,51 @@ void render() {
         }
     }
 
-    SDL_Rect frames[] = {
-        { 3, 43, 17, 24 }, { 22, 43, 17, 24 }, { 42, 43, 16, 24 }, { 3, 246, 16, 24 },
-        { 3, 130, 17, 24 }, { 22, 130, 17, 24 }, { 42, 130, 16, 24 }, { 3, 130, 17, 24 },
-        { 3, 72, 14, 24 }, { 22, 72, 14, 24 }
-    };
+    // Définition des rectangles source
+    SDL_Rect frame0 = { 3, 43, 17, 26 };   // debout
+    SDL_Rect frame1 = { 22, 43, 17, 26 };  // Course frame 1
+    SDL_Rect frame2 = { 42, 43, 16, 26 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 246, 16, 26 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 130, 17, 26 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 130, 17, 26 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 42, 130, 16, 26 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 72, 14, 26 };   // Saut haut
+    SDL_Rect frame9 = { 22, 72, 14, 26 };  // Saut bas
 
-    SDL_Rect srcRect = frames[player.currentFrame];
+    SDL_Rect srcRect;
+    switch (player.currentFrame) {
+    case 0: srcRect = frame0; break;
+    case 1: srcRect = frame1; break;
+    case 2: srcRect = frame2; break;
+    case 3: srcRect = frame3; break;
+    case 4: srcRect = frame4; break;
+    case 5: srcRect = frame5; break;
+    case 6: srcRect = frame6; break;
+    case 8: srcRect = frame8; break;
+    case 9: srcRect = frame9; break;
+    case 7: srcRect = frame5; break; // frame7 utilise frame5 flipée
+    default: srcRect = frame3; break;
+    }
+
     SDL_Rect dstRect = { (int)(player.x - camera_x), (int)player.y, 32, 64 };
+    SDL_RendererFlip flip = SDL_FLIP_NONE;
 
-    SDL_RendererFlip flip = player.facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    // Flip logique
+    if (player.isJumping) {
+        if (!player.facingRight) {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
+    }
+    else {
+        if ((player.velX < 0) || (player.currentFrame == 7) || (!player.facingRight && (player.currentFrame == 5 || player.currentFrame == 6))) {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
+    }
+
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
-
     SDL_RenderPresent(renderer);
 }
+
 
 void cleanup() {
     SDL_DestroyTexture(tileTexture);
