@@ -118,6 +118,8 @@ void handleEvents() {
     }
 }
 
+
+
 void update() {
     // Mise à jour position
     player.x += player.velX;
@@ -126,11 +128,16 @@ void update() {
     // Collisions avec les bords
     if (player.x < 0) player.x = 0;
     if (player.y < 0) player.y = 0;
-    if (player.x > SCREEN_WIDTH/2 - 32) player.x = SCREEN_WIDTH/2 - 32;
+    if (player.x > SCREEN_WIDTH / 2 - 32) player.x = SCREEN_WIDTH / 2 - 32;
     if (player.y > SCREEN_HEIGHT - 64) player.y = SCREEN_HEIGHT - 64;
 
     // Animation seulement si le perso bouge
     if (player.velX != 0 || player.velY != 0) {
+        // Réinitialiser à la frame 0 si on était sur la frame statique (3)
+        if (player.currentFrame == 3) {
+            player.currentFrame = 0;
+        }
+
         player.animationTimer++;
         if (player.animationTimer >= ANIMATION_SPEED) {
             player.animationTimer = 0;
@@ -171,7 +178,7 @@ void render() {
     SDL_Rect frame0 = { 3, 43, 17, 26 };   // Première frame cours 
     SDL_Rect frame1 = { 22, 43, 17, 26 };  // Deuxième frame cours
     SDL_Rect frame2 = { 42,43,16,26 };// frame 3 cours
-
+    SDL_Rect frame3 = { 3,246,16,26 };
     // Sélection du rectangle source selon currentFrame
     SDL_Rect srcRect;
     if (player.currentFrame == 0) {
@@ -182,6 +189,9 @@ void render() {
     }
     else if (player.currentFrame == 2) { // currentFrame == 2
         srcRect = frame2;
+    }
+    else if (player.currentFrame == 3) { // currentFrame == 2
+        srcRect = frame3;
     }
 
     // Rectangle destination (taille affichée à l'écran)
