@@ -33,6 +33,7 @@ typedef struct {
     bool isIdleAnimating; // Si on est en train de faire l'animation d'attente
     bool lookAlternate;
     bool wasMoving;
+
 } Sprite;
 
 SDL_Window* window = NULL;
