@@ -49,7 +49,6 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 		}
 		while (*choix == 1) {
 			Ecran* ecran = definirEcran();
-			afficherCurseur();
 			tableau[*nbParties]=nouvelle_partie();
 			demanderPseudo(ecran, tableau[*nbParties]);
 			cacherCurseur();
