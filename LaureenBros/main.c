@@ -1,7 +1,7 @@
 ﻿#include <SDL.h>
 #include <SDL_image.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
@@ -22,6 +22,10 @@ typedef struct {
     float gravity;
     float jumpForce;
     bool facingRight;
+    int idleTimer;
+    bool isIdleAnimating;
+    bool lookAlternate;
+    bool wasMoving;
 } Sprite;
 
 SDL_Window* window = NULL;
@@ -37,82 +41,56 @@ int map[MAP_HEIGHT][MAP_WIDTH];
 void generate_map(int map[MAP_HEIGHT][MAP_WIDTH]) {
     for (int row = 0; row < MAP_HEIGHT; row++) {
         for (int col = 0; col < MAP_WIDTH; col++) {
-            if (row >= 6)
-                map[row][col] = 1;
-            else
-                map[row][col] = 0;
+            map[row][col] = (row >= 6) ? 1 : 0;
         }
     }
-    map[6][5] = 2;
-    map[6][6] = 3;
-    map[7][5] = 2;
-    map[7][6] = 3;
-    map[8][5] = 2;
-    map[8][6] = 3;
-    map[5][5] = 4;
-    map[5][6] = 5;
-    map[4][8] = 6;
-    map[4][9] = 7;
+    map[6][5] = 2; map[6][6] = 3;
+    map[7][5] = 2; map[7][6] = 3;
+    map[8][5] = 2; map[8][6] = 3;
+    map[5][5] = 4; map[5][6] = 5;
+    map[4][8] = 6; map[4][9] = 7;
 }
 
 bool is_solid_tile(float x, float y) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
-
-    if (col < 0 || col >= MAP_WIDTH || row < 0 || row >= MAP_HEIGHT) {
-        return false;
-    }
-
-    return map[row][col] != 0;
+    return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0);
 }
 
 bool initialize() {
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("SDL Init Error: %s\n", SDL_GetError());
-        return false;
-    }
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
 
-    window = SDL_CreateWindow("Mario Map Fusion", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+    window = SDL_CreateWindow("Mario Fusion", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (!window) {
-        printf("Window creation error: %s\n", SDL_GetError());
-        return false;
-    }
+    if (!window) return false;
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        printf("Renderer creation error: %s\n", SDL_GetError());
-        return false;
-    }
+    if (!renderer) return false;
 
     SDL_Surface* tileSurface = SDL_LoadBMP("tiles.bmp");
-    if (!tileSurface) {
-        printf("Failed to load tiles.bmp: %s\n", SDL_GetError());
-        return false;
-    }
+    if (!tileSurface) return false;
     tileTexture = SDL_CreateTextureFromSurface(renderer, tileSurface);
     SDL_FreeSurface(tileSurface);
 
     SDL_Surface* marioSurface = IMG_Load("png/mario.png");
-    if (!marioSurface) {
-        printf("Failed to load mario.png: %s\n", SDL_GetError());
-        return false;
-    }
+    if (!marioSurface) return false;
     SDL_SetColorKey(marioSurface, SDL_TRUE, SDL_MapRGB(marioSurface->format, 0, 197, 10));
     playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
     SDL_FreeSurface(marioSurface);
 
     player.x = 100;
     player.y = SCREEN_HEIGHT - 240;
-    player.velX = 0;
-    player.velY = 0;
+    player.velX = player.velY = 0;
     player.texture = playerTexture;
-    player.animationTimer = 0;
+    player.animationTimer = player.idleTimer = 0;
     player.currentFrame = 3;
     player.isJumping = false;
     player.gravity = 0.5f;
     player.jumpForce = -10.0f;
     player.facingRight = true;
+    player.isIdleAnimating = false;
+    player.lookAlternate = false;
+    player.wasMoving = false;
 
     generate_map(map);
     return true;
@@ -121,15 +99,13 @@ bool initialize() {
 void handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-        if (event.type == SDL_QUIT)
+        if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
             running = false;
-        else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-            running = false;
-
         if (event.type == SDL_KEYDOWN) {
             if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP) && !player.isJumping) {
                 player.velY = player.jumpForce;
                 player.isJumping = true;
+                player.wasMoving = (player.velX != 0);
             }
         }
     }
@@ -151,46 +127,37 @@ void update() {
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
 
-    // Collision horizontale
-    if (player.velX > 0) {
-        if (!is_solid_tile(newX + 32, player.y + 32)) {
-            player.x = newX;
-        }
-    }
-    else if (player.velX < 0) {
-        if (!is_solid_tile(newX, player.y + 32)) {
-            player.x = newX;
-        }
-    }
+    // Horizontale collision
+    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) player.x = newX;
+    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) player.x = newX;
 
-    // Gravité toujours appliquée
+    // Gravité
     player.velY += player.gravity;
 
-    // Collision verticale descendante
+    // Verticale collision
     if (player.velY > 0) {
         if (is_solid_tile(player.x + 16, newY + 64)) {
             player.y = ((int)((newY + 64) / BLOCK_SIZE)) * BLOCK_SIZE - 64;
             player.velY = 0;
             player.isJumping = false;
         }
-        else {
-            player.y = newY;
-        }
+        else player.y = newY;
     }
-    // Collision verticale montante
     else if (player.velY < 0) {
         if (is_solid_tile(player.x + 16, newY)) {
-            player.y = ((int)((newY) / BLOCK_SIZE) + 1) * BLOCK_SIZE;
+            player.y = ((int)(newY / BLOCK_SIZE) + 1) * BLOCK_SIZE;
             player.velY = 0;
         }
-        else {
-            player.y = newY;
-        }
+        else player.y = newY;
     }
 
     // Animation
-    if (player.velX != 0 || player.velY != 0) {
-        if (player.currentFrame == 3) player.currentFrame = 0;
+    if (player.isJumping) {
+        player.currentFrame = (player.velY < 0) ? 8 : 9;
+    }
+    else if (player.velX != 0) {
+        player.wasMoving = true;
+        player.idleTimer = 0;
         player.animationTimer++;
         if (player.animationTimer >= ANIMATION_SPEED) {
             player.animationTimer = 0;
@@ -198,10 +165,23 @@ void update() {
         }
     }
     else {
-        player.currentFrame = 3;
+        player.idleTimer++;
+        if (player.idleTimer > 180) {
+            player.animationTimer++;
+            if (player.animationTimer >= ANIMATION_SPEED * 3) {
+                player.animationTimer = 0;
+                if (player.currentFrame == 3) player.currentFrame = 4;
+                else if (player.currentFrame == 4) player.currentFrame = 5;
+                else if (player.currentFrame == 5) player.currentFrame = 6;
+                else if (player.currentFrame == 6) player.currentFrame = 7;
+                else player.currentFrame = 4;
+            }
+        }
+        else {
+            player.currentFrame = 3;
+        }
     }
 
-    // Reset si chute
     if (player.y > SCREEN_HEIGHT) {
         player.x = 100;
         player.y = SCREEN_HEIGHT - 64;
@@ -209,28 +189,16 @@ void update() {
         player.isJumping = false;
     }
 
-    // Caméra
     float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
-
-    if (target_camera_x > camera_lock_x) {
-        camera_lock_x = target_camera_x;
-    }
+    if (target_camera_x > camera_lock_x) camera_lock_x = target_camera_x;
 
     float max_camera_x = (MAP_WIDTH * BLOCK_SIZE) - SCREEN_WIDTH;
-    if (camera_lock_x > max_camera_x) {
-        camera_lock_x = max_camera_x;
-    }
+    if (camera_lock_x > max_camera_x) camera_lock_x = max_camera_x;
 
     camera_x = camera_lock_x;
-
-    if (player.x < camera_x) {
-        player.x = camera_x;
-    }
-
-    float max_player_x = (MAP_WIDTH * BLOCK_SIZE) - 32; // 32 = largeur approximative du joueur
-    if (player.x > max_player_x) {
-        player.x = max_player_x;
-    }
+    if (player.x < camera_x) player.x = camera_x;
+    float max_player_x = (MAP_WIDTH * BLOCK_SIZE) - 32;
+    if (player.x > max_player_x) player.x = max_player_x;
 }
 
 void render() {
@@ -256,17 +224,17 @@ void render() {
         }
     }
 
-    SDL_Rect frameRects[] = {
-        { 3, 43, 17, 26 },
-        { 22, 43, 17, 26 },
-        { 42, 43, 16, 26 },
-        { 3, 246, 16, 26 }
+    SDL_Rect frames[] = {
+        { 3, 43, 17, 24 }, { 22, 43, 17, 24 }, { 42, 43, 16, 24 }, { 3, 246, 16, 24 },
+        { 3, 130, 17, 24 }, { 22, 130, 17, 24 }, { 42, 130, 16, 24 }, { 3, 130, 17, 24 },
+        { 3, 72, 14, 24 }, { 22, 72, 14, 24 }
     };
-    SDL_Rect srcRect = frameRects[player.currentFrame];
+
+    SDL_Rect srcRect = frames[player.currentFrame];
     SDL_Rect dstRect = { (int)(player.x - camera_x), (int)player.y, 32, 64 };
 
-    SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL,
-        player.facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL);
+    SDL_RendererFlip flip = player.facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
 
     SDL_RenderPresent(renderer);
 }
