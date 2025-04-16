@@ -1,223 +1,222 @@
 ﻿#include <SDL.h>
+#include <SDL_image.h>
 #include <stdio.h>
+#include <stdbool.h>
 
-/*#include <stdlib.h>
-#include <windows.h>
-#include <conio.h>
-#include "ecran.h"
-#include "AffichageMenu.h"
-#include <string.h>
-#include "placementTexte.h"
-#include <time.h>
-#include "quitterJeu.h"
-*/
+// --- CONSTANTES ---
+#define SCREEN_WIDTH 1280
+#define SCREEN_HEIGHT 720
+#define BLOCK_SIZE 80
 
-#define SCREEN_WIDTH 1280    // -¤ Largeur de la fenêtre en pixel ¤-
-#define SCREEN_HEIGHT 720    // -¤ Hauteur de la fenêtre en pixel ¤-
-
-#define NUMBER_OF_TILES 8    // -¤ Sur l'image.bmp ¤-
-#define BLOCK_SIZE 80        // -¤ En pixel ¤-
-
+#define NUMBER_OF_TILES 8
 #define MAP_WIDTH 90
 #define MAP_HEIGHT 9
-#define VIEW_WIDTH 16        // -¤ Nombre de tuiles affichées horizontalement ¤-
+#define VIEW_WIDTH 16
 
-#define CAMERA_SPEED 300     // -¤ Vitesse de déplacement de la caméra (pixels/sec) ¤-
+#define ANIMATION_SPEED 10
+#define CAMERA_SPEED 300.0f
 
+// --- STRUCTURES ---
+typedef struct {
+    float x, y;
+    float velX, velY;
+    SDL_Texture* texture;
+    int animationTimer;
+    int currentFrame;
+    bool isJumping;
+    float gravity;
+    float jumpForce;
+    bool facingRight;
+} Sprite;
+
+// --- VARIABLES GLOBALES ---
+SDL_Window* window = NULL;
+SDL_Renderer* renderer = NULL;
+SDL_Texture* playerTexture = NULL;
+SDL_Texture* tileTexture = NULL;
+
+Sprite player;
+bool running = true;
+int map[MAP_HEIGHT][MAP_WIDTH];
+float cameraX = 0.0f;
+
+// --- INITIALISATION ---
+bool initialize() {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
+    window = SDL_CreateWindow("Mario Map Fusion", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (!window) return false;
+
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+    if (!renderer) return false;
+
+    // Chargement tiles
+    SDL_Surface* tileSurface = SDL_LoadBMP("tiles.bmp");
+    if (!tileSurface) return false;
+    tileTexture = SDL_CreateTextureFromSurface(renderer, tileSurface);
+    SDL_FreeSurface(tileSurface);
+
+    // Chargement sprite
+    SDL_Surface* marioSurface = IMG_Load("png/mario.png");
+    if (!marioSurface) return false;
+    SDL_SetColorKey(marioSurface, SDL_TRUE, SDL_MapRGB(marioSurface->format, 0, 197, 10));
+    playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
+    SDL_FreeSurface(marioSurface);
+
+    // Init player
+    player.x = 100;
+    player.y = 300;
+    player.velX = player.velY = 0;
+    player.texture = playerTexture;
+    player.animationTimer = 0;
+    player.currentFrame = 0;
+    player.isJumping = false;
+    player.gravity = 0.5f;
+    player.jumpForce = -10.0f;
+    player.facingRight = true;
+
+    return true;
+}
+
+// --- MAP ---
 void generate_map(int map[MAP_HEIGHT][MAP_WIDTH]) {
     for (int row = 0; row < MAP_HEIGHT; row++) {
         for (int col = 0; col < MAP_WIDTH; col++) {
-            if (row >= 6)
-                map[row][col] = 1;  // -¤ Sol ¤-
-            else
-                map[row][col] = 0;  // -¤ Ciel ¤-
+            if (row >= 6) map[row][col] = 1; // Sol
+            else map[row][col] = 0;
         }
     }
 }
 
-int main(int argc, char* argv[]) {
-	
-	/*
-	
-	//MENU 
-	
-	Partie** tableau = creerTableau();
-	char option[6][40] = { "1. Règles du jeu","2. Choisir difficulté","3. Nouvelle partie","4. Continuer partie","5. Accéder au tableau des scores","6. Quitter le jeu" };
-
-	Ecran* ecran = definirEcran();
-	int touche = 0;
-	int* choix = malloc(sizeof(int));
-	if (choix == NULL) {
-		printf("Erreur d'allocation mémoire\n");
-		return 1;
-	}
-	*choix = 0;
-
-
-	afficherMenu(ecran, touche, choix,option,tableau);
-
-	while (1) {
-		if (_kbhit()) {
-			touche = _getch();
-
-
-			system("cls");
-			afficherMenu(ecran, touche, choix,option,tableau);
-		}
-
-
-	}
-	free(choix);
-	choix = NULL;
-	return 0;
-	*/
-
-
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0)  // -¤ Initialisation de l'affichage et audio en une fois ¤-
-    {
-        printf("Erreur d'initialisation de SDL : %s\n", SDL_GetError());
-        return 1;
-    }
-
-    SDL_Window* window = SDL_CreateWindow(
-        "LaureenBros",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        SCREEN_WIDTH,          // -¤ Largeur ¤-
-        SCREEN_HEIGHT,         // -¤ Hauteur ¤-
-        SDL_WINDOW_SHOWN
-    );
-    if (!window) {
-        printf("Erreur de création de la fenêtre : %s\n", SDL_GetError());
-        SDL_Quit();
-        return 1;
-    }
-
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-        printf("Erreur de création du renderer : %s\n", SDL_GetError());
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
-    SDL_Surface* surface = SDL_LoadBMP("tiles.bmp");
-    if (!surface) {
-        printf("SDL_LoadBMP Error: %s\n", SDL_GetError());
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
-    if (!texture) {
-        printf("Erreur de création de la texture : %s\n", SDL_GetError());
-        SDL_FreeSurface(surface);
-        SDL_DestroyRenderer(renderer);
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
-    SDL_FreeSurface(surface);
-
-    int tex_width, tex_height;
-    SDL_QueryTexture(texture, NULL, NULL, &tex_width, &tex_height);
-    int tile_width = tex_width / NUMBER_OF_TILES;  // -¤ Largeur d'une tuile dans la texture ¤-
-
-    float camera_x = 0.0f;   // -¤ Position de la caméra en pixels ¤-
-    int map[MAP_HEIGHT][MAP_WIDTH];
-    generate_map(map);
-
-    Uint32 last_time = SDL_GetTicks();  // -¤ Pour delta_time ¤-
-
+// --- EVENEMENTS ---
+void handleEvents() {
     SDL_Event event;
-    int running = 1;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT)
+            running = false;
+        else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
+            running = false;
 
-    while (running) {
-        Uint32 current_time = SDL_GetTicks();
-        float delta_time = (current_time - last_time) / 1000.0f;
-        last_time = current_time;
-
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_QUIT)
-                running = 0;
-            else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)
-                running = 0;
-        }
-
-        const Uint8* keystate = SDL_GetKeyboardState(NULL);
-
-        // -¤ Gestion des touches ← → avec caméra fluide en pixels ¤-
-        if (keystate[SDL_SCANCODE_RIGHT]) {
-            camera_x += CAMERA_SPEED * delta_time;
-            float max_camera_x = (MAP_WIDTH - VIEW_WIDTH) * BLOCK_SIZE;
-            if (camera_x > max_camera_x)
-                camera_x = max_camera_x;
-        }
-        if (keystate[SDL_SCANCODE_LEFT]) {
-            camera_x -= CAMERA_SPEED * delta_time;
-            if (camera_x < 0)
-                camera_x = 0;
-        }
-
-        SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);  // -¤ Bleu ciel ¤-
-        SDL_RenderClear(renderer);
-
-        int first_tile = (int)(camera_x / BLOCK_SIZE);               // -¤ Tuile de départ ¤-
-        int offset_x = (int)(camera_x) % BLOCK_SIZE;                 // -¤ Décalage pixel ¤-
-
-        for (int row = 0; row < MAP_HEIGHT; row++) {
-            for (int col = 0; col <= VIEW_WIDTH; col++) {
-                int tile_col = first_tile + col;
-
-                if (tile_col >= 0 && tile_col < MAP_WIDTH) {
-                    int tile_index = map[row][tile_col];
-
-                    SDL_Rect src_rect = {
-                        .x = tile_index * tile_width,
-                        .y = 0,
-                        .w = tile_width,
-                        .h = tex_height
-                    };
-
-                    SDL_Rect dst_rect = {
-                        .x = col * BLOCK_SIZE - offset_x,
-                        .y = row * BLOCK_SIZE,
-                        .w = BLOCK_SIZE,
-                        .h = BLOCK_SIZE
-                    };
-
-                    SDL_RenderCopy(renderer, texture, &src_rect, &dst_rect);
-                }
+        if (event.type == SDL_KEYDOWN) {
+            if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP) && !player.isJumping) {
+                player.velY = player.jumpForce;
+                player.isJumping = true;
             }
         }
-
-        SDL_RenderPresent(renderer);
-        SDL_Delay(1000 / 60);  // -¤ Taux de rafraichissement ¤-
     }
 
-    // -¤ Libération des ressources ¤-
-    SDL_DestroyTexture(texture);
+    const Uint8* keys = SDL_GetKeyboardState(NULL);
+    player.velX = 0;
+    if (keys[SDL_SCANCODE_LEFT]) {
+        player.velX = -3;
+        player.facingRight = false;
+    }
+    if (keys[SDL_SCANCODE_RIGHT]) {
+        player.velX = 3;
+        player.facingRight = true;
+    }
+}
+
+// --- UPDATE ---
+void update(float deltaTime) {
+    // Gravité
+    if (player.isJumping)
+        player.velY += player.gravity;
+
+    player.x += player.velX;
+    player.y += player.velY;
+
+    // Collision sol (ligne Y + 64 pixels)
+    int tileX = (int)(player.x + 16) / BLOCK_SIZE;
+    int tileY = (int)(player.y + 63) / BLOCK_SIZE;
+    if (tileY < MAP_HEIGHT && tileX < MAP_WIDTH && map[tileY][tileX] == 1) {
+        player.y = tileY * BLOCK_SIZE - 64;
+        player.velY = 0;
+        player.isJumping = false;
+    }
+
+    // Animation
+    if (player.velX != 0 || player.velY != 0) {
+        player.animationTimer++;
+        if (player.animationTimer >= ANIMATION_SPEED) {
+            player.animationTimer = 0;
+            player.currentFrame = (player.currentFrame + 1) % 3;
+        }
+    }
+    else {
+        player.currentFrame = 3; // Frame statique
+    }
+
+    // Caméra suit le joueur (centrée)
+    cameraX = player.x - SCREEN_WIDTH / 2 + 16;
+    if (cameraX < 0) cameraX = 0;
+    float maxCameraX = (MAP_WIDTH - VIEW_WIDTH) * BLOCK_SIZE;
+    if (cameraX > maxCameraX) cameraX = maxCameraX;
+}
+
+// --- RENDER ---
+void render() {
+    SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
+    SDL_RenderClear(renderer);
+
+    int texW, texH;
+    SDL_QueryTexture(tileTexture, NULL, NULL, &texW, &texH);
+    int tileW = texW / NUMBER_OF_TILES;
+
+    int firstTile = (int)(cameraX / BLOCK_SIZE);
+    int offsetX = (int)(cameraX) % BLOCK_SIZE;
+
+    for (int row = 0; row < MAP_HEIGHT; row++) {
+        for (int col = 0; col <= VIEW_WIDTH; col++) {
+            int mapCol = firstTile + col;
+            if (mapCol < MAP_WIDTH) {
+                int tileIndex = map[row][mapCol];
+                SDL_Rect src = { tileIndex * tileW, 0, tileW, texH };
+                SDL_Rect dst = { col * BLOCK_SIZE - offsetX, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
+                SDL_RenderCopy(renderer, tileTexture, &src, &dst);
+            }
+        }
+    }
+
+    // Mario sprite
+    SDL_Rect frames[] = {
+        {3, 43, 17, 26}, {22, 43, 17, 26}, {42, 43, 16, 26}, {62, 43, 17, 26}
+    };
+    SDL_Rect src = frames[player.currentFrame];
+    SDL_Rect dst = { (int)(player.x - cameraX), (int)player.y, 32, 64 };
+
+    SDL_RendererFlip flip = player.facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+    SDL_RenderCopyEx(renderer, player.texture, &src, &dst, 0, NULL, flip);
+
+    SDL_RenderPresent(renderer);
+}
+
+// --- CLEANUP ---
+void cleanup() {
+    SDL_DestroyTexture(playerTexture);
+    SDL_DestroyTexture(tileTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
-    return 0;
 }
 
+// --- MAIN ---
+int main(int argc, char* argv[]) {
+    if (!initialize()) return -1;
+    generate_map(map);
 
-//dsqjfdn
+    Uint32 lastTime = SDL_GetTicks();
 
+    while (running) {
+        Uint32 current = SDL_GetTicks();
+        float delta = (current - lastTime) / 1000.0f;
+        lastTime = current;
 
+        handleEvents();
+        update(delta);
+        render();
+        SDL_Delay(16); // ~60 FPS
+    }
 
-//mettre des while(valeur= ...)  ca va dans un menu
-
-
-
-
-
-
-
-
-
-
+    cleanup();
+    return 0;
+}
