@@ -29,6 +29,10 @@ typedef struct {
     float gravity;       // Force de gravité
     float jumpForce;     // Puissance du saut
     bool facingRight; // verifie le sens du perso
+    int idleTimer;       // Timer pour l'animation d'attente
+    bool isIdleAnimating; // Si on est en train de faire l'animation d'attente
+    bool lookAlternate;
+    bool wasMoving;
 } Sprite;
 
 SDL_Window* window = NULL;
@@ -80,9 +84,13 @@ bool initialize() {
     player.animationTimer = 0;
     player.currentFrame = 0;
     player.isJumping = false;
-    player.gravity = 0.5f;    // Valeur de gravité (ajustable)
-    player.jumpForce = -10.0f; // Valeur négative car en SDL, y augmente vers le bas
+    player.gravity = 0.4f;    // Valeur de gravité (ajustable)
+    player.jumpForce = -12.0f; // Valeur négative car en SDL, y augmente vers le bas
     player.facingRight = true;
+    player.idleTimer = 0;
+    player.isIdleAnimating = false;
+    player.lookAlternate = false;
+    player.wasMoving = false;
     return true;
 }
 void handleEvents() {
@@ -92,7 +100,6 @@ void handleEvents() {
             running = false;
         }
 
-        // Détection du saut
         if (event.type == SDL_KEYDOWN) {
             if ((event.key.keysym.sym == SDLK_SPACE ||
                 event.key.keysym.sym == SDLK_UP ||
@@ -100,58 +107,25 @@ void handleEvents() {
                 !player.isJumping) {
                 player.velY = player.jumpForce;
                 player.isJumping = true;
+                player.wasMoving = (player.velX != 0); // Enregistre si on bougeait avant de sauter
             }
         }
     }
 
-    // Gestion des déplacements gauche/droite
     const Uint8* keystates = SDL_GetKeyboardState(NULL);
-    player.velX = 0; // On ne réinitialise que velX
+    player.velX = 0;
 
     if (keystates[SDL_SCANCODE_LEFT] || keystates[SDL_SCANCODE_A]) {
         player.velX = -3;
-        player.facingRight = false; // Regarde à gauche
+        player.facingRight = false;
     }
     if (keystates[SDL_SCANCODE_RIGHT] || keystates[SDL_SCANCODE_D]) {
         player.velX = 3;
-        player.facingRight = true; // Regarde à droite
+        player.facingRight = true;
     }
 }
 
-
-
 void update() {
-    // Mise à jour position
-    player.x += player.velX;
-    player.y += player.velY;
-
-    // Collisions avec les bords
-    if (player.x < 0) player.x = 0;
-    if (player.y < 0) player.y = 0;
-    if (player.x > SCREEN_WIDTH / 2 - 32) player.x = SCREEN_WIDTH / 2 - 32;
-    if (player.y > SCREEN_HEIGHT - 64) player.y = SCREEN_HEIGHT - 64;
-
-    // Animation seulement si le perso bouge
-    if (player.velX != 0 || player.velY != 0) {
-        // Réinitialiser à la frame 0 si on était sur la frame statique (3)
-        if (player.currentFrame == 3) {
-            player.currentFrame = 0;
-        }
-
-        player.animationTimer++;
-        if (player.animationTimer >= ANIMATION_SPEED) {
-            player.animationTimer = 0;
-            if (player.currentFrame < 2) {
-                player.currentFrame++;
-            }
-            else if (player.currentFrame == 2) {
-                player.currentFrame = 0;
-            }
-        }
-    }
-    else {
-        player.currentFrame = 3;  // Frame statique quand immobile
-    }
     // Appliquer la gravité seulement si en train de sauter
     if (player.isJumping) {
         player.velY += player.gravity;
@@ -161,63 +135,131 @@ void update() {
     player.x += player.velX;
     player.y += player.velY;
 
-    // Gestion du sol (empêche de tomber hors écran)
+    // Collisions avec les bords
+    if (player.x < 0) player.x = 0;
+    if (player.y < 0) player.y = 0;
+    if (player.x > SCREEN_WIDTH / 2 - 32) player.x = SCREEN_WIDTH / 2 - 32;
     if (player.y > SCREEN_HEIGHT - 64) {
         player.y = SCREEN_HEIGHT - 64;
         player.velY = 0;
-        player.isJumping = false; // On a atterri
+        player.isJumping = false;
+        player.wasMoving = false;
     }
 
+    // Gestion de l'animation
+    if (player.isJumping) {
+        // Animation de saut uniquement
+        player.idleTimer = 0;
+        player.isIdleAnimating = false;
+
+        // Détermine la frame de saut en fonction de la vitesse Y et de l'orientation
+        if (player.velY < 0) { // Monter
+            player.currentFrame = 8; // Frame de saut vers le haut
+        }
+        else { // Descendre
+            player.currentFrame = 9; // Frame de saut vers le bas
+        }
+    }
+    else if (player.velX != 0) {
+        // Animation de course seulement si au sol
+        player.wasMoving = true;
+        player.idleTimer = 0;
+        player.isIdleAnimating = false;
+
+        player.animationTimer++;
+        if (player.animationTimer >= ANIMATION_SPEED) {
+            player.animationTimer = 0;
+            player.currentFrame = (player.currentFrame + 1) % 3; // Cycle entre 0, 1, 2
+        }
+    }
+    else {
+        // Le joueur est immobile
+        player.idleTimer++;
+
+        // Après 3 secondes (180 frames)
+        if (player.idleTimer > 180) {
+            player.isIdleAnimating = true;
+
+            player.animationTimer++;
+            if (player.animationTimer >= ANIMATION_SPEED * 3) {
+                player.animationTimer = 0;
+
+                if (player.currentFrame == 3) player.currentFrame = 4;
+                else if (player.currentFrame == 4) player.currentFrame = 5;
+                else if (player.currentFrame == 5) player.currentFrame = 6;
+                else if (player.currentFrame == 6) {
+                    player.currentFrame = 7;
+                    player.lookAlternate = true;
+                }
+                else if (player.currentFrame == 7) {
+                    player.currentFrame = 4;
+                    player.lookAlternate = false;
+                }
+            }
+        }
+        else {
+            player.currentFrame = 3; // Frame statique normale
+        }
+    }
 }
 
 void render() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
 
-    // Définition des rectangles source pour chaque frame
-    SDL_Rect frame0 = { 3, 43, 17, 26 };   // Première frame cours 
-    SDL_Rect frame1 = { 22, 43, 17, 26 };  // Deuxième frame cours
-    SDL_Rect frame2 = { 42,43,16,26 };// frame 3 cours
-    SDL_Rect frame3 = { 3,246,16,26 };
-    // Sélection du rectangle source selon currentFrame
+    // Définition des rectangles source
+    SDL_Rect frame0 = { 3, 43, 17, 26 };   // debout
+    SDL_Rect frame1 = { 22, 43, 17, 26 };  // Course frame 1
+    SDL_Rect frame2 = { 42, 43, 16, 26 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 246, 16, 26 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 130, 17, 26 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 130, 17, 26 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 42, 130, 16, 26 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 72, 14, 26 };   // Saut haut
+    SDL_Rect frame9 = { 22, 72, 14, 26 };  // Saut bas
+
     SDL_Rect srcRect;
-    if (player.currentFrame == 0) {
-        srcRect = frame0;
-    }
-    else if (player.currentFrame == 1) {
-        srcRect = frame1;
-    }
-    else if (player.currentFrame == 2) { // currentFrame == 2
-        srcRect = frame2;
-    }
-    else if (player.currentFrame == 3) { // currentFrame == 2
-        srcRect = frame3;
+    switch (player.currentFrame) {
+    case 0: srcRect = frame0; break;
+    case 1: srcRect = frame1; break;
+    case 2: srcRect = frame2; break;
+    case 3: srcRect = frame3; break;
+    case 4: srcRect = frame4; break;
+    case 5: srcRect = frame5; break;
+    case 6: srcRect = frame6; break;
+    case 8: srcRect = frame8; break;
+    case 9: srcRect = frame9; break;
+    default: srcRect = frame3; break;
     }
 
-    // Rectangle destination (taille affichée à l'écran)
     SDL_Rect dstRect = { (int)player.x, (int)player.y, 32, 64 };
 
-    // Détermination du flip en fonction de la vitesse horizontale
+    // Gestion du flip
     SDL_RendererFlip flip = SDL_FLIP_NONE;
-    if (player.velX < 0) {
-        flip = SDL_FLIP_HORIZONTAL; // Inverse si va à gauche
+
+    // Pendant le saut, on garde la dernière orientation
+    if (player.isJumping) {
+        if (!player.facingRight) {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
     }
-    // Si velX == 0, conserve le dernier flip
+    else {
+        // Sinon, on suit la direction actuelle
+        if ((player.velX < 0) ||
+            (player.currentFrame == 7) ||
+            (!player.facingRight && (player.currentFrame == 5 || player.currentFrame == 6))) {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
+    }
 
-    // Rendu avec flip horizontal si nécessaire
-    SDL_RenderCopyEx(
-        renderer,               // Le renderer
-        playerTexture,          // La texture
-        &srcRect,              // Rectangle source (frame)
-        &dstRect,              // Rectangle destination
-        0.0,                   // Angle de rotation (0 = pas de rotation)
-        NULL,                   // Centre de rotation (NULL = centre de la texture)
-        flip                   // Flip horizontal ou aucun
-    );
+    // Pour la frame 7 (regarde à gauche), on utilise frame5 mais flipée
+    if (player.currentFrame == 7) {
+        srcRect = frame5;
+    }
 
+    SDL_RenderCopyEx(renderer, playerTexture, &srcRect, &dstRect, 0.0, NULL, flip);
     SDL_RenderPresent(renderer);
 }
-
 void cleanup() {
     SDL_DestroyTexture(playerTexture);
     SDL_DestroyRenderer(renderer);
