@@ -102,7 +102,7 @@ void handleEvents() {
         if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
             running = false;
         if (event.type == SDL_KEYDOWN) {
-            if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP) && !player.isJumping) {
+            if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_z) && !player.isJumping) {
                 player.velY = player.jumpForce;
                 player.isJumping = true;
                 player.wasMoving = (player.velX != 0);
