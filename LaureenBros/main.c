@@ -128,8 +128,12 @@ void update() {
     float newY = player.y + player.velY;
 
     // Horizontale collision
-    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) player.x = newX;
-    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) player.x = newX;
+    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
+        player.x = newX;
+    }
+    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
+        player.x = newX;
+    }
 
     // Gravité
     player.velY += player.gravity;
@@ -153,32 +157,57 @@ void update() {
 
     // Animation
     if (player.isJumping) {
-        player.currentFrame = (player.velY < 0) ? 8 : 9;
+        // Animation de saut uniquement
+        player.idleTimer = 0;
+        player.isIdleAnimating = false;
+
+        // Détermine la frame de saut en fonction de la vitesse Y et de l'orientation
+        if (player.velY < 0) { // Monter
+            player.currentFrame = 8; // Frame de saut vers le haut
+        }
+        else { // Descendre
+            player.currentFrame = 9; // Frame de saut vers le bas
+        }
     }
     else if (player.velX != 0) {
+        // Animation de course seulement si au sol
         player.wasMoving = true;
         player.idleTimer = 0;
+        player.isIdleAnimating = false;
+
         player.animationTimer++;
         if (player.animationTimer >= ANIMATION_SPEED) {
             player.animationTimer = 0;
-            player.currentFrame = (player.currentFrame + 1) % 3;
+            player.currentFrame = (player.currentFrame + 1) % 3; // Cycle entre 0, 1, 2
         }
     }
     else {
+        // Le joueur est immobile
         player.idleTimer++;
+
+        // Après 3 secondes (180 frames)
         if (player.idleTimer > 180) {
+            player.isIdleAnimating = true;
+
             player.animationTimer++;
             if (player.animationTimer >= ANIMATION_SPEED * 3) {
                 player.animationTimer = 0;
+
                 if (player.currentFrame == 3) player.currentFrame = 4;
                 else if (player.currentFrame == 4) player.currentFrame = 5;
                 else if (player.currentFrame == 5) player.currentFrame = 6;
-                else if (player.currentFrame == 6) player.currentFrame = 7;
-                else player.currentFrame = 4;
+                else if (player.currentFrame == 6) {
+                    player.currentFrame = 7;
+                    player.lookAlternate = true;
+                }
+                else if (player.currentFrame == 7) {
+                    player.currentFrame = 4;
+                    player.lookAlternate = false;
+                }
             }
         }
         else {
-            player.currentFrame = 3;
+            player.currentFrame = 3; // Frame statique normale
         }
     }
 
