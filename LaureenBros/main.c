@@ -18,14 +18,13 @@
 
 int main(int argc, char* argv[]) {
 
-int main() {
 	
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		fprintf(stderr, "Erreur SDL_mixer : %s\n", Mix_GetError());
 		return 1;
 	}
 
-	Mix_Music* musique = Mix_LoadMUS("C:\\Users\\Arthur PAILLE\\Desktop\\JUNIA\\CIR\\PROG_C\\Projet Mario\\Projet\\LaureenBros\\SDL2\\sons\\Super Mario Bros (NES) Music - Overworld Theme.mp3");
+	Mix_Music* musique = Mix_LoadMUS("music/noCopr.mp3");
 	if (!musique) {
 		fprintf(stderr, "Erreur chargement musique : %s\n", Mix_GetError());
 		return 1;
