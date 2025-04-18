@@ -45,18 +45,18 @@ bool initialize() {
 
     window = SDL_CreateWindow("Mario Fusion", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-    if (!window) return false;
+    if (!window) printf("Erreur window");
 
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) return false;
+    if (!renderer) printf("Erreur render");
 
-    SDL_Surface* tileSurface = SDL_LoadBMP("tiles.bmp");
-    if (!tileSurface) return false;
+    SDL_Surface* tileSurface = SDL_LoadBMP("bmp/tiles.bmp");
+    if (!tileSurface) return printf("Erreur surface tile");
     tileTexture = SDL_CreateTextureFromSurface(renderer, tileSurface);
     SDL_FreeSurface(tileSurface);
 
     SDL_Surface* marioSurface = IMG_Load("png/mario.png");
-    if (!marioSurface) return false;
+    if (!marioSurface) return printf("Erreur surface mario");
     SDL_SetColorKey(marioSurface, SDL_TRUE, SDL_MapRGB(marioSurface->format, 0, 197, 10));
     playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
     SDL_FreeSurface(marioSurface);
