@@ -34,14 +34,16 @@ void contourEcran(Ecran* ecran) {
 	for (int i = 0; i < ecran->hauteur; i++) {
 		for (int j = 0; j < ecran->largeur; j++) {
 			if ((i == 0 || i == hauteur)) {
+				gotoxy(j, i);
 				printf("%c", c);
 			}
 			else if (j == 0 || j == largeur) {
+				gotoxy(j, i);
 				printf("%c", c);
 			}
-			else {
-				printf(" ");
-			}
+		}
+		if (i == hauteur) {
+			break;
 		}
 		printf("\n");
 	}

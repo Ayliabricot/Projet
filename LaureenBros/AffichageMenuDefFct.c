@@ -4,11 +4,18 @@
 #include "ecran.h"
 #include "placementTexte.h"
 #include "affichageMenu.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdbool.h>
 
 
 
-void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40],Partie** tableau) {
+void afficherMenu(Ecran* ecran, int touche, int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
+	SetConsoleOutputCP(GetOEMCP());
+	SetConsoleCP(GetOEMCP());
+
 	contourEcran(ecran);
+
 	SetConsoleOutputCP(1252);
 	SetConsoleCP(1252);
 
@@ -19,27 +26,27 @@ void afficherMenu(Ecran* ecran, int touche, int* choix, char option[6][40],Parti
 		definirChoix(touche, choix);
 	}
 	else if (touche == 13) {
-		lancer_ecran(choix,option,tableau);
+		lancer_ecran(choix,option,tableau,nbParties,argc,argv);
 	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
-		afficherTexte(a, 1, "*");
+		afficherTexte(a, 2, "*");
 
 	}
-	afficherTexte(ecran->largeur / 2 - 29 / 2, 3, "*****  LAUREEN   BROS  *****");
+	afficherTexte(ecran->largeur / 2 - 29 / 2, 4, "*****  LAUREEN   BROS  *****");
 	
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {
-		afficherTexte(a, 5, "*");
+		afficherTexte(a, 6, "*");
 	}
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < 5; i++) {
 		if (*choix == i) {
-			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
+			afficherTexteHighlight(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i +1, option[i]);
 			
 		}
 		else {
-			afficherTexte(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i, option[i]);
+			afficherTexte(ecran->largeur / 2 - strlen(option[i]) / 2, ecran->hauteur / 3 + 2 * i + 1, option[i]);
 		
 		}
 	}
@@ -60,43 +67,28 @@ void definirChoix(int touche, int* choix) {
 		*choix = *choix - 1;
 	}
 	else if (touche == 122 && *choix == 0) {
-		*choix = 5;
+		*choix = 4;
 	}
-	else if (touche == 115 && *choix != 5) {
+	else if (touche == 115 && *choix != 4) {
 		*choix = *choix + 1;
 	}
-	else if (touche == 115 && *choix == 5) {
+	else if (touche == 115 && *choix == 4) {
 		*choix = 0;
 	}
 }
 
-/*
-main pour affciher le menu
-
-Ecran* ecran = definirEcran();
-int touche = 0;
-int* choix = malloc(sizeof(int));
-if (choix == NULL) {
-	printf("Erreur d'allocation mémoire\n");
-	return 1;
+void cacherCurseur(void) {
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = FALSE;
+	SetConsoleCursorInfo(consoleHandle, &info);
 }
-*choix = 2;
 
-
-afficherMenu(ecran, touche, choix);
-
-while (1) {
-	if (_kbhit()) {
-		touche = _getch();
-
-
-		system("cls");
-		afficherMenu(ecran, touche, choix);
-	}
-
-
+void afficherCurseur(void) {
+	HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_CURSOR_INFO info;
+	info.dwSize = 100;
+	info.bVisible = TRUE;
+	SetConsoleCursorInfo(consoleHandle, &info);
 }
-free(choix);
-return 0;
-
-*/
