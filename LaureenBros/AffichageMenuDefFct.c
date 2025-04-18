@@ -4,6 +4,9 @@
 #include "ecran.h"
 #include "placementTexte.h"
 #include "affichageMenu.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdbool.h>
 
 
 

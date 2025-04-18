@@ -10,6 +10,9 @@
 #include "quitterJeu.h"
 #include "gererParties.h"
 #include "openClose.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <stdbool.h>
 
 
 void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {

@@ -8,35 +8,8 @@
 #include <time.h>
 #include "jeu.h"
 
-#include <SDL.h>
-#include <SDL_image.h>
-#include <stdbool.h>
-#include <stdio.h>
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
-#define BLOCK_SIZE 80
-#define NUMBER_OF_TILES 8
-#define MAP_WIDTH 19
-#define MAP_HEIGHT 9
-#define VIEW_WIDTH 16
-#define ANIMATION_SPEED 10
 
-typedef struct {
-    float x, y;
-    float velX, velY;
-    SDL_Texture* texture;
-    int animationTimer;
-    int currentFrame;
-    bool isJumping;
-    float gravity;
-    float jumpForce;
-    bool facingRight;
-    int idleTimer;
-    bool isIdleAnimating;
-    bool lookAlternate;
-    bool wasMoving;
-} Sprite;
 
 SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
