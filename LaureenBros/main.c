@@ -254,15 +254,15 @@ void render() {
     }
 
     // Définition des rectangles source
-    SDL_Rect frame0 = { 3, 43, 17, 26 };   // debout
-    SDL_Rect frame1 = { 22, 43, 17, 26 };  // Course frame 1
-    SDL_Rect frame2 = { 42, 43, 16, 26 };  // Course frame 2
-    SDL_Rect frame3 = { 3, 246, 16, 26 };  // Course frame 3
-    SDL_Rect frame4 = { 3, 130, 17, 26 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 130, 17, 26 }; // Idle frame 2 (côté droit)
-    SDL_Rect frame6 = { 42, 130, 16, 26 }; // Idle frame 3 (dos)
-    SDL_Rect frame8 = { 3, 72, 14, 26 };   // Saut haut
-    SDL_Rect frame9 = { 22, 72, 14, 26 };  // Saut bas
+    SDL_Rect frame0 = { 3, 43, 17, 24 };   // debout
+    SDL_Rect frame1 = { 22, 43, 17, 24 };  // Course frame 1
+    SDL_Rect frame2 = { 42, 43, 16, 24 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 246, 16, 24 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 130, 17, 24 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 130, 17, 24 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 42, 130, 16, 24 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 72, 14, 24 };   // Saut haut
+    SDL_Rect frame9 = { 22, 72, 14, 24 };  // Saut bas
 
     SDL_Rect srcRect;
     switch (player.currentFrame) {
@@ -289,7 +289,7 @@ void render() {
         }
     }
     else {
-        if ((player.velX < 0) || (player.currentFrame == 7) || (!player.facingRight && (player.currentFrame == 5 || player.currentFrame == 6))) {
+        if ((player.velX < 0) || (player.currentFrame == 7)) {
             flip = SDL_FLIP_HORIZONTAL;
         }
     }
