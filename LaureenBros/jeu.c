@@ -299,7 +299,7 @@ void render() {
         }
     }
     else {
-        if ((player.velX < 0) || (player.currentFrame == 7) || (!player.facingRight && (player.currentFrame == 5 || player.currentFrame == 6))) {
+        if ((player.velX < 0) || (player.currentFrame == 7)) {
             flip = SDL_FLIP_HORIZONTAL;
         }
     }
