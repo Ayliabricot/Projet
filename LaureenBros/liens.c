@@ -14,18 +14,31 @@
 
 void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties) {
 	Ecran* ecran = definirEcran();
+	Ecran* nouveauEcran = definirEcran();
 	int touche = 0;
 	while (1) {
+
 		while (*choix == -1) {
 			touche = 0;
 			*choix = 0;
+
+			SetConsoleOutputCP(GetOEMCP());
+			SetConsoleCP(GetOEMCP());
+			
+			contourEcran(ecran);
+			SetConsoleOutputCP(1252);
+			SetConsoleCP(1252);
 			afficherMenu(ecran, touche, choix,option,tableau,nbParties);
 			while (1) {
 				if (_kbhit()) {
+					tailleEcran(nouveauEcran);
+					if (nouveauEcran->hauteur != ecran->hauteur || nouveauEcran->largeur != ecran->largeur) {
+						system("cls");
+						contourEcran(ecran);
+					}
 					touche = _getch();
 
 
-					system("cls");
 					afficherMenu(ecran, touche, choix, option,tableau,nbParties);
 				}
 			}
@@ -39,7 +52,8 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			Ecran* ecran = definirEcran();
 			tableau[*nbParties]=nouvelle_partie();
 			demanderPseudo(ecran, tableau[*nbParties]);
-			
+			cacherCurseur();
+
 			system("cls");
 			ecran = definirEcran();
 			*choix = choisirDifficulteContain(ecran, tableau[*nbParties]);

@@ -52,15 +52,15 @@ void demanderPseudo(Ecran* ecran, Partie* partie) {
 	afficherTexte(ecran->largeur / 2 - 32 / 2, ecran->hauteur / 4, "Veuillez saisir votre pseudo :");
 
 
-
+	afficherTexte(ecran->largeur / 2-12, ecran->hauteur / 3 + 1, "-> ");
 	afficherTexte(ecran->largeur / 2 - 12, ecran->hauteur / 3 + 2, "-------------------------");
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3, " /)/)");
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3 + 1, "( -.-)");
-
-	afficherTexte(ecran->largeur / 4, ecran->hauteur / 3 + 2, " o_(µ)(µ)");
+	
+	afficherTexte(ecran->largeur / 4+5, ecran->hauteur / 3, " (\\(\\");
+	afficherTexte(ecran->largeur / 4+5, ecran->hauteur / 3 + 1, " (='.')");
+	afficherTexte(ecran->largeur / 4+5, ecran->hauteur / 3 + 2, "o(_\")\")");
 	
 	char pseudo[50];
-	gotoxy(ecran->largeur / 2-11, ecran->hauteur / 3 + 1);
+	gotoxy(ecran->largeur / 2-9, ecran->hauteur / 3 + 1);
 	scanf_s("%s", &pseudo,sizeof(pseudo));
 
 	strcpy_s(partie->pseudo, 30, pseudo);
