@@ -32,13 +32,46 @@ int afficher_regles(Ecran* ecran) {
 
 		afficherTexte(ecran->largeur / 2 - 15 , ecran->hauteur - 5, "(Pressez une touche pour sortir)");
 	
-		SetConsoleOutputCP(GetOEMCP());
-		SetConsoleCP(GetOEMCP());
+		
 
-		while (continuer == 1) {
+		while (1) {
+			afficherTexte(ecran->largeur / 2 - 30, ecran->hauteur / 2 + 4, "( •.• )");
 			if (_kbhit()) {
-				int touche = getch();
-				continuer = 0;
+				int touche = _getch();
+				break;
+			}
+			Sleep(500);
+			if (_kbhit()) {
+				int touche = _getch();
+				break;
+			}
+			Sleep(500);
+			if (_kbhit()) {
+				int touche = _getch();
+				break;
+			}
+			Sleep(500);
+			if (_kbhit()) {
+				int touche = _getch();
+				break;
+			}
+			afficherTexte(ecran->largeur / 2 - 30, ecran->hauteur / 2 + 4, "( -.- )");
+			Sleep(100);
+			if (_kbhit()) {
+				int touche = _getch();
+				break;
+			}
+			afficherTexte(ecran->largeur / 2 - 30, ecran->hauteur / 2 + 4, "( •.• )");
+			Sleep(200);
+			if (_kbhit()) {
+				int touche = _getch();
+				break;
+			}
+			afficherTexte(ecran->largeur / 2 - 30, ecran->hauteur / 2 + 4, "( -.- )");
+			Sleep(100);
+			if (_kbhit()) {
+				int touche = _getch();
+				break;
 			}
 		}
 	

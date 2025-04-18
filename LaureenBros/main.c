@@ -10,18 +10,15 @@
 #include "quitterJeu.h"
 #include "gererParties.h"
 #include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL_image.h>
+#include <stdbool.h>
 
 
-
-int main() {
-
-	
-
+int main(int argc, char* argv[]) {
 
 	Partie** tableau = creerTableau();
 
-	char option[5][40] = { "1. Règles du jeu","2. Nouvelle partie","3. Continuer partie","4. Accéder au tableau des scores","5. Quitter le jeu" };
+	char option[5][40] = { " 1. Règles du jeu "," 2. Nouvelle partie "," 3. Continuer partie "," 4. Accéder au tableau des scores "," 5. Quitter le jeu " };
 
 	Ecran* ecran = definirEcran();
 	int touche = 0;
@@ -33,21 +30,9 @@ int main() {
 	}
 	cacherCurseur();
 	*nbParties = 0;
-	*choix = 0;
+	*choix = -1;
 
-	afficherMenu(ecran, touche, choix,option,tableau,nbParties);
-
-	while (1) {
-		if (_kbhit()) {
-			touche = _getch();
-
-
-			system("cls");
-			afficherMenu(ecran, touche, choix,option,tableau,nbParties);
-		}
-
-
-	}
+	lancer_ecran(choix, option, tableau, nbParties,argc,argv);
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);
@@ -60,7 +45,6 @@ int main() {
 
 	afficherCurseur();
 	return 0;
-
 }
 
 
