@@ -11,7 +11,7 @@
 #include "gererParties.h"
 
 
-int main() {
+int main(int argc, char* argv[]) {
 
 	Partie** tableau = creerTableau();
 
@@ -29,7 +29,7 @@ int main() {
 	*nbParties = 0;
 	*choix = -1;
 
-	lancer_ecran(choix, option, tableau, nbParties);
+	lancer_ecran(choix, option, tableau, nbParties,argc,argv);
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);

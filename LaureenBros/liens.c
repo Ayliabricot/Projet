@@ -12,7 +12,7 @@
 #include "openClose.h"
 
 
-void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties) {
+void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
 	Ecran* ecran = definirEcran();
 	Ecran* nouveauEcran = definirEcran();
 	int touche = 0;
@@ -28,7 +28,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			contourEcran(ecran);
 			SetConsoleOutputCP(1252);
 			SetConsoleCP(1252);
-			afficherMenu(ecran, touche, choix,option,tableau,nbParties);
+			afficherMenu(ecran, touche, choix,option,tableau,nbParties,argc,argv);
 			while (1) {
 				if (_kbhit()) {
 					tailleEcran(nouveauEcran);
@@ -38,8 +38,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 					}
 					touche = _getch();
 
-
-					afficherMenu(ecran, touche, choix, option,tableau,nbParties);
+					afficherMenu(ecran, touche, choix, option,tableau,nbParties, argc, argv);
 				}
 			}
 		}
@@ -70,7 +69,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 		}
 		while (*choix == 5) {
 			
-		   ouvrirConsoleSDL();
+		   lancerJeu(argc,argv);
 		   *choix = -1;
 		  
 		}
