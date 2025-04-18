@@ -100,3 +100,5 @@ free(choix);
 return 0;
 
 */
+
+/* lier le menu au jeu SDL,  reorganiser les fonction SDL */
