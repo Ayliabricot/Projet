@@ -265,16 +265,34 @@ void render() {
     SDL_Rect dstRect = { (int)(player.x - camera_x), (int)player.y, 32, 64 };
     SDL_RendererFlip flip = SDL_FLIP_NONE;
 
-    // Flip logique
+    // Jumping flip logic
     if (player.isJumping) {
         if (!player.facingRight) {
             flip = SDL_FLIP_HORIZONTAL;
         }
     }
-    else {
-        if ((player.velX < 0) || (player.currentFrame == 7)) {
+    // Idle animation flip logic
+    else if (player.isIdleAnimating) {
+        // Frame 5 is looking right, so flip it if facing left
+        if (player.currentFrame == 5 && !player.facingRight) {
             flip = SDL_FLIP_HORIZONTAL;
         }
+        // Frame 7 should look left, so flip it if facing right
+        else if (player.currentFrame == 7 && player.facingRight) {
+            flip = SDL_FLIP_HORIZONTAL;
+        }
+        // For other frames that should show the same regardless of direction
+        else if (player.currentFrame != 5 && player.currentFrame != 7) {
+            // No flip needed for front/back views
+        }
+    }
+    // Running flip logic
+    else if (player.velX < 0) {
+        flip = SDL_FLIP_HORIZONTAL;
+    }
+    // Standing still but facing left
+    else if (!player.facingRight) {
+        flip = SDL_FLIP_HORIZONTAL;
     }
 
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
