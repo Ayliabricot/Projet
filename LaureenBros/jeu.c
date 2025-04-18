@@ -237,15 +237,15 @@ void render() {
     }
 
     // Définition des rectangles source
-    SDL_Rect frame0 = { 3, 43, 17, 26 };   // debout
-    SDL_Rect frame1 = { 22, 43, 17, 26 };  // Course frame 1
-    SDL_Rect frame2 = { 42, 43, 16, 26 };  // Course frame 2
-    SDL_Rect frame3 = { 3, 246, 16, 26 };  // Course frame 3
-    SDL_Rect frame4 = { 3, 130, 17, 26 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 130, 17, 26 }; // Idle frame 2 (côté droit)
-    SDL_Rect frame6 = { 42, 130, 16, 26 }; // Idle frame 3 (dos)
-    SDL_Rect frame8 = { 3, 72, 14, 26 };   // Saut haut
-    SDL_Rect frame9 = { 22, 72, 14, 26 };  // Saut bas
+    SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
+    SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
+    SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 248, 17, 22 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 132, 17, 22 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
+    SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
 
     SDL_Rect srcRect;
     switch (player.currentFrame) {
@@ -290,10 +290,6 @@ void render() {
     else if (player.velX < 0) {
         flip = SDL_FLIP_HORIZONTAL;
     }
-    // Standing still but facing left
-    else if (!player.facingRight) {
-        flip = SDL_FLIP_HORIZONTAL;
-    }
 
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
     SDL_RenderPresent(renderer);
@@ -325,7 +321,7 @@ int lancerJeu(int argc, char* argv[]) {
         handleEvents();
         update();
         render();
-        SDL_Delay(16);
+        SDL_Delay(16); //60fps
     }
 
     cleanup();
