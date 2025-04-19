@@ -213,10 +213,7 @@ void update() {
     if (player.x > max_player_x) player.x = max_player_x;
 }
 
-void render() {
-    SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
-    SDL_RenderClear(renderer);
-
+void renderMap() {
     int tile_width, tile_height;
     SDL_QueryTexture(tileTexture, NULL, NULL, &tile_width, &tile_height);
     tile_width /= NUMBER_OF_TILES;
@@ -235,7 +232,9 @@ void render() {
             }
         }
     }
+}
 
+void renderMario() {
     // Définition des rectangles source
     SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
     SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
@@ -281,10 +280,6 @@ void render() {
         else if (player.currentFrame == 7 && player.facingRight) {
             flip = SDL_FLIP_HORIZONTAL;
         }
-        // For other frames that should show the same regardless of direction
-        else if (player.currentFrame != 5 && player.currentFrame != 7) {
-            // No flip needed for front/back views
-        }
     }
     // Running flip logic
     else if (player.velX < 0) {
@@ -292,9 +287,19 @@ void render() {
     }
 
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
-    SDL_RenderPresent(renderer);
 }
 
+void render(int* choixPerso) {
+    SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
+    SDL_RenderClear(renderer);
+
+    renderMap();
+   
+    renderMario(); 
+    
+
+    SDL_RenderPresent(renderer);
+}
 
 void cleanup() {
     SDL_DestroyTexture(tileTexture);
@@ -320,7 +325,7 @@ int lancerJeu(int argc, char* argv[]) {
 
         handleEvents();
         update();
-        render();
+        render(0);
         SDL_Delay(16); //60fps
     }
 
