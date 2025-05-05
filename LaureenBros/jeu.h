@@ -11,11 +11,11 @@
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
-#define BLOCK_SIZE 60
+#define BLOCK_SIZE 80
 #define NUMBER_OF_TILES 8
-#define MAP_WIDTH 50
-#define MAP_HEIGHT 12
-#define VIEW_WIDTH 1280/60
+#define MAP_WIDTH 19
+#define MAP_HEIGHT 9
+#define VIEW_WIDTH 16
 #define ANIMATION_SPEED 10
 
 
@@ -62,7 +62,9 @@ bool is_solid_tile(float x, float y);
 bool initialize();
 void handleEvents();
 void update();
-void render();
+void renderMario();
+void renderMap();
+void render(int* choixPerso);
 void cleanup();
 int lancerJeu(int argc, char* argv[]);
 
