@@ -75,7 +75,6 @@ bool initialize() {
     player.lookAlternate = false;
     player.wasMoving = false;
 
-    generate_map(map);
     return true;
 }
 
