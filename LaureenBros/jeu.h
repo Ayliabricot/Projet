@@ -62,7 +62,9 @@ bool is_solid_tile(float x, float y);
 bool initialize();
 void handleEvents();
 void update();
-void render();
+void renderMario();
+void renderMap();
+void render(int* choixPerso);
 void cleanup();
 int lancerJeu(int argc, char* argv[]);
 

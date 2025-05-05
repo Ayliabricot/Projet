@@ -10,11 +10,29 @@
 #include "quitterJeu.h"
 #include "gererParties.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <SDL_image.h>
 #include <stdbool.h>
 
 
 int main(int argc, char* argv[]) {
+
+	
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		fprintf(stderr, "Erreur SDL_mixer : %s\n", Mix_GetError());
+		return 1;
+	}
+
+	Mix_Music* musique = Mix_LoadMUS("music/noCopr.mp3");
+	if (!musique) {
+		fprintf(stderr, "Erreur chargement musique : %s\n", Mix_GetError());
+		return 1;
+	}
+
+	Mix_PlayMusic(musique, -1);
+	
+
 
 	Partie** tableau = creerTableau();
 
@@ -44,15 +62,14 @@ int main(int argc, char* argv[]) {
 	choix = NULL;
 
 	afficherCurseur();
+	Mix_FreeMusic(musique);
+	Mix_CloseAudio();
 	return 0;
 }
 
 
 
 
-
-
-//mettre des while(valeur= ...)  ca va dans un menu
 
 
 
