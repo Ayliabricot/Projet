@@ -62,7 +62,7 @@ bool initialize() {
     SDL_FreeSurface(marioSurface);
 
     player.x = 100;
-    player.y = SCREEN_HEIGHT - 240;
+    player.y = SCREEN_HEIGHT - 480;
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 0;
