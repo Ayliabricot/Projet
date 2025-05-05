@@ -201,7 +201,7 @@ void update() {
         player.isJumping = false;
     }
 
-    float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
+    float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2; //erreur???
     if (target_camera_x > camera_lock_x) camera_lock_x = target_camera_x;
 
     float max_camera_x = (MAP_WIDTH * BLOCK_SIZE) - SCREEN_WIDTH;
