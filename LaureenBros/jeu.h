@@ -13,7 +13,7 @@
 #define SCREEN_HEIGHT 720
 #define BLOCK_SIZE 60
 #define NUMBER_OF_TILES 8
-#define MAP_WIDTH 56
+#define MAP_WIDTH 224
 #define MAP_HEIGHT 12
 #define VIEW_WIDTH 22
 #define ANIMATION_SPEED 10
@@ -57,7 +57,6 @@ extern float camera_lock_x;
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 
 
-void generate_map(int map[MAP_HEIGHT][MAP_WIDTH]);
 bool is_solid_tile(float x, float y);
 bool initialize();
 void handleEvents();
@@ -69,9 +68,13 @@ void cleanup();
 int lancerJeu(int argc, char* argv[]);
 
 
+
+
+/*
 void genererPersonnage(Personnage* personnage, Ecran* ecran);
 void genererEnnemi(Ennemi* ennemi, Ecran* ecran);
 void deplacementEnnemi(Ennemi* ennemi);
+*/
 
 
 int lancerJeu(int argc, char* argv[]);
