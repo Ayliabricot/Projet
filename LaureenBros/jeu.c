@@ -24,14 +24,15 @@ int map[MAP_HEIGHT][MAP_WIDTH];
 void generate_map(int map[MAP_HEIGHT][MAP_WIDTH]) {
     for (int row = 0; row < MAP_HEIGHT; row++) {
         for (int col = 0; col < MAP_WIDTH; col++) {
-            map[row][col] = (row >= 6) ? 1 : 0;
+            map[row][col] = (row >= 9) ? 1 : 0;
         }
     }
-    map[6][5] = 2; map[6][6] = 3;
-    map[7][5] = 2; map[7][6] = 3;
-    map[8][5] = 2; map[8][6] = 3;
-    map[5][5] = 4; map[5][6] = 5;
-    map[4][8] = 6; map[4][9] = 7;
+    map[9][5] = 2; map[9][6] = 3;
+    map[10][5] = 2; map[10][6] = 3;
+    map[11][5] = 2; map[11][6] = 3;
+    map[8][5] = 4; map[8][6] = 5;
+    map[6][8] = 6; map[6][9] = 7;
+    map[5][11] = 6; map[5][12] = 6;
 }
 
 bool is_solid_tile(float x, float y) {
@@ -50,7 +51,7 @@ bool initialize() {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) printf("Erreur render");
 
-    SDL_Surface* tileSurface = SDL_LoadBMP("bmp/tiles.bmp");
+    SDL_Surface* tileSurface = IMG_Load("png/textures.png");
     if (!tileSurface) return printf("Erreur surface tile");
     tileTexture = SDL_CreateTextureFromSurface(renderer, tileSurface);
     SDL_FreeSurface(tileSurface);
@@ -62,7 +63,7 @@ bool initialize() {
     SDL_FreeSurface(marioSurface);
 
     player.x = 100;
-    player.y = SCREEN_HEIGHT - 240;
+    player.y = SCREEN_HEIGHT - 480;
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 0;
@@ -226,9 +227,21 @@ void renderMap() {
             int tile_col = first_tile + col;
             if (tile_col >= 0 && tile_col < MAP_WIDTH) {
                 int tile_index = map[row][tile_col];
-                SDL_Rect src = { tile_index * tile_width, 0, tile_width, tile_height };
-                SDL_Rect dst = { col * BLOCK_SIZE - offset_x, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
-                SDL_RenderCopy(renderer, tileTexture, &src, &dst);
+                if (row >= 9) {
+                    SDL_Rect src = { 1 * tile_width, 0, tile_width, tile_height };
+                    SDL_Rect dst = { col * BLOCK_SIZE - offset_x, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
+                    SDL_RenderCopy(renderer, tileTexture, &src, &dst);
+                    if (tile_index == 2 || tile_index == 3) {
+                        SDL_Rect src = { tile_index * tile_width, 0, tile_width, tile_height };
+                        SDL_Rect dst = { col * BLOCK_SIZE - offset_x, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
+                        SDL_RenderCopy(renderer, tileTexture, &src, &dst);
+                    }
+                }
+                else {
+                    SDL_Rect src = { tile_index * tile_width, 0, tile_width, tile_height };
+                    SDL_Rect dst = { col * BLOCK_SIZE - offset_x, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
+                    SDL_RenderCopy(renderer, tileTexture, &src, &dst);
+                }
             }
         }
     }
