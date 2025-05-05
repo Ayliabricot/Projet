@@ -69,13 +69,9 @@ void cleanup();
 int lancerJeu(int argc, char* argv[]);
 
 
-
-
-
 void genererPersonnage(Personnage* personnage, Ecran* ecran);
 void genererEnnemi(Ennemi* ennemi, Ecran* ecran);
 void deplacementEnnemi(Ennemi* ennemi);
-
 
 
 int lancerJeu(int argc, char* argv[]);
