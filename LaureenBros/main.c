@@ -1,4 +1,4 @@
-ï»¿#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
@@ -18,7 +18,7 @@
 
 int main(int argc, char* argv[]) {
 
-
+	
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
 		fprintf(stderr, "Erreur SDL_mixer : %s\n", Mix_GetError());
 		return 1;
@@ -31,26 +31,26 @@ int main(int argc, char* argv[]) {
 	}
 
 	Mix_PlayMusic(musique, -1);
-
+	
 
 
 	Partie** tableau = creerTableau();
 
-	char option[5][40] = { " 1. Rï¿½gles du jeu "," 2. Nouvelle partie "," 3. Continuer partie "," 4. Accï¿½der au tableau des scores "," 5. Quitter le jeu " };
+	char option[5][40] = { " 1. Règles du jeu "," 2. Nouvelle partie "," 3. Continuer partie "," 4. Accéder au tableau des scores "," 5. Quitter le jeu " };
 
 	Ecran* ecran = definirEcran();
 	int touche = 0;
 	int* nbParties = malloc(sizeof(int));
 	int* choix = malloc(sizeof(int));
-	if (choix == NULL || nbParties == NULL) {
-		printf("Erreur d'allocation mï¿½moire\n");
+	if (choix == NULL || nbParties==NULL) {
+		printf("Erreur d'allocation mémoire\n");
 		return 1;
 	}
 	cacherCurseur();
 	*nbParties = 0;
 	*choix = -1;
 
-	lancer_ecran(choix, option, tableau, nbParties, argc, argv);
+	lancer_ecran(choix, option, tableau, nbParties,argc,argv);
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);
@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
 	Mix_CloseAudio();
 	return 0;
 }
+
 
 
 

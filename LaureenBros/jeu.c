@@ -62,7 +62,7 @@ bool initialize() {
     SDL_FreeSurface(marioSurface);
 
     player.x = 100;
-    player.y = SCREEN_HEIGHT - 480;
+    player.y = SCREEN_HEIGHT - 240;
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 0;
@@ -201,7 +201,7 @@ void update() {
         player.isJumping = false;
     }
 
-    float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2; //erreur???
+    float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
     if (target_camera_x > camera_lock_x) camera_lock_x = target_camera_x;
 
     float max_camera_x = (MAP_WIDTH * BLOCK_SIZE) - SCREEN_WIDTH;
@@ -213,10 +213,7 @@ void update() {
     if (player.x > max_player_x) player.x = max_player_x;
 }
 
-void render() {
-    SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
-    SDL_RenderClear(renderer);
-
+void renderMap() {
     int tile_width, tile_height;
     SDL_QueryTexture(tileTexture, NULL, NULL, &tile_width, &tile_height);
     tile_width /= NUMBER_OF_TILES;
@@ -235,17 +232,19 @@ void render() {
             }
         }
     }
+}
 
+void renderMario() {
     // Définition des rectangles source
-    SDL_Rect frame0 = { 3, 43, 17, 26 };   // debout
-    SDL_Rect frame1 = { 22, 43, 17, 26 };  // Course frame 1
-    SDL_Rect frame2 = { 42, 43, 16, 26 };  // Course frame 2
-    SDL_Rect frame3 = { 3, 246, 16, 26 };  // Course frame 3
-    SDL_Rect frame4 = { 3, 130, 17, 26 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 130, 17, 26 }; // Idle frame 2 (côté droit)
-    SDL_Rect frame6 = { 42, 130, 16, 26 }; // Idle frame 3 (dos)
-    SDL_Rect frame8 = { 3, 72, 14, 26 };   // Saut haut
-    SDL_Rect frame9 = { 22, 72, 14, 26 };  // Saut bas
+    SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
+    SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
+    SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 248, 17, 22 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 132, 17, 22 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
+    SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
 
     SDL_Rect srcRect;
     switch (player.currentFrame) {
@@ -281,24 +280,26 @@ void render() {
         else if (player.currentFrame == 7 && player.facingRight) {
             flip = SDL_FLIP_HORIZONTAL;
         }
-        // For other frames that should show the same regardless of direction
-        else if (player.currentFrame != 5 && player.currentFrame != 7) {
-            // No flip needed for front/back views
-        }
     }
     // Running flip logic
     else if (player.velX < 0) {
         flip = SDL_FLIP_HORIZONTAL;
     }
-    // Standing still but facing left
-    else if (!player.facingRight) {
-        flip = SDL_FLIP_HORIZONTAL;
-    }
 
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
-    SDL_RenderPresent(renderer);
 }
 
+void render(int* choixPerso) {
+    SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
+    SDL_RenderClear(renderer);
+
+    renderMap();
+   
+    renderMario(); 
+    
+
+    SDL_RenderPresent(renderer);
+}
 
 void cleanup() {
     SDL_DestroyTexture(tileTexture);
@@ -324,8 +325,8 @@ int lancerJeu(int argc, char* argv[]) {
 
         handleEvents();
         update();
-        render();
-        SDL_Delay(16);
+        render(0);
+        SDL_Delay(16); //60fps
     }
 
     cleanup();
