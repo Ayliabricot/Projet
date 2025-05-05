@@ -332,3 +332,7 @@ int lancerJeu(int argc, char* argv[]) {
     cleanup();
     return 0;
 }
+
+void vieAffichage(int nb_vie) {
+
+}

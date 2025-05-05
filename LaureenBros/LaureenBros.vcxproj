@@ -135,7 +135,6 @@
     <ClInclude Include="ecran.h" />
     <ClInclude Include="gererParties.h" />
     <ClInclude Include="jeu.h" />
-    <ClInclude Include="openClose.h" />
     <ClInclude Include="quitterJeu.h" />
     <ClInclude Include="scores.h" />
   </ItemGroup>
@@ -155,7 +154,6 @@
     <ClCompile Include="ceQuiDoitEtreFree.c" />
     <ClCompile Include="regles.c" />
     <ClCompile Include="save.c" />
-    <ClCompile Include="openClose.c" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="lapin.txt" />
