@@ -13,7 +13,7 @@
 #define SCREEN_HEIGHT 720
 #define BLOCK_SIZE 60
 #define NUMBER_OF_TILES 8
-#define MAP_WIDTH 56
+#define MAP_WIDTH 224
 #define MAP_HEIGHT 12
 #define VIEW_WIDTH 22
 #define ANIMATION_SPEED 10
