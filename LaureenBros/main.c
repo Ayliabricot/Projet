@@ -14,6 +14,7 @@
 #include <SDL_mixer.h>
 #include <SDL_image.h>
 #include <stdbool.h>
+#include "jeu.h"
 
 
 int main(int argc, char* argv[]) {
@@ -32,7 +33,7 @@ int main(int argc, char* argv[]) {
 
 	Mix_PlayMusic(musique, -1);
 	
-
+	lancerJeu(argc, argv);
 
 	Partie** tableau = creerTableau();
 

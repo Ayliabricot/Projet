@@ -352,12 +352,56 @@ void renderHUD() {
     SDL_RenderCopy(renderer, hudTexture, &hudBgSrc, &hudBgRect);
 
     // 2. Afficher les vies (cœurs)
-    for (int i = 0; i < gameState->lives; i++) {
-        SDL_Rect lifeRect = { 10 + i * 30, 10, 25, 25 };
-        SDL_Rect lifeSrc = { 0, 0, 16, 16 };
-        SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
-    }
+    int MAX_LIVES = 3; // Nombre max de vies affichables
+    for (int i = 0; i < MAX_LIVES; i++) {
+      
+        if (i == 0) {
+            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828  , 10, 25, 25 };
+            if (i < gameState->lives) {
+                // Vie pleine
+                SDL_Rect lifeSrc = { 35, 14, 10, 15 };
+                SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+            }
+            else {
+                // Vie vide
+                SDL_Rect lifeSrc = { 36, 14, 10, 15 };
+                SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+            }
+        }
+        else if (i == 1) {
+            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 73, 10, 25, 25 };
+            if (i < gameState->lives) {
+                // Vie pleine
+                SDL_Rect lifeSrc = { 35, 14, 10, 15 };
+                SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+            }
+            else {
+                // Vie vide
+                SDL_Rect lifeSrc = { 36, 14, 10, 15 };
+                SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+            }
+        }
+        else if (i == 2) {
+            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 180, 10, 25, 25 };
+            if (i < gameState->lives) {
+                // Vie pleine
+                SDL_Rect lifeSrc = { 35, 14, 10, 15 };
+                SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+            }
+            else {
+                // Vie vide
+                SDL_Rect lifeSrc = { 36, 14, 10, 15 };
+                SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+            }
+        }
+    
 
+       
+
+
+        // Choisir entre vie pleine ou vide
+   
+    }
     // 3. Afficher les pièces
     SDL_Rect coinIconRect = { 200, 10, 20, 20 };
     SDL_Rect coinIconSrc = { 32, 0, 16, 16 };
