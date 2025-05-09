@@ -356,41 +356,41 @@ void renderHUD() {
     for (int i = 0; i < MAX_LIVES; i++) {
       
         if (i == 0) {
-            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828  , 10, 25, 25 };
+            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.825  , 10, 25, 25 };
             if (i < gameState->lives) {
                 // Vie pleine
-                SDL_Rect lifeSrc = { 35, 14, 10, 15 };
+                SDL_Rect lifeSrc = { 35, 14, 11, 15 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
             else {
                 // Vie vide
-                SDL_Rect lifeSrc = { 36, 14, 10, 15 };
+                SDL_Rect lifeSrc = { 36, 14, 11, 15 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
         else if (i == 1) {
-            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 73, 10, 25, 25 };
+            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 83, 10, 25, 25 };
             if (i < gameState->lives) {
                 // Vie pleine
-                SDL_Rect lifeSrc = { 35, 14, 10, 15 };
+                SDL_Rect lifeSrc = { 35, 14, 11, 15 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
             else {
                 // Vie vide
-                SDL_Rect lifeSrc = { 36, 14, 10, 15 };
+                SDL_Rect lifeSrc = { 36, 14, 11, 15 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
         else if (i == 2) {
-            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 180, 10, 25, 25 };
+            SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 173, 10, 25, 25 };
             if (i < gameState->lives) {
                 // Vie pleine
-                SDL_Rect lifeSrc = { 35, 14, 10, 15 };
+                SDL_Rect lifeSrc = { 35, 14, 11, 15 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
             else {
                 // Vie vide
-                SDL_Rect lifeSrc = { 36, 14, 10, 15 };
+                SDL_Rect lifeSrc = { 36, 14, 11, 15 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
