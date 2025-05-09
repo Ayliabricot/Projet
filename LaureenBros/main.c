@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
 
 	Mix_PlayMusic(musique, -1);
 	
-	lancerJeu(argc, argv);
+
 
 	Partie** tableau = creerTableau();
 
