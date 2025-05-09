@@ -73,7 +73,6 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			
 		   lancerJeu(argc,argv);
 		   *choix = -1;
-		  
 		}
 	}
 }
