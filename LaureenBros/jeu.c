@@ -250,15 +250,15 @@ void renderMap() {
 
 void renderMario() {
     // Définition des rectangles source
-    SDL_Rect frame0 = { 3, 45, 17, 20 };   // debout
-    SDL_Rect frame1 = { 22, 45, 17, 20 };  // Course frame 1
-    SDL_Rect frame2 = { 41, 45, 17, 20 };  // Course frame 2
-    SDL_Rect frame3 = { 3, 248, 17, 20 };  // Course frame 3
-    SDL_Rect frame4 = { 3, 132, 17, 20 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 132, 17, 20 }; // Idle frame 2 (côté droit)
-    SDL_Rect frame6 = { 41, 132, 17, 20 }; // Idle frame 3 (dos)
-    SDL_Rect frame8 = { 3, 74, 17, 20 };   // Saut haut
-    SDL_Rect frame9 = { 22, 74, 17, 20 };  // Saut bas
+    SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
+    SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
+    SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 248, 17, 22 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 132, 17, 22 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
+    SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
 
     SDL_Rect srcRect;
     switch (player.currentFrame) {
