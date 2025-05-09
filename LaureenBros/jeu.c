@@ -292,15 +292,15 @@ void renderMap() {
 
 void renderMario() {
     // Définition des rectangles source
-    SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
-    SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
-    SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
-    SDL_Rect frame3 = { 3, 248, 17, 22 };  // Course frame 3
-    SDL_Rect frame4 = { 3, 132, 17, 22 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (côté droit)
-    SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
-    SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
-    SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
+    SDL_Rect frame0 = { 3, 45, 17, 20 };   // debout
+    SDL_Rect frame1 = { 22, 45, 17, 20 };  // Course frame 1
+    SDL_Rect frame2 = { 41, 45, 17, 20 };  // Course frame 2
+    SDL_Rect frame3 = { 3, 248, 17, 20 };  // Course frame 3
+    SDL_Rect frame4 = { 3, 132, 17, 20 };  // Idle frame 1 (face)
+    SDL_Rect frame5 = { 22, 132, 17, 20 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame6 = { 41, 132, 17, 20 }; // Idle frame 3 (dos)
+    SDL_Rect frame8 = { 3, 74, 17, 20 };   // Saut haut
+    SDL_Rect frame9 = { 22, 74, 17, 20 };  // Saut bas
 
     SDL_Rect srcRect; // src rect c pour te dire où allez chercher dans la sheet
     switch (player.currentFrame) {
@@ -406,9 +406,9 @@ void renderHUD() {
    
     }
     // 3. Afficher les pièces
-    SDL_Rect coinIconRect = { 200, 10, 20, 20 };
-    SDL_Rect coinIconSrc = { 32, 0, 16, 16 };
-    SDL_RenderCopy(renderer, itemsTexture, &coinIconSrc, &coinIconRect);
+    //SDL_Rect coinIconRect = { 200, 10, 20, 20 };
+    //SDL_Rect coinIconSrc = { 32, 0, 16, 16 };
+    //SDL_RenderCopy(renderer, itemsTexture, &coinIconSrc, &coinIconRect);
 
     // 4. Afficher le nombre de pièces (avec SDL_ttf)
     char coinText[10];
@@ -417,15 +417,15 @@ void renderHUD() {
     SDL_Color white = { 255, 255, 255, 255 };
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, coinText, white);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = { 225, 10, textSurface->w, textSurface->h };
+    SDL_Rect textRect = { 200, 10, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
 
     // 5. Afficher le monde
-    SDL_Rect worldRect = { 300, 10, 40, 20 };
+ /*   SDL_Rect worldRect = { 300, 10, 40, 20 };
     SDL_Rect worldSrc = { 64, 0, 32, 16 };
-    SDL_RenderCopy(renderer, hudTexture, &worldSrc, &worldRect);
+    SDL_RenderCopy(renderer, hudTexture, &worldSrc, &worldRect);*/
 
     // 6. Afficher le numéro du monde
     char worldText[10];
@@ -440,11 +440,11 @@ void renderHUD() {
 
     // 7. Afficher le score (optionnel)
     char scoreText[20];
-    snprintf(scoreText, sizeof(scoreText), "Score: %d", gameState->score);
+    snprintf(scoreText, sizeof(scoreText), "%d", gameState->score);
 
     textSurface = TTF_RenderText_Solid(font, scoreText, white);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    textRect = (SDL_Rect){ SCREEN_WIDTH - 150, 10, textSurface->w, textSurface->h };
+    textRect = (SDL_Rect){ SCREEN_WIDTH *0.339, 13.5, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
