@@ -266,8 +266,8 @@ void renderMario() {
     case 1: srcRect = frame1; break;
     case 2: srcRect = frame2; break;
     case 3: srcRect = frame3; break;
-    case 4: srcRect = frame4; break;
-    case 5: srcRect = frame5; break;
+    case 4: srcRect = frame4; break;ujj
+ n    case 5: srcRect = frame5; break;
     case 6: srcRect = frame6; break;
     case 8: srcRect = frame8; break;
     case 9: srcRect = frame9; break;
