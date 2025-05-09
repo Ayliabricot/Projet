@@ -14,7 +14,6 @@ typedef struct {
 }Partie;
 
 Partie** creerTableau(void);
-void adapterMemoire(Partie** tableau, int nbParties);
 Partie* nouvelle_partie(void);
 void demanderPseudo(Ecran* ecran, Partie* partie);
 

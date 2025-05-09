@@ -55,7 +55,7 @@ int main(int argc, char* argv[]) {
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);
-		tableau[i] == NULL;
+		tableau[i] = NULL;
 	}
 	free(tableau);
 	tableau = NULL;
