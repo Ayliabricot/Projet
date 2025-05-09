@@ -9,7 +9,6 @@
 #include <time.h>
 #include "quitterJeu.h"
 #include "gererParties.h"
-#include "openClose.h"
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdbool.h>

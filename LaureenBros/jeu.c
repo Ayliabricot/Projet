@@ -15,11 +15,19 @@ SDL_Window* window = NULL;
 SDL_Renderer* renderer = NULL;
 SDL_Texture* tileTexture = NULL;
 SDL_Texture* playerTexture = NULL;
+SDL_Texture* hudTexture = NULL;
+SDL_Texture* itemsTexture = NULL;
+TTF_Font* font = NULL;
+SDL_Texture* textTexture = NULL;
+
+
 Sprite player;
 bool running = true;
 float camera_x = 0.0f;
 float camera_lock_x = 0.0f;
 int map[MAP_HEIGHT][MAP_WIDTH];
+
+GameState* gameState = NULL;
 
 void generate_map(int map[MAP_HEIGHT][MAP_WIDTH]) {
     for (int row = 0; row < MAP_HEIGHT; row++) {
@@ -61,6 +69,20 @@ bool initialize() {
     playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
     SDL_FreeSurface(marioSurface);
 
+
+    SDL_Surface* hudSurface = IMG_Load("sprite/hud.png");
+    if (!hudSurface) return printf("Erreur surface HUD");
+    hudTexture = SDL_CreateTextureFromSurface(renderer, hudSurface);
+    SDL_FreeSurface(hudSurface);
+
+    SDL_Surface* itemsSurface = IMG_Load("sprite/health.png");
+    if (!itemsSurface) return printf("Erreur surface items");
+    itemsTexture = SDL_CreateTextureFromSurface(renderer, itemsSurface);
+    SDL_FreeSurface(itemsSurface);  
+
+    TTF_Init();
+    font = TTF_OpenFont("Fonts/8514oem.fon", 24);
+
     player.x = 100;
     player.y = SCREEN_HEIGHT - 240;
     player.velX = player.velY = 0;
@@ -74,7 +96,13 @@ bool initialize() {
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
+    gameState = malloc(sizeof(GameState));
+    if (!gameState) return false;
 
+    gameState->lives = 3;
+    gameState->coins = 0;
+    gameState->world = 1;
+    gameState->score = 0;
     generate_map(map);
     return true;
 }
@@ -246,7 +274,7 @@ void renderMario() {
     SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
     SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
 
-    SDL_Rect srcRect;
+    SDL_Rect srcRect; // src rect c pour te dire où allez chercher dans la sheet
     switch (player.currentFrame) {
     case 0: srcRect = frame0; break;
     case 1: srcRect = frame1; break;
@@ -289,23 +317,90 @@ void renderMario() {
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
 }
 
+
+void renderHUD() {
+    if (!gameState || !renderer || !hudTexture || !itemsTexture) return;
+
+    // 1. Afficher le fond du HUD
+    SDL_Rect hudBgRect = { 0, 0, SCREEN_WIDTH, 50 };
+    SDL_Rect hudBgSrc = { 2, 176, 234, 18 };
+    SDL_RenderCopy(renderer, hudTexture, &hudBgSrc, &hudBgRect);
+
+    // 2. Afficher les vies (cœurs)
+    for (int i = 0; i < gameState->lives; i++) {
+        SDL_Rect lifeRect = { 10 + i * 30, 10, 25, 25 };
+        SDL_Rect lifeSrc = { 0, 0, 16, 16 };
+        SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+    }
+
+    // 3. Afficher les pièces
+    SDL_Rect coinIconRect = { 200, 10, 20, 20 };
+    SDL_Rect coinIconSrc = { 32, 0, 16, 16 };
+    SDL_RenderCopy(renderer, itemsTexture, &coinIconSrc, &coinIconRect);
+
+    // 4. Afficher le nombre de pièces (avec SDL_ttf)
+    char coinText[10];
+    snprintf(coinText, sizeof(coinText), "x%d", gameState->coins);
+
+    SDL_Color white = { 255, 255, 255, 255 };
+    SDL_Surface* textSurface = TTF_RenderText_Solid(font, coinText, white);
+    SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    SDL_Rect textRect = { 225, 10, textSurface->w, textSurface->h };
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+    // 5. Afficher le monde
+    SDL_Rect worldRect = { 300, 10, 40, 20 };
+    SDL_Rect worldSrc = { 64, 0, 32, 16 };
+    SDL_RenderCopy(renderer, hudTexture, &worldSrc, &worldRect);
+
+    // 6. Afficher le numéro du monde
+    char worldText[10];
+    snprintf(worldText, sizeof(worldText), "%d-1", gameState->world);
+
+    textSurface = TTF_RenderText_Solid(font, worldText, white);
+    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    textRect = (SDL_Rect){ 345, 10, textSurface->w, textSurface->h };
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
+    // 7. Afficher le score (optionnel)
+    char scoreText[20];
+    snprintf(scoreText, sizeof(scoreText), "Score: %d", gameState->score);
+
+    textSurface = TTF_RenderText_Solid(font, scoreText, white);
+    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    textRect = (SDL_Rect){ SCREEN_WIDTH - 150, 10, textSurface->w, textSurface->h };
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+}
+
+
 void render(int* choixPerso) {
     SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
     SDL_RenderClear(renderer);
 
     renderMap();
-   
-    renderMario(); 
-    
+    renderMario();
+    renderHUD(); 
 
     SDL_RenderPresent(renderer);
 }
+
 
 void cleanup() {
     SDL_DestroyTexture(tileTexture);
     SDL_DestroyTexture(playerTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    SDL_DestroyTexture(hudTexture);
+    SDL_DestroyTexture(itemsTexture);
+    TTF_CloseFont(font);
+    TTF_Quit();
+    free(gameState);
     SDL_Quit();
 }
 
@@ -333,6 +428,11 @@ int lancerJeu(int argc, char* argv[]) {
     return 0;
 }
 
-void vieAffichage(int nb_vie) {
 
-}
+
+
+
+
+
+
+

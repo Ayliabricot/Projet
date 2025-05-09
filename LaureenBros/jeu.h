@@ -5,6 +5,7 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -44,6 +45,16 @@ typedef struct {
     int x;
     int y;
 }Ennemi;
+
+
+typedef struct {
+    int lives;
+    int coins;
+    int world;
+    int score;
+} GameState;
+
+
 
 
 extern SDL_Window* window;
