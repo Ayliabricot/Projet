@@ -390,18 +390,10 @@ void renderHUD() {
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
-    
-
-       
-
-
         // Choisir entre vie pleine ou vide
    
     }
-    // 3. Afficher les pièces
-    //SDL_Rect coinIconRect = { 200, 10, 20, 20 };
-    //SDL_Rect coinIconSrc = { 32, 0, 16, 16 };
-    //SDL_RenderCopy(renderer, itemsTexture, &coinIconSrc, &coinIconRect);
+ 
 
     // 4. Afficher le nombre de pièces (avec SDL_ttf)
     char coinText[10];
@@ -415,10 +407,7 @@ void renderHUD() {
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
 
-    // 5. Afficher le monde
- /*   SDL_Rect worldRect = { 300, 10, 40, 20 };
-    SDL_Rect worldSrc = { 64, 0, 32, 16 };
-    SDL_RenderCopy(renderer, hudTexture, &worldSrc, &worldRect);*/
+
 
     // 6. Afficher le numéro du monde
     char worldText[10];
