@@ -15,7 +15,6 @@
 #define VIEW_WIDTH 44
 #define ANIMATION_SPEED 10
 #define SAVE_FILE "save.txt"  // Nouvelle constante pour le fichier de sauvegarde
-#define SAVE_VALUES 3   // Définir le nombre de valeurs à sauvegarder (joueur x, joueur y, camera_lock_x)
 
 typedef struct {
     float x, y;
