@@ -355,12 +355,12 @@ void renderHUD() {
             SDL_Rect lifeRect = { SCREEN_WIDTH * 0.825  , 10, 25, 25 };
             if (i < gameState->lives) {
                 // Vie pleine
-                SDL_Rect lifeSrc = { 35, 14, 11, 15 };
+                SDL_Rect lifeSrc = { 34, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
             else {
                 // Vie vide
-                SDL_Rect lifeSrc = { 36, 14, 11, 15 };
+                SDL_Rect lifeSrc = { 48, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
@@ -368,12 +368,12 @@ void renderHUD() {
             SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 83, 10, 25, 25 };
             if (i < gameState->lives) {
                 // Vie pleine
-                SDL_Rect lifeSrc = { 35, 14, 11, 15 };
+                SDL_Rect lifeSrc = { 34, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
             else {
                 // Vie vide
-                SDL_Rect lifeSrc = { 36, 14, 11, 15 };
+                SDL_Rect lifeSrc = { 48, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
@@ -381,12 +381,12 @@ void renderHUD() {
             SDL_Rect lifeRect = { SCREEN_WIDTH * 0.828 + 173, 10, 25, 25 };
             if (i < gameState->lives) {
                 // Vie pleine
-                SDL_Rect lifeSrc = { 35, 14, 11, 15 };
+                SDL_Rect lifeSrc = { 34, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
             else {
                 // Vie vide
-                SDL_Rect lifeSrc = { 36, 14, 11, 15 };
+                SDL_Rect lifeSrc = { 48, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
             }
         }
