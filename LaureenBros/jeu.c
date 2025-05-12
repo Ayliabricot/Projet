@@ -234,6 +234,7 @@ void update() {
         player.y = SCREEN_HEIGHT - 480;
         player.velY = 0;
         player.isJumping = false;
+        gameState->lives--;
     }
 
     float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
@@ -388,6 +389,7 @@ void renderHUD() {
                 // Vie vide
                 SDL_Rect lifeSrc = { 48, 13, 12, 16 };
                 SDL_RenderCopy(renderer, itemsTexture, &lifeSrc, &lifeRect);
+
             }
         }
         // Choisir entre vie pleine ou vide
