@@ -51,7 +51,9 @@ typedef struct {
     int lives;
     int coins;
     int world;
-    int score;
+    char save[50];
+    int stage;
+    int distance;
 } GameState;
 
 

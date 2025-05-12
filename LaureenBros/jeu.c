@@ -118,7 +118,10 @@ bool initialize() {
     gameState->lives = 3;
     gameState->coins = 0;
     gameState->world = 1;
-    gameState->score = 0;
+    gameState->stage = 1;
+    gameState->distance = 0;
+    strcpy_s(gameState->save, 50, "test save");
+    
     generate_map(map);
     return true;
 }
@@ -153,7 +156,7 @@ void handleEvents() {
 void update() {
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
-
+    gameState->distance = player.x/80;
     // Horizontale collision
     if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
         player.x = newX;
@@ -412,12 +415,12 @@ void renderHUD() {
 
     // 4. Afficher le nombre de pièces (avec SDL_ttf)
     char coinText[10];
-    snprintf(coinText, sizeof(coinText), "x%d", gameState->coins);
+    snprintf(coinText, sizeof(coinText), "%d", gameState->coins);
 
     SDL_Color white = { 255, 255, 255, 255 };
     SDL_Surface* textSurface = TTF_RenderText_Solid(font, coinText, white);
     SDL_Texture* textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    SDL_Rect textRect = { 200, 10, textSurface->w, textSurface->h };
+    SDL_Rect textRect = { SCREEN_WIDTH * 0.467, 13.5, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -429,25 +432,37 @@ void renderHUD() {
 
     // 6. Afficher le numéro du monde
     char worldText[10];
-    snprintf(worldText, sizeof(worldText), "%d-1", gameState->world);
+    snprintf(worldText, sizeof(worldText), "%d-%d", gameState->world, gameState->stage);
 
     textSurface = TTF_RenderText_Solid(font, worldText, white);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    textRect = (SDL_Rect){ 345, 10, textSurface->w, textSurface->h };
+    textRect = (SDL_Rect){ SCREEN_WIDTH*0.168, 13.5, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
 
-    // 7. Afficher le score (optionnel)
-    char scoreText[20];
-    snprintf(scoreText, sizeof(scoreText), "%d", gameState->score);
+    // 7. Afficher le nom de sauvegarde
+    char saveName[50];
+    snprintf(saveName, sizeof(saveName), "%s", gameState->save);
 
-    textSurface = TTF_RenderText_Solid(font, scoreText, white);
+    textSurface = TTF_RenderText_Solid(font, saveName, white);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    textRect = (SDL_Rect){ SCREEN_WIDTH *0.339, 13.5, textSurface->w, textSurface->h };
+    textRect = (SDL_Rect){SCREEN_WIDTH*0.54, 13.5, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
+
+
+    char distance[10];
+    snprintf(distance, sizeof(distance), "%dm", gameState->distance);
+
+    textSurface = TTF_RenderText_Solid(font, distance, white);
+    textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    textRect = (SDL_Rect){ SCREEN_WIDTH * 0.341, 13.5, textSurface->w, textSurface->h };
+    SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
+    SDL_FreeSurface(textSurface);
+    SDL_DestroyTexture(textTexture);
+
 }
 
 
