@@ -89,6 +89,10 @@ bool initialize() {
 
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
+
+    // Charger la sauvegarde si elle existe
+    if (chargerPartieUNIQUE) loadGame();
+    // Initialisation des autres propriétés
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 5;
@@ -125,6 +129,14 @@ void handleEvents() {
                 player.isJumping = true;
                 player.wasMoving = (player.velX != 0);
             }
+            // Sauvegarde avec F5
+            else if (event.key.keysym.sym == SDLK_F5) {
+                saveGame();
+            }
+            // Chargement avec F9
+            else if (event.key.keysym.sym == SDLK_F9) {
+                loadGame();
+            }
         }
     }
 
@@ -141,6 +153,8 @@ void handleEvents() {
     }
 }
 
+// Modification de la fonction update pour corriger le problème de saut en glissant
+
 void update() {
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
@@ -151,6 +165,16 @@ void update() {
     }
     else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
         player.x = newX;
+    }
+
+    // Vérifie si le joueur est sur le sol avant d'appliquer la gravité
+    bool wasOnGround = !player.isJumping;
+    bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1);
+
+    // Si le joueur était au sol mais ne l'est plus (glisse d'un bloc), 
+    // considérer qu'il est en train de sauter/tomber
+    if (wasOnGround && !isOnGround) {
+        player.isJumping = true;
     }
 
     // Gravité
@@ -447,6 +471,48 @@ void renderHUD() {
 }
 
 
+// Sauvegarde la position du joueur et de la caméra dans un fichier texte
+void saveGame() {
+    FILE* file = fopen(SAVE_FILE, "w");
+    if (!file) {
+        printf("Erreur lors de l'ouverture du fichier de sauvegarde\n");
+        return;
+    }
+
+    // Écrire player.x, player.y et camera_lock_x au format texte
+    fprintf(file, "%.2f %.2f %.2f", player.x, player.y, camera_lock_x);
+    fclose(file);
+
+    printf("Jeu sauvegardé - Position: (%.2f, %.2f), Camera lock: %.2f\n", player.x, player.y, camera_lock_x);
+}
+
+// Charge la position du joueur et de la caméra depuis un fichier texte
+void loadGame() {
+    FILE* file = fopen(SAVE_FILE, "r");
+    if (!file) {
+        printf("Aucune sauvegarde trouvée, utilisation des valeurs par défaut\n");
+        return;
+    }
+
+    float x, y, camLock;
+    if (fscanf_s(file, "%f %f %f", &x, &y, &camLock) == 3) {
+        player.x = x;
+        player.y = y;
+        camera_lock_x = camLock;
+        camera_x = camera_lock_x;
+        printf("Jeu chargé - Position: (%.2f, %.2f), Camera lock: %.2f\n", player.x, player.y, camera_lock_x);
+
+        // Réinitialiser les vitesses et l'état de saut
+        player.velX = player.velY = 0;
+        player.isJumping = false;
+    }
+    else {
+        printf("Erreur lors de la lecture de la sauvegarde\n");
+    }
+
+    fclose(file);
+}
+
 void render(int* choixPerso) {
     SDL_SetRenderDrawColor(renderer, 100, 149, 237, 255);
     SDL_RenderClear(renderer);
@@ -493,5 +559,6 @@ int lancerJeu(int argc, char* argv[]) {
     }
 
     cleanup();
+	system("cls");
     return 0;
 }

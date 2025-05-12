@@ -13,11 +13,11 @@
 #include <SDL_image.h>
 #include <stdbool.h>
 
-
 void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
 	Ecran* ecran = definirEcran();
 	Ecran* nouveauEcran = definirEcran();
 	int touche = 0;
+	chargerPartieUNIQUE = 0;
 	while (1) {
 
 		while (*choix == -1) {
@@ -62,6 +62,15 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			system("cls");
 			lancerJeu(argc, argv);
 			*choix = -1;
+		}
+		while (*choix == 2) {
+			Ecran* ecran = definirEcran();
+			ecran = definirEcran();
+			chargerPartieUNIQUE = 1;
+			system("cls");
+			lancerJeu(argc, argv);
+			*choix = -1;
+			return;
 		}
 		while (*choix == 4) {
 			char opti[4] = "oui";

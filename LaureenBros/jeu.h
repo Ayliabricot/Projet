@@ -1,14 +1,11 @@
 #ifndef JEU
 #define JEU
 
-
-
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
 #include <stdbool.h>
 #include <stdio.h>
-
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
@@ -18,7 +15,7 @@
 #define MAP_HEIGHT 15
 #define VIEW_WIDTH 44
 #define ANIMATION_SPEED 10
-
+#define SAVE_FILE "save.txt"  // Nouvelle constante pour le fichier de sauvegarde
 
 typedef struct {
     float x, y;
@@ -39,13 +36,12 @@ typedef struct {
 typedef struct {
     int x;
     int y;
-}Personnage;
+} Personnage;
 
 typedef struct {
     int x;
     int y;
-}Ennemi;
-
+} Ennemi;
 
 typedef struct {
     int lives;
@@ -69,7 +65,6 @@ extern float camera_x;
 extern float camera_lock_x;
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 
-
 bool is_solid_tile(float x, float y);
 bool initialize();
 void handleEvents();
@@ -80,16 +75,8 @@ void render(int* choixPerso);
 void cleanup();
 int lancerJeu(int argc, char* argv[]);
 
-
-
-
-/*
-void genererPersonnage(Personnage* personnage, Ecran* ecran);
-void genererEnnemi(Ennemi* ennemi, Ecran* ecran);
-void deplacementEnnemi(Ennemi* ennemi);
-*/
-
-
-int lancerJeu(int argc, char* argv[]);
+// Nouvelles fonctions pour la sauvegarde
+void saveGame();
+void loadGame();
 
 #endif
