@@ -328,40 +328,46 @@ void renderMario() {
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
 }
 
-// Sauvegarde la position du joueur dans un fichier
+// Sauvegarde la position du joueur et de la caméra dans un fichier texte
 void saveGame() {
     FILE* file = fopen(SAVE_FILE, "w");
-    if (file == NULL) {
+    if (!file) {
         printf("Erreur lors de l'ouverture du fichier de sauvegarde\n");
         return;
     }
 
-    fprintf(file, "%.2f %.2f", player.x, player.y);
+    // Écrire player.x, player.y et camera_lock_x au format texte
+    fprintf(file, "%.2f %.2f %.2f", player.x, player.y, camera_lock_x);
     fclose(file);
 
-    printf("Jeu sauvegardé - Position: (%.2f, %.2f)\n", player.x, player.y);
+    printf("Jeu sauvegardé - Position: (%.2f, %.2f), Camera lock: %.2f\n", player.x, player.y, camera_lock_x);
 }
 
-// Charge la position du joueur depuis un fichier
+// Charge la position du joueur et de la caméra depuis un fichier texte
 void loadGame() {
     FILE* file = fopen(SAVE_FILE, "r");
-    if (file == NULL) {
+    if (!file) {
         printf("Aucune sauvegarde trouvée, utilisation des valeurs par défaut\n");
         return;
     }
 
-    if (fscanf_s(file, "%f %f", &player.x, &player.y) != 2) {
+    float x, y, camLock;
+    if (fscanf_s(file, "%f %f %f", &x, &y, &camLock) == 3) {
+        player.x = x;
+        player.y = y;
+        camera_lock_x = camLock;
+        camera_x = camera_lock_x;
+        printf("Jeu chargé - Position: (%.2f, %.2f), Camera lock: %.2f\n", player.x, player.y, camera_lock_x);
+
+        // Réinitialiser les vitesses et l'état de saut
+        player.velX = player.velY = 0;
+        player.isJumping = false;
+    }
+    else {
         printf("Erreur lors de la lecture de la sauvegarde\n");
-        fclose(file);
-        return;
     }
 
     fclose(file);
-    printf("Jeu chargé - Position: (%.2f, %.2f)\n", player.x, player.y);
-
-    // Réinitialiser certaines propriétés du joueur
-    player.velX = player.velY = 0;
-    player.isJumping = false;
 }
 
 void render(int* choixPerso) {
@@ -405,5 +411,6 @@ int lancerJeu(int argc, char* argv[]) {
     }
 
     cleanup();
+	system("cls");
     return 0;
 }
