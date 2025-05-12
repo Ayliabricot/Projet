@@ -45,19 +45,6 @@ int map[MAP_HEIGHT][MAP_WIDTH] = {
 
 GameState* gameState = NULL;
 
-void generate_map(int map[MAP_HEIGHT][MAP_WIDTH]) {
-    for (int row = 0; row < MAP_HEIGHT; row++) {
-        for (int col = 0; col < MAP_WIDTH; col++) {
-            map[row][col] = (row >= 6) ? 1 : 0;
-        }
-    }
-    map[6][5] = 2; map[6][6] = 3;
-    map[7][5] = 2; map[7][6] = 3;
-    map[8][5] = 2; map[8][6] = 3;
-    map[5][5] = 4; map[5][6] = 5;
-    map[4][8] = 6; map[4][9] = 7;
-}
-
 bool is_solid_tile(float x, float y) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
@@ -84,6 +71,7 @@ bool initialize() {
     SDL_SetColorKey(marioSurface, SDL_TRUE, SDL_MapRGB(marioSurface->format, 0, 197, 10));
     playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
     SDL_FreeSurface(marioSurface);
+
 
 
     SDL_Surface* hudSurface = IMG_Load("sprite/hud.png");
@@ -122,7 +110,7 @@ bool initialize() {
     gameState->distance = 0;
     strcpy_s(gameState->save, 50, "test save");
     
-    generate_map(map);
+    
     return true;
 }
 
@@ -260,6 +248,7 @@ void update() {
     if (player.x > max_player_x) player.x = max_player_x;
 }
 
+
 void renderMap() {
     int tile_width, tile_height;
     SDL_QueryTexture(tileTexture, NULL, NULL, &tile_width, &tile_height);
@@ -274,7 +263,7 @@ void renderMap() {
             if (tile_col >= 0 && tile_col < MAP_WIDTH) {
                 int tile_index = map[row][tile_col];
                 if (tile_index == 2 || tile_index == 3) {
-                    if (row>=10) {
+                    if (row >= 10) {
                         SDL_Rect src = { 1 * tile_width, 0, tile_width, tile_height };
                         SDL_Rect dst = { col * BLOCK_SIZE - offset_x, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
                         SDL_RenderCopy(renderer, tileTexture, &src, &dst);
@@ -292,6 +281,7 @@ void renderMap() {
         }
     }
 }
+
 
 void renderMario() {
     // Définition des rectangles source
