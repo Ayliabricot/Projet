@@ -60,6 +60,8 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			*choix = choisirDifficulteContain(ecran, tableau[*nbParties]);
 			*nbParties = *nbParties + 1;
 			system("cls");
+			lancerJeu(argc, argv);
+			*choix = -1;
 		}
 		while (*choix == 4) {
 			char opti[4] = "oui";
@@ -68,11 +70,6 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 				*choix = quitterJeuContain(ecran, opti);
 			}
 			system("cls");
-		}
-		while (*choix == 5) {
-			
-		   lancerJeu(argc,argv);
-		   *choix = -1;
 		}
 	}
 }
