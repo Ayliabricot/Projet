@@ -64,8 +64,14 @@ bool initialize() {
     playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
     SDL_FreeSurface(marioSurface);
 
+    // Position par défaut
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
+
+    // Charger la sauvegarde si elle existe
+    loadGame();
+
+    // Initialisation des autres propriétés
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 0;
@@ -91,6 +97,14 @@ void handleEvents() {
                 player.velY = player.jumpForce;
                 player.isJumping = true;
                 player.wasMoving = (player.velX != 0);
+            }
+            // Sauvegarde avec F5
+            else if (event.key.keysym.sym == SDLK_F5) {
+                saveGame();
+            }
+            // Chargement avec F9
+            else if (event.key.keysym.sym == SDLK_F9) {
+                loadGame();
             }
         }
     }
@@ -301,6 +315,42 @@ void renderMario() {
     }
 
     SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
+}
+
+// Sauvegarde la position du joueur dans un fichier
+void saveGame() {
+    FILE* file = fopen(SAVE_FILE, "w");
+    if (file == NULL) {
+        printf("Erreur lors de l'ouverture du fichier de sauvegarde\n");
+        return;
+    }
+
+    fprintf(file, "%.2f %.2f", player.x, player.y);
+    fclose(file);
+
+    printf("Jeu sauvegardé - Position: (%.2f, %.2f)\n", player.x, player.y);
+}
+
+// Charge la position du joueur depuis un fichier
+void loadGame() {
+    FILE* file = fopen(SAVE_FILE, "r");
+    if (file == NULL) {
+        printf("Aucune sauvegarde trouvée, utilisation des valeurs par défaut\n");
+        return;
+    }
+
+    if (fscanf_s(file, "%f %f", &player.x, &player.y) != 2) {
+        printf("Erreur lors de la lecture de la sauvegarde\n");
+        fclose(file);
+        return;
+    }
+
+    fclose(file);
+    printf("Jeu chargé - Position: (%.2f, %.2f)\n", player.x, player.y);
+
+    // Réinitialiser certaines propriétés du joueur
+    player.velX = player.velY = 0;
+    player.isJumping = false;
 }
 
 void render(int* choixPerso) {
