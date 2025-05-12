@@ -90,7 +90,7 @@ int choisirDifficulteContain(Ecran* ecran, Partie* partie) {
 			toucheDiff = _getch();
 			if (toucheDiff == 13) {
 				partie->difficulte = difficulte;
-				return 5;
+				return -1;
 			}
 			difficulte = choisirDifficulte(toucheDiff, difficulte);
 			affichageDifficulte(ecran, difficulte);
