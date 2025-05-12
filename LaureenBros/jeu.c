@@ -69,8 +69,7 @@ bool initialize() {
     player.y = SCREEN_HEIGHT - 480;
 
     // Charger la sauvegarde si elle existe
-    loadGame();
-
+    if (chargerPartieUNIQUE) loadGame();
     // Initialisation des autres propriétés
     player.velX = player.velY = 0;
     player.texture = playerTexture;
