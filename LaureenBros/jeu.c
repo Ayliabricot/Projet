@@ -121,6 +121,8 @@ void handleEvents() {
     }
 }
 
+// Modification de la fonction update pour corriger le problème de saut en glissant
+
 void update() {
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
@@ -131,6 +133,16 @@ void update() {
     }
     else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
         player.x = newX;
+    }
+
+    // Vérifie si le joueur est sur le sol avant d'appliquer la gravité
+    bool wasOnGround = !player.isJumping;
+    bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1);
+
+    // Si le joueur était au sol mais ne l'est plus (glisse d'un bloc), 
+    // considérer qu'il est en train de sauter/tomber
+    if (wasOnGround && !isOnGround) {
+        player.isJumping = true;
     }
 
     // Gravité
