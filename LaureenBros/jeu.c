@@ -195,11 +195,11 @@ void handleEvents() {
     player.velX = 0;
 
     if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]) {
-        player.velX = -3;
+        player.velX = -4;
         player.facingRight = false;
     }
     if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
-        player.velX = 3;
+        player.velX = 4;
         player.facingRight = true;
     }
 }
