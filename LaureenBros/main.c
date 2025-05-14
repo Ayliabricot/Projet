@@ -15,6 +15,7 @@
 #include <SDL_image.h>
 #include <stdbool.h>
 
+Partie* currentPartie = NULL;
 
 int main(int argc, char* argv[]) {
 

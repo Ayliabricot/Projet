@@ -11,7 +11,7 @@ typedef struct {
 	int vies;
 	int x;
 	int y;
-}Partie;
+} Partie;
 
 Partie** creerTableau(void);
 Partie* nouvelle_partie(void);

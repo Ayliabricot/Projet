@@ -13,6 +13,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <stdbool.h>
+#include "jeu.h"
 
 void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
 	Ecran* ecran = definirEcran();
@@ -54,6 +55,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			Ecran* ecran = definirEcran();
 			tableau[*nbParties]=nouvelle_partie();
 			demanderPseudo(ecran, tableau[*nbParties]);
+			currentPartie = tableau[*nbParties];
 			cacherCurseur();
 
 			system("cls");
