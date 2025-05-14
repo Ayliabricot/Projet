@@ -52,7 +52,7 @@ bool is_solid_tile(float x, float y) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
     return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
-        (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9);
+        (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9 && (map[row][col] != 10));
 }
 
 bool is_deadly_tile(float x, float y) {
@@ -237,7 +237,7 @@ void update() {
                 // Respawn 5 blocs avant la position actuelle
                 player.x -= 400;
                 player.y = SCREEN_HEIGHT-800;
-                camera_lock_x = 0.0f;
+                camera_lock_x -= 400;
                 camera_x = camera_lock_x;
                 player.currentFrame = 12;
             }
