@@ -1,4 +1,4 @@
-#include <stdio.h>
+ï»¿#include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
@@ -65,15 +65,22 @@ bool initialize() {
     playerTexture = SDL_CreateTextureFromSurface(renderer, marioSurface);
     SDL_FreeSurface(marioSurface);
 
-    // Position par défaut
+    // Position par dÃ©faut
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
     camera_x = 0.0f;
     camera_lock_x = 0.0f;
 
+    gameState->lives = 3;
+    gameState->coins = 0;
+    gameState->world = 1;
+    gameState->stage = 1;
+    gameState->distance = 0;
+    strcpy_s(gameState->save, 50, currentPartie->pseudo);
+
     // Charger la sauvegarde si elle existe
     if (chargerPartieUNIQUE) loadGame();
-    // Initialisation des autres propriétés
+    // Initialisation des autres propriÃ©tÃ©s
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 0;
@@ -141,7 +148,28 @@ void handleEvents() {
     }
 }
 
-// Modification de la fonction update pour corriger le problème de saut en glissant
+void collectPieces() {
+    if (!player.isDying && !player.isRespawning) {
+        // Calculate player's center position
+        float playerCenterX = player.x + 16;
+        float playerCenterY = player.y + 32;
+
+        // Convert position to map coordinates
+        int col = (int)(playerCenterX / BLOCK_SIZE);
+        int row = (int)(playerCenterY / BLOCK_SIZE);
+
+        // Check if the player is on a valid map tile
+        if (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) {
+            // Check if the tile is a piece (ID 10)
+            if (map[row][col] == 10) {
+                // Collect the piece
+                map[row][col] = 0; // Remove the piece from the map
+                gameState->coins++; // Increment the score
+                printf("Piece collected! Total coins: %d\n", gameState->coins);
+            }
+        }
+    }
+}
 
 void update() {
     float newX = player.x + player.velX;
@@ -155,17 +183,17 @@ void update() {
         player.x = newX;
     }
 
-    // Vérifie si le joueur est sur le sol avant d'appliquer la gravité
+    // VÃ©rifie si le joueur est sur le sol avant d'appliquer la gravitÃ©
     bool wasOnGround = !player.isJumping;
     bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1);
 
-    // Si le joueur était au sol mais ne l'est plus (glisse d'un bloc), 
-    // considérer qu'il est en train de sauter/tomber
+    // Si le joueur Ã©tait au sol mais ne l'est plus (glisse d'un bloc), 
+    // considÃ©rer qu'il est en train de sauter/tomber
     if (wasOnGround && !isOnGround) {
         player.isJumping = true;
     }
 
-    // Gravité
+    // GravitÃ©
     player.velY += player.gravity;
 
     // Verticale collision
@@ -191,7 +219,7 @@ void update() {
         player.idleTimer = 0;
         player.isIdleAnimating = false;
 
-        // Détermine la frame de saut en fonction de la vitesse Y et de l'orientation
+        // DÃ©termine la frame de saut en fonction de la vitesse Y et de l'orientation
         if (player.velY < 0) { // Monter
             player.currentFrame = 8; // Frame de saut vers le haut
         }
@@ -215,7 +243,7 @@ void update() {
         // Le joueur est immobile
         player.idleTimer++;
 
-        // Après 3 secondes (180 frames)
+        // AprÃ¨s 3 secondes (180 frames)
         if (player.idleTimer > 180) {
             player.isIdleAnimating = true;
 
@@ -333,13 +361,13 @@ void renderMap() {
 }
 
 void renderMario() {
-    // Définition des rectangles source
+    // DÃ©finition des rectangles source
     SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
     SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
     SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
     SDL_Rect frame3 = { 3, 248, 17, 22 };  // Course frame 3
     SDL_Rect frame4 = { 3, 132, 17, 22 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (côté droit)
+    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (cÃ´tÃ© droit)
     SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
     SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
     SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
@@ -355,7 +383,7 @@ void renderMario() {
     case 6: srcRect = frame6; break;
     case 8: srcRect = frame8; break;
     case 9: srcRect = frame9; break;
-    case 7: srcRect = frame5; break; // frame7 utilise frame5 flipée
+    case 7: srcRect = frame5; break; // frame7 utilise frame5 flipÃ©e
     default: srcRect = frame3; break;
     }
 
@@ -401,7 +429,7 @@ void saveGameWithPseudo(char* pseudo) {
     fprintf(file, "%.2f %.2f %.2f %d\n", player.x, player.y, camera_lock_x, currentPartie->score);
     fclose(file);
 
-    printf("Jeu sauvegardé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
+    printf("Jeu sauvegardÃ© pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
         pseudo, player.x, player.y, camera_lock_x, currentPartie->score);
 }
 
@@ -411,7 +439,7 @@ void loadGameWithPseudo(char* pseudo) {
 
     FILE* file = fopen(saveFilePath, "r");
     if (!file) {
-        printf("Aucune sauvegarde trouvée pour %s, utilisation des valeurs par défaut\n", pseudo);
+        printf("Aucune sauvegarde trouvï¿½e pour %s, utilisation des valeurs par dï¿½faut\n", pseudo);
         return;
     }
 
@@ -423,7 +451,7 @@ void loadGameWithPseudo(char* pseudo) {
         camera_lock_x = camLock;
         camera_x = camera_lock_x;
         currentPartie->score = score; // Load the score
-        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
+        printf("Jeu chargÃ© pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
             pseudo, player.x, player.y, camera_lock_x, currentPartie->score);
     }
     else {
