@@ -31,6 +31,12 @@ typedef struct {
     bool isIdleAnimating;
     bool lookAlternate;
     bool wasMoving;
+    bool isDying;         // True pendant l'animation de mort
+    bool isRespawning;    // True pendant l'animation de réapparition
+    float respawnTimer;   // Timer pour l'animation de réapparition
+    float swingOffset;    // Décalage oscillation parachute
+    float parachuteYOffset;
+    float deathTimer;
 } Sprite;
 
 typedef struct {

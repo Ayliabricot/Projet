@@ -19,6 +19,7 @@ SDL_Texture* hudTexture = NULL;
 SDL_Texture* itemsTexture = NULL;
 TTF_Font* font = NULL;
 SDL_Texture* textTexture = NULL;
+SDL_Texture* deathTexture = NULL;
 
 
 Sprite player;
@@ -48,7 +49,15 @@ GameState* gameState = NULL;
 bool is_solid_tile(float x, float y) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
-    return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9);
+    return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
+        (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9);
+}
+
+bool is_deadly_tile(float x, float y) {
+    int col = (int)(x / BLOCK_SIZE);
+    int row = (int)(y / BLOCK_SIZE);
+    return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
+        (map[row][col] == 8 || map[row][col] == 9);
 }
 
 bool initialize() {
@@ -87,6 +96,23 @@ bool initialize() {
     TTF_Init();
     font = TTF_OpenFont("Fonts/8514oem.fon", 24);
 
+    SDL_Surface* deathSurface = IMG_Load("png/mario_anim.png");
+    if (!deathSurface) {
+        printf("Erreur surface mario death: %s\n", IMG_GetError());
+        return false;
+    }
+    SDL_SetColorKey(deathSurface, SDL_TRUE, SDL_MapRGB(deathSurface->format, 39, 122, 209));
+    deathTexture = SDL_CreateTextureFromSurface(renderer, deathSurface);
+    SDL_FreeSurface(deathSurface);
+
+    // Initialisation des nouveaux états
+    player.isDying = false;
+    player.isRespawning = false;
+    player.respawnTimer = 0.0f;
+    player.swingOffset = 0.0f;
+    player.parachuteYOffset = 0.0f;
+    player.deathTimer = 0.0f;
+   
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
 
@@ -113,7 +139,7 @@ bool initialize() {
     gameState->stage = 1;
     gameState->distance = 0;
     strcpy_s(gameState->save, 50, "test save");
-    
+
     
     return true;
 }
@@ -156,6 +182,65 @@ void handleEvents() {
 // Modification de la fonction update pour corriger le problème de saut en glissant
 
 void update() {
+
+    if (!player.isDying && !player.isRespawning &&
+        (is_deadly_tile(player.x + 16, player.y + 32) ||
+            is_deadly_tile(player.x + 32, player.y + 32))) {
+        player.isDying = true;
+        player.deathTimer = 0.0f;
+        return;
+    }
+
+    if (player.isDying) {
+        player.deathTimer += 0.05f;
+
+        // Death animation sequence
+        if (player.deathTimer < 1.0f) {
+            player.currentFrame = 10; // First death frame
+        }
+        else if (player.deathTimer < 2.0f) {
+            player.currentFrame = 11; // Second death frame
+            player.y += 5.0f; // Make Mario fall
+        }
+        else {
+            // After death animation completes
+            gameState->lives--;
+            if (gameState->lives > 0) {
+                player.isDying = false;
+                player.isRespawning = true;
+                player.respawnTimer = 0.0f;
+                // Respawn 5 blocs avant la position actuelle
+                player.x = fmax(camera_x - 5 * BLOCK_SIZE, 100); // Ne pas revenir avant le début
+                player.y = -100; // Position de départ en hauteur
+                player.currentFrame = 12;
+            }
+            else {
+                // Game Over
+                running = false;
+            }
+        }
+        return; // Skip other updates while dying
+    }
+
+    if (player.isRespawning) {
+        player.respawnTimer += 0.05f;
+
+        // Parachute animation
+        player.swingOffset = sin(player.respawnTimer * 2.0f) * 20.0f;// premier vitesse 2 eme amplitude
+        player.parachuteYOffset = sin(player.respawnTimer * 5.0f) * 2.0f;
+
+        // Move player down
+        player.y += 2.0f;
+
+        // Check if respawn is complete
+        if (player.y >= SCREEN_HEIGHT - 430) {
+            player.isRespawning = false;
+            player.currentFrame = 3;
+            player.swingOffset = 0.0f;
+            player.parachuteYOffset = 0.0f;
+        }
+        return; // Skip other updates while respawning
+    }
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
     gameState->distance = player.x/80;
@@ -252,14 +337,7 @@ void update() {
             player.currentFrame = 3; // Frame statique normale
         }
     }
-   
-    if (player.y > SCREEN_HEIGHT) {
-        player.x = 100;
-        player.y = SCREEN_HEIGHT - 480;
-        player.velY = 0;
-        player.isJumping = false;
-        gameState->lives--;
-    }
+    
 
     float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
     if (target_camera_x > camera_lock_x) camera_lock_x = target_camera_x;
@@ -272,6 +350,7 @@ void update() {
     float max_player_x = (MAP_WIDTH * BLOCK_SIZE) - 32;
     if (player.x > max_player_x) player.x = max_player_x;
 }
+
 
 
 void renderMap() {
@@ -310,6 +389,18 @@ void renderMap() {
 
 void renderMario() {
     // Définition des rectangles source
+
+
+   
+    SDL_Texture* currentTexture = player.texture; // Utilise la texture courante du joueur
+
+    // Pour les animations de mort/respawn, utiliser deathTexture
+    if (player.isDying || player.isRespawning) {
+        currentTexture = deathTexture;
+    }
+    if (player.currentFrame >= 10 && player.currentFrame <= 12) {
+        currentTexture = deathTexture;
+    }
     SDL_Rect frame0 = { 3, 45, 17, 22 };   // debout
     SDL_Rect frame1 = { 22, 45, 17, 22 };  // Course frame 1
     SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
@@ -319,8 +410,18 @@ void renderMario() {
     SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
     SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
     SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
+    SDL_Rect frame10 = { 27, 255, 13, 24 };// mort frame 1
+    SDL_Rect frame11 = { 180, 35, 23, 13 };// mort frame 2
+    SDL_Rect frame12 = { 133, 614, 24, 32 };// respawn
 
-    SDL_Rect srcRect; // src rect c pour te dire où allez chercher dans la sheet
+    SDL_Rect srcRect;
+    SDL_Rect dstRect = {
+    (int)(player.x - camera_x + (player.isRespawning ? player.swingOffset : 0)),
+    (int)(player.y + (player.isRespawning ? player.parachuteYOffset : 0)),
+    32,
+    64
+    };
+
     switch (player.currentFrame) {
     case 0: srcRect = frame0; break;
     case 1: srcRect = frame1; break;
@@ -329,38 +430,45 @@ void renderMario() {
     case 4: srcRect = frame4; break;
     case 5: srcRect = frame5; break;
     case 6: srcRect = frame6; break;
+    case 7: srcRect = frame5; break;
     case 8: srcRect = frame8; break;
     case 9: srcRect = frame9; break;
-    case 7: srcRect = frame5; break; // frame7 utilise frame5 flipée
+    case 10: srcRect = frame10; break;
+    case 11: srcRect = frame11; break;
+    case 12:srcRect = frame12;break;
     default: srcRect = frame3; break;
     }
 
-    SDL_Rect dstRect = { (int)(player.x - camera_x), (int)player.y, 32, 64 };
+    if (player.currentFrame == 11) {
+        dstRect.h = 26; // Flattened Mario is shorter
+    }
     SDL_RendererFlip flip = SDL_FLIP_NONE;
 
-    // Jumping flip logic
+    // Flip logic
     if (player.isJumping) {
-        if (!player.facingRight) {
-            flip = SDL_FLIP_HORIZONTAL;
-        }
+        if (!player.facingRight) flip = SDL_FLIP_HORIZONTAL;
     }
-    // Idle animation flip logic
     else if (player.isIdleAnimating) {
-        // Frame 5 is looking right, so flip it if facing left
-        if (player.currentFrame == 5 && !player.facingRight) {
+        if (player.currentFrame == 5 && !player.facingRight)
             flip = SDL_FLIP_HORIZONTAL;
-        }
-        // Frame 7 should look left, so flip it if facing right
-        else if (player.currentFrame == 7 && player.facingRight) {
+        else if (player.currentFrame == 7 && player.facingRight)
             flip = SDL_FLIP_HORIZONTAL;
-        }
     }
-    // Running flip logic
     else if (player.velX < 0) {
         flip = SDL_FLIP_HORIZONTAL;
     }
 
-    SDL_RenderCopyEx(renderer, player.texture, &srcRect, &dstRect, 0, NULL, flip);
+    // Don't render Mario during death animation (frame 11 is the flattened sprite)
+    if (player.currentFrame != 11 || player.isDying) {
+        SDL_RenderCopyEx(renderer, currentTexture, &srcRect, &dstRect, 0, NULL, flip);
+    }
+
+    // Render parachute during respawn
+    if (player.isRespawning) {
+        SDL_Rect dstWithSwing = dstRect;
+        dstWithSwing.x += (int)player.swingOffset;
+        SDL_RenderCopyEx(renderer, currentTexture, &srcRect, &dstRect, 0, NULL, flip);
+    }
 }
 
 
