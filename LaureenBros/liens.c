@@ -66,13 +66,17 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			*choix = -1;
 		}
 		while (*choix == 2) {
-			Ecran* ecran = definirEcran();
-			ecran = definirEcran();
-			chargerPartieUNIQUE = 1;
 			system("cls");
-			lancerJeu(argc, argv);
-			*choix = -1;
-			return;
+			Ecran* ecran = definirEcran();
+			afficherSavePartie( ecran, tableau);
+			//chargerPartieUNIQUE = 1;
+			/*system("cls");*/
+			//lancerJeu(argc, argv);
+			/**choix = -1;*/
+			/*return;*/
+		}
+		while (*choix == 3) {
+			
 		}
 		while (*choix == 4) {
 			char opti[4] = "oui";

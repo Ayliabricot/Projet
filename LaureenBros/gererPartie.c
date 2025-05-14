@@ -75,3 +75,20 @@ void demanderPseudo(Ecran* ecran, Partie* partie) {
     SetConsoleOutputCP(GetOEMCP());
     SetConsoleCP(GetOEMCP());
 }
+
+
+//continuer partie
+
+void afficherSavePartie(Ecran* ecran, Partie* partie) {
+    
+    if (!ecran) {
+        printf("probleme d'allocation");
+        return;
+    }
+    SetConsoleOutputCP(GetOEMCP());
+    SetConsoleCP(GetOEMCP());
+    contourEcran(ecran);
+    SetConsoleOutputCP(1252);
+    SetConsoleCP(1252);
+    afficherTexte(ecran->largeur / 2 - 34 / 2, 10, "Voici Vos sauvegardes de partie:");
+}

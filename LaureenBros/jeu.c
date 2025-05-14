@@ -212,8 +212,10 @@ void update() {
                 player.isRespawning = true;
                 player.respawnTimer = 0.0f;
                 // Respawn 5 blocs avant la position actuelle
-                player.x = fmax(camera_x - 5 * BLOCK_SIZE, 100); // Ne pas revenir avant le début
-                player.y = -100; // Position de départ en hauteur
+                player.x -= 400;
+                player.y = SCREEN_HEIGHT-800;
+                camera_lock_x = 0.0f;
+                camera_x = camera_lock_x;
                 player.currentFrame = 12;
             }
             else {
@@ -228,20 +230,30 @@ void update() {
         player.respawnTimer += 0.05f;
 
         // Parachute animation
-        player.swingOffset = sin(player.respawnTimer * 2.0f) * 20.0f;// premier vitesse 2 eme amplitude
+        player.swingOffset = sin(player.respawnTimer * 2.0f) * 20.0f;
         player.parachuteYOffset = sin(player.respawnTimer * 5.0f) * 2.0f;
 
-        // Move player down
+        // Déplacement horizontal pendant le respawn
+        float newX = player.x + player.velX;
+        if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
+            player.x = newX;
+        }
+        else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
+            player.x = newX;
+        }
+
+        // Descente verticale
         player.y += 2.0f;
 
-        // Check if respawn is complete
+        // Fin du respawn
         if (player.y >= SCREEN_HEIGHT - 430) {
             player.isRespawning = false;
             player.currentFrame = 3;
             player.swingOffset = 0.0f;
             player.parachuteYOffset = 0.0f;
         }
-        return; // Skip other updates while respawning
+
+        return; // on skippe le reste du update (physique classique)
     }
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
