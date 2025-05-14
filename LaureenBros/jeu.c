@@ -67,6 +67,8 @@ bool initialize() {
     // Position par défaut
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
+    camera_x = 0.0f;
+    camera_lock_x = 0.0f;
 
     // Charger la sauvegarde si elle existe
     if (chargerPartieUNIQUE) loadGame();
@@ -383,22 +385,39 @@ void render(int* choixPerso) {
 }
 
 void cleanup() {
-    SDL_DestroyTexture(tileTexture);
-    SDL_DestroyTexture(playerTexture);
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
+    // Free textures
+    if (tileTexture) SDL_DestroyTexture(tileTexture);
+    if (playerTexture) SDL_DestroyTexture(playerTexture);
+
+    // Destroy renderer and window
+    if (renderer) SDL_DestroyRenderer(renderer);
+    if (window) SDL_DestroyWindow(window);
+
+    // Quit SDL subsystems
+    IMG_Quit();
     SDL_Quit();
+
+    // Reset pointers to NULL
+    window = NULL;
+    renderer = NULL;
+    tileTexture = NULL;
+    playerTexture = NULL;
 }
 
 int lancerJeu(int argc, char* argv[]) {
+    // Ensure SDL is properly cleaned up before reinitializing
+    cleanup();
+
+    // Check if SDL can be initialized
     if (!initialize()) {
-        printf("Échec de l'initialisation. Appuyez sur une touche pour continuer...\n");
-        getchar(); // Attendre que l'utilisateur voie le message
-        cleanup();
+        printf("Failed to initialize SDL. Press any key to continue...\n");
+        getchar();
         return -1;
     }
 
     Uint32 last_time = SDL_GetTicks();
+    running = true; // Reset the running flag
+
     while (running) {
         Uint32 current_time = SDL_GetTicks();
         float delta_time = (current_time - last_time) / 1000.0f;
@@ -407,10 +426,10 @@ int lancerJeu(int argc, char* argv[]) {
         handleEvents();
         update();
         render(0);
-        SDL_Delay(16); //60fps
+        SDL_Delay(16); // 60fps
     }
 
+    // Cleanup after the game loop exits
     cleanup();
-	system("cls");
     return 0;
 }
