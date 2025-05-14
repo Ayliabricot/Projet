@@ -1,4 +1,4 @@
-#include <stdio.h>
+Ôªø#include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
@@ -107,7 +107,7 @@ bool initialize() {
     deathTexture = SDL_CreateTextureFromSurface(renderer, deathSurface);
     SDL_FreeSurface(deathSurface);
 
-    // Initialisation des nouveaux Ètats
+    // Initialisation des nouveaux √©tats
     player.isDying = false;
     player.isRespawning = false;
     player.respawnTimer = 0.0f;
@@ -117,10 +117,19 @@ bool initialize() {
    
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
+    gameState = malloc(sizeof(GameState));
+    if (!gameState) return false;
+
+    gameState->lives = 3;
+    gameState->coins = 0;
+    gameState->world = 1;
+    gameState->stage = 1;
+    gameState->distance = 0;
+    strcpy_s(gameState->save, 50, currentPartie->pseudo);
 
     // Charger la sauvegarde si elle existe
     if (chargerPartieUNIQUE) loadGame();
-    // Initialisation des autres propriÈtÈs
+    // Initialisation des autres propri√©t√©s
     player.velX = player.velY = 0;
     player.texture = playerTexture;
     player.animationTimer = player.idleTimer = 5;
@@ -132,18 +141,32 @@ bool initialize() {
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
-    gameState = malloc(sizeof(GameState));
-    if (!gameState) return false;
-
-    gameState->lives = 3;
-    gameState->coins = 0;
-    gameState->world = 1;
-    gameState->stage = 1;
-    gameState->distance = 0;
-    strcpy_s(gameState->save, 50, "test save");
 
     
     return true;
+}
+
+void collectPieces() {
+    if (!player.isDying && !player.isRespawning) {
+        // Calculate player's center position
+        float playerCenterX = player.x + 16;
+        float playerCenterY = player.y + 32;
+
+        // Convert position to map coordinates
+        int col = (int)(playerCenterX / BLOCK_SIZE);
+        int row = (int)(playerCenterY / BLOCK_SIZE);
+
+        // Check if the player is on a valid map tile
+        if (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) {
+            // Check if the tile is a piece (ID 10)
+            if (map[row][col] == 10) {
+                // Collect the piece
+                map[row][col] = 0; // Remove the piece from the map
+                gameState->coins++; // Increment the score
+                printf("Piece collected! Total coins: %d\n", gameState->coins);
+            }
+        }
+    }
 }
 
 void handleEvents() {
@@ -181,7 +204,7 @@ void handleEvents() {
     }
 }
 
-// Modification de la fonction update pour corriger le problËme de saut en glissant
+// Modification de la fonction update pour corriger le probl√®me de saut en glissant
 
 void update() {
 
@@ -233,7 +256,7 @@ void update() {
         player.swingOffset = sin(player.respawnTimer * 2.0f) * 20.0f;
         player.parachuteYOffset = sin(player.respawnTimer * 5.0f) * 2.0f;
 
-        // DÈplacement horizontal pendant le respawn
+        // D√©placement horizontal pendant le respawn
         float newX = player.x + player.velX;
         if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
             player.x = newX;
@@ -255,6 +278,9 @@ void update() {
 
         return; // on skippe le reste du update (physique classique)
     }
+
+    collectPieces();
+
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
     gameState->distance = player.x/80;
@@ -266,17 +292,17 @@ void update() {
         player.x = newX;
     }
 
-    // VÈrifie si le joueur est sur le sol avant d'appliquer la gravitÈ
+    // V√©rifie si le joueur est sur le sol avant d'appliquer la gravit√©
     bool wasOnGround = !player.isJumping;
     bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1);
 
-    // Si le joueur Ètait au sol mais ne l'est plus (glisse d'un bloc), 
-    // considÈrer qu'il est en train de sauter/tomber
+    // Si le joueur √©tait au sol mais ne l'est plus (glisse d'un bloc), 
+    // consid√©rer qu'il est en train de sauter/tomber
     if (wasOnGround && !isOnGround) {
         player.isJumping = true;
     }
 
-    // GravitÈ
+    // Gravit√©
     player.velY += player.gravity;
 
     // Verticale collision
@@ -302,7 +328,7 @@ void update() {
         player.idleTimer = 0;
         player.isIdleAnimating = false;
 
-        // DÈtermine la frame de saut en fonction de la vitesse Y et de l'orientation
+        // D√©termine la frame de saut en fonction de la vitesse Y et de l'orientation
         if (player.velY < 0) { // Monter
             player.currentFrame = 8; // Frame de saut vers le haut
         }
@@ -326,7 +352,7 @@ void update() {
         // Le joueur est immobile
         player.idleTimer++;
 
-        // AprËs 3 secondes (180 frames)
+        // Apr√®s 3 secondes (180 frames)
         if (player.idleTimer > 180) {
             player.isIdleAnimating = true;
 
@@ -402,7 +428,7 @@ void renderMap() {
 
 
 void renderMario() {
-    // DÈfinition des rectangles source
+    // D√©finition des rectangles source
 
 
    
@@ -420,7 +446,7 @@ void renderMario() {
     SDL_Rect frame2 = { 41, 45, 17, 22 };  // Course frame 2
     SDL_Rect frame3 = { 3, 248, 17, 22 };  // Course frame 3
     SDL_Rect frame4 = { 3, 132, 17, 22 };  // Idle frame 1 (face)
-    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (cÙtÈ droit)
+    SDL_Rect frame5 = { 22, 132, 17, 22 }; // Idle frame 2 (c√¥t√© droit)
     SDL_Rect frame6 = { 41, 132, 17, 22 }; // Idle frame 3 (dos)
     SDL_Rect frame8 = { 3, 74, 17, 22 };   // Saut haut
     SDL_Rect frame9 = { 22, 74, 17, 22 };  // Saut bas
@@ -494,7 +520,7 @@ void renderHUD() {
     SDL_Rect hudBgSrc = { 2, 176, 234, 18 };
     SDL_RenderCopy(renderer, hudTexture, &hudBgSrc, &hudBgRect);
 
-    // 2. Afficher les vies (cúurs)
+    // 2. Afficher les vies (c≈ìurs)
     int MAX_LIVES = 3; // Nombre max de vies affichables
     for (int i = 0; i < MAX_LIVES; i++) {
       
@@ -543,7 +569,7 @@ void renderHUD() {
     }
  
 
-    // 4. Afficher le nombre de piËces (avec SDL_ttf)
+    // 4. Afficher le nombre de pi√®ces (avec SDL_ttf)
     char coinText[10];
     snprintf(coinText, sizeof(coinText), "%d", gameState->coins);
 
@@ -557,7 +583,7 @@ void renderHUD() {
 
 
 
-    // 6. Afficher le numÈro du monde
+    // 6. Afficher le num√©ro du monde
     char worldText[10];
     snprintf(worldText, sizeof(worldText), "%d-%d", gameState->world, gameState->stage);
 
@@ -602,10 +628,12 @@ void saveGameWithPseudo(char* pseudo) {
         return;
     }
 
-    fprintf(file, "%.2f %.2f %.2f", player.x, player.y, camera_lock_x);
+    // Save the player's position, camera lock, and coins collected
+    fprintf(file, "%.2f %.2f %.2f %d\n", player.x, player.y, camera_lock_x, gameState->coins); // Added coins
     fclose(file);
 
-    printf("Jeu sauvegardÈ pour %s - Position: (%.2f, %.2f), Camera lock: %.2f\n", pseudo, player.x, player.y, camera_lock_x);
+    printf("Jeu sauvegardÔøΩ pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Coins: %d\n",
+        pseudo, player.x, player.y, camera_lock_x, gameState->coins);
 }
 
 void loadGameWithPseudo(char* pseudo) {
@@ -614,17 +642,20 @@ void loadGameWithPseudo(char* pseudo) {
 
     FILE* file = fopen(saveFilePath, "r");
     if (!file) {
-        printf("Aucune sauvegarde trouvÈe pour %s, utilisation des valeurs par dÈfaut\n", pseudo);
+        printf("Aucune sauvegarde trouvÔøΩe pour %s, utilisation des valeurs par dÔøΩfaut\n", pseudo);
         return;
     }
 
     float x, y, camLock;
-    if (fscanf_s(file, "%f %f %f", &x, &y, &camLock) == 3) {
+    int coins; // Variable to store the number of coins
+    if (fscanf_s(file, "%f %f %f %d", &x, &y, &camLock, &coins) == 4) { // Read 4 values instead of 3
         player.x = x;
         player.y = y;
         camera_lock_x = camLock;
         camera_x = camera_lock_x;
-        printf("Jeu chargÈ pour %s - Position: (%.2f, %.2f), Camera lock: %.2f\n", pseudo, player.x, player.y, camera_lock_x);
+        gameState->coins = coins; // Update the game state with loaded coins
+        printf("Jeu chargÔøΩ pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Coins: %d\n",
+            pseudo, player.x, player.y, camera_lock_x, gameState->coins);
     }
     else {
         printf("Erreur lors de la lecture de la sauvegarde pour %s\n", pseudo);
@@ -679,7 +710,7 @@ void cleanup() {
 
 int lancerJeu(int argc, char* argv[]) {
     if (!initialize()) {
-        printf("…chec de l'initialisation. Appuyez sur une touche pour continuer...\n");
+        printf("√âchec de l'initialisation. Appuyez sur une touche pour continuer...\n");
         getchar(); // Attendre que l'utilisateur voie le message
         cleanup();
         return -1;
