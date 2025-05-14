@@ -41,7 +41,7 @@ Partie* nouvelle_partie(void) {
 void demanderPseudo(Ecran* ecran, Partie* partie) {
     system("cls");
     if (!ecran) {
-        printf("probl×me d'allocation");
+        printf("probleme d'allocation");
         return;
     }
     SetConsoleOutputCP(GetOEMCP());

@@ -55,6 +55,7 @@ extern Partie* currentPartie;
 
 bool is_solid_tile(float x, float y);
 bool initialize();
+void checkAndCollectPieces();
 void handleEvents();
 void update();
 void renderMario();
