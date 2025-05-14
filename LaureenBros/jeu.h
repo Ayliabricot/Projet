@@ -70,6 +70,7 @@ extern bool running;
 extern float camera_x;
 extern float camera_lock_x;
 extern int map[MAP_HEIGHT][MAP_WIDTH];
+extern Partie* currentPartie;
 
 bool is_solid_tile(float x, float y);
 bool initialize();
@@ -84,5 +85,6 @@ int lancerJeu(int argc, char* argv[]);
 // Nouvelles fonctions pour la sauvegarde
 void saveGame();
 void loadGame();
-
+void saveGameWithPseudo(char* pseudo); // Declare save function
+void loadGameWithPseudo(char* pseudo);
 #endif

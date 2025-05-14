@@ -6,6 +6,7 @@
 #include "AffichageMenu.h"
 #include <string.h>
 #include <time.h>
+#include <direct.h>
 #include "jeu.h"
 
 
@@ -156,13 +157,13 @@ void handleEvents() {
                 player.isJumping = true;
                 player.wasMoving = (player.velX != 0);
             }
-            // Sauvegarde avec F5
-            else if (event.key.keysym.sym == SDLK_F5) {
-                saveGame();
+            // Save with F5 using currentPartie's pseudo
+            else if (event.key.keysym.sym == SDLK_F5 && currentPartie != NULL) {
+                saveGameWithPseudo(currentPartie->pseudo);
             }
-            // Chargement avec F9
-            else if (event.key.keysym.sym == SDLK_F9) {
-                loadGame();
+            // Load with F9 using currentPartie's pseudo
+            else if (event.key.keysym.sym == SDLK_F9 && currentPartie != NULL) {
+                loadGameWithPseudo(currentPartie->pseudo);
             }
         }
     }
@@ -579,27 +580,29 @@ void renderHUD() {
 
 }
 
+void saveGameWithPseudo(char* pseudo) {
+    char saveFilePath[255];
+    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
 
-// Sauvegarde la position du joueur et de la caméra dans un fichier texte
-void saveGame() {
-    FILE* file = fopen(SAVE_FILE, "w");
+    FILE* file = fopen(saveFilePath, "w");
     if (!file) {
         printf("Erreur lors de l'ouverture du fichier de sauvegarde\n");
         return;
     }
 
-    // Écrire player.x, player.y et camera_lock_x au format texte
     fprintf(file, "%.2f %.2f %.2f", player.x, player.y, camera_lock_x);
     fclose(file);
 
-    printf("Jeu sauvegardé - Position: (%.2f, %.2f), Camera lock: %.2f\n", player.x, player.y, camera_lock_x);
+    printf("Jeu sauvegardé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f\n", pseudo, player.x, player.y, camera_lock_x);
 }
 
-// Charge la position du joueur et de la caméra depuis un fichier texte
-void loadGame() {
-    FILE* file = fopen(SAVE_FILE, "r");
+void loadGameWithPseudo(char* pseudo) {
+    char saveFilePath[255];
+    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
+
+    FILE* file = fopen(saveFilePath, "r");
     if (!file) {
-        printf("Aucune sauvegarde trouvée, utilisation des valeurs par défaut\n");
+        printf("Aucune sauvegarde trouvée pour %s, utilisation des valeurs par défaut\n", pseudo);
         return;
     }
 
@@ -609,17 +612,32 @@ void loadGame() {
         player.y = y;
         camera_lock_x = camLock;
         camera_x = camera_lock_x;
-        printf("Jeu chargé - Position: (%.2f, %.2f), Camera lock: %.2f\n", player.x, player.y, camera_lock_x);
-
-        // Réinitialiser les vitesses et l'état de saut
-        player.velX = player.velY = 0;
-        player.isJumping = false;
+        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f\n", pseudo, player.x, player.y, camera_lock_x);
     }
     else {
-        printf("Erreur lors de la lecture de la sauvegarde\n");
+        printf("Erreur lors de la lecture de la sauvegarde pour %s\n", pseudo);
     }
 
     fclose(file);
+}
+
+// Update the existing save and load functions to use the new ones
+void saveGame() {
+    if (currentPartie != NULL) {
+        saveGameWithPseudo(currentPartie->pseudo);
+    }
+    else {
+        printf("Aucune partie en cours pour sauvegarder\n");
+    }
+}
+
+void loadGame() {
+    if (currentPartie != NULL) {
+        loadGameWithPseudo(currentPartie->pseudo);
+    }
+    else {
+        printf("Aucune partie en cours pour charger\n");
+    }
 }
 
 void render(int* choixPerso) {
@@ -656,6 +674,9 @@ int lancerJeu(int argc, char* argv[]) {
     }
 
     Uint32 last_time = SDL_GetTicks();
+    running = true; // Reset the running flag
+    Partie* currentPartie = NULL;
+
     while (running) {
         Uint32 current_time = SDL_GetTicks();
         float delta_time = (current_time - last_time) / 1000.0f;

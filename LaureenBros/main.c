@@ -16,6 +16,7 @@
 #include <stdbool.h>
 #include "jeu.h"
 
+Partie* currentPartie = NULL;
 
 int main(int argc, char* argv[]) {
 
