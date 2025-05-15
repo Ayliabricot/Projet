@@ -31,8 +31,10 @@ int main(int argc, char* argv[]) {
 		fprintf(stderr, "Erreur chargement musique : %s\n", Mix_GetError());
 		return 1;
 	}
-
+	Mix_VolumeMusic(50);
 	Mix_PlayMusic(musique, -1);
+
+	initSounds();
 	
 
 
@@ -65,6 +67,7 @@ int main(int argc, char* argv[]) {
 
 	afficherCurseur();
 	Mix_FreeMusic(musique);
+	cleanupSounds();
 	Mix_CloseAudio();
 	return 0;
 }

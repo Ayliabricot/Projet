@@ -21,6 +21,8 @@ SDL_Texture* itemsTexture = NULL;
 TTF_Font* font = NULL;
 SDL_Texture* textTexture = NULL;
 SDL_Texture* deathTexture = NULL;
+Mix_Chunk* piece = NULL;
+Mix_Chunk* saut = NULL;
 
 
 Sprite player;
@@ -47,6 +49,22 @@ int map[MAP_HEIGHT][MAP_WIDTH] = {
 };
 
 GameState* gameState = NULL;
+
+void initSounds() {
+    piece = Mix_LoadWAV("music/piece.mp3");
+    if (!piece) {
+        printf("Erreur chargement son piece: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(piece, 128);
+
+    saut = Mix_LoadWAV("music/saut.mp3");
+    if (!saut) {
+        printf("Erreur chargement son saut: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(saut, 30);
+}
 
 bool is_solid_tile(float x, float y) {
     int col = (int)(x / BLOCK_SIZE);
@@ -94,6 +112,7 @@ bool initialize() {
     if (!itemsSurface) return printf("Erreur surface items");
     itemsTexture = SDL_CreateTextureFromSurface(renderer, itemsSurface);
     SDL_FreeSurface(itemsSurface);  
+
 
     TTF_Init();
     font = TTF_OpenFont("Fonts/8514oem.fon", 24);
@@ -161,6 +180,9 @@ void collectPieces() {
             // Check if the tile is a piece (ID 10)
             if (map[row][col] == 10) {
                 // Collect the piece
+                if (piece) {
+                    Mix_PlayChannel(-1, piece, 0);
+                }
                 map[row][col] = 0; // Remove the piece from the map
                 gameState->coins++; // Increment the score
                 printf("Piece collected! Total coins: %d\n", gameState->coins);
@@ -176,6 +198,9 @@ void handleEvents() {
             running = false;
         if (event.type == SDL_KEYDOWN) {
             if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_z) && !player.isJumping) {
+                if (saut) {
+                    Mix_PlayChannel(-1, saut, 0);
+                }
                 player.velY = player.jumpForce;
                 player.isJumping = true;
                 player.wasMoving = (player.velX != 0);
@@ -734,4 +759,15 @@ int lancerJeu(int argc, char* argv[]) {
     cleanup();
 	system("cls");
     return 0;
+}
+
+void cleanupSounds(void) {
+    if (piece) {
+        Mix_FreeChunk(piece);
+        piece = NULL;
+    }
+    if (saut) {
+        Mix_FreeChunk(saut);
+        saut = NULL;
+    }
 }

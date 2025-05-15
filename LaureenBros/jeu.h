@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -66,6 +67,7 @@ extern SDL_Renderer* renderer;
 extern SDL_Texture* tileTexture;
 extern SDL_Texture* playerTexture;
 extern Sprite player;
+void initSounds(void);
 extern bool running;
 extern float camera_x;
 extern float camera_lock_x;
@@ -76,6 +78,7 @@ bool is_solid_tile(float x, float y);
 bool initialize();
 void handleEvents();
 void update();
+void collectPieces();
 void renderMario();
 void renderMap();
 void render(int* choixPerso);
@@ -88,4 +91,7 @@ void saveGame();
 void loadGame();
 void saveGameWithPseudo(char* pseudo); // Declare save function
 void loadGameWithPseudo(char* pseudo);
+
+void cleanupSounds(void);
+
 #endif
