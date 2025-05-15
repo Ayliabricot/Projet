@@ -234,8 +234,26 @@ void afficherSavePartie(Ecran* ecran, Partie* partie) {
         SetConsoleOutputCP(GetOEMCP());
         SetConsoleCP(GetOEMCP());
         if (_kbhit()) {
-            int touche = _getch();
-            break;
+            char touche = _getch();
+            if (touche == 49) {
+                //charge save 1
+                break;
+            }
+            else if(touche == 50) {
+                //charge save 2
+                break;
+            }
+            else if (touche == 51) {
+                //charge save 3
+                break;
+            }
+            else if (touche == 51) {
+                //charge save 4
+                break;
+            }
+            else {
+                break;//sort si autre touche pressee
+            }
         }
 
     }

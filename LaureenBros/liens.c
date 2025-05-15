@@ -69,6 +69,8 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			system("cls");
 			Ecran* ecran = definirEcran();
 			afficherSavePartie( ecran, tableau);
+			system("cls");
+			*choix = -1;
 			//chargerPartieUNIQUE = 1;
 			/*system("cls");*/
 			//lancerJeu(argc, argv);
