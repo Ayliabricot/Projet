@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Mix_Music* musique = Mix_LoadMUS("music/noCopr.mp3");
+	Mix_Music* musique = Mix_LoadMUS("music/Super Mario Bros (NES) Music - Overworld Theme.mp3");
 	if (!musique) {
 		fprintf(stderr, "Erreur chargement musique : %s\n", Mix_GetError());
 		return 1;
