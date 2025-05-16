@@ -363,11 +363,11 @@ void handleEvents() {
             }
             // Save with F5 using currentPartie's pseudo
             else if (event.key.keysym.sym == SDLK_F5 && currentPartie != NULL) {
-                saveGameWithPseudo(currentPartie->pseudo);
+                saveGame();
             }
             // Load with F9 using currentPartie's pseudo
             else if (event.key.keysym.sym == SDLK_F9 && currentPartie != NULL) {
-                loadGameWithPseudo(currentPartie->pseudo);
+                loadGame();
             }
         }
     }
@@ -1005,9 +1005,6 @@ void generateEnemy(float x, float y) {
 
 
 
-
-
-
 void saveGameWithPseudo(char* pseudo) {
     char saveFilePath[255];
     snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
@@ -1019,33 +1016,39 @@ void saveGameWithPseudo(char* pseudo) {
     }
 
     // Save the player's position, camera lock, and coins collected
-    fprintf(file, "%.2f %.2f %.2f %d\n", player.x, player.y, camera_lock_x, gameState->coins); // Added coins
+    fprintf(file, "%.2f %.2f %.2f %d %d\n", player.x, player.y, camera_lock_x, gameState->coins, gameState->lives); // Added coins
     fclose(file);
 
-    printf("Jeu sauvegard� pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Coins: %d\n",
-        pseudo, player.x, player.y, camera_lock_x, gameState->coins);
+    printf("Jeu sauvegard� pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Coins: %d, Lives: %d\n",
+        pseudo, player.x, player.y, camera_lock_x, gameState->coins, gameState->lives);
 }
 
 void loadGameWithPseudo(char* pseudo) {
     char saveFilePath[255];
-    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
+    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save%s.txt", pseudo);
 
     FILE* file = fopen(saveFilePath, "r");
     if (!file) {
-        printf("Aucune sauvegarde trouv�e pour %s, utilisation des valeurs par d�faut\n", pseudo);
+        printf("No save file found for %s, using default values\n", pseudo);
+        player.x = 100; // Default values
+        player.y = SCREEN_HEIGHT - 480;
+        camera_lock_x = 0;
+        gameState->coins = 0;
+        gameState->lives = 3;
         return;
     }
 
     float x, y, camLock;
-    int coins; // Variable to store the number of coins
-    if (fscanf_s(file, "%f %f %f %d", &x, &y, &camLock, &coins) == 4) { // Read 4 values instead of 3
+    int coins, lives; // Variable to store the number of coins
+    if (fscanf_s(file, "%f %f %f %d %d", &x, &y, &camLock, &coins, &lives) == 5) {
         player.x = x;
         player.y = y;
         camera_lock_x = camLock;
         camera_x = camera_lock_x;
         gameState->coins = coins; // Update the game state with loaded coins
-        printf("Jeu charg� pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Coins: %d\n",
-            pseudo, player.x, player.y, camera_lock_x, gameState->coins);
+        gameState->lives = lives; // Update the game state with loaded lives
+        printf("Jeu charg� pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Coins: %d, Lives: %d\n",
+            pseudo, player.x, player.y, camera_lock_x, gameState->coins, gameState->lives);
     }
     else {
         printf("Erreur lors de la lecture de la sauvegarde pour %s\n", pseudo);
