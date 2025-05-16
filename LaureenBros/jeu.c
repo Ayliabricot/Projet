@@ -21,18 +21,24 @@ SDL_Texture* itemsTexture = NULL;
 TTF_Font* font = NULL;
 SDL_Texture* textTexture = NULL;
 SDL_Texture* deathTexture = NULL;
+SDL_Texture* enemyTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
 Mix_Chunk* ecrase = NULL;
 Mix_Chunk* sonFinJeu = NULL;
 
 
+Ennemi enemies[MAX_ENEMIES];
 Sprite player;
 Sprite chateau;
 bool running = true;
+int enemyCount = 0;
 float camera_x = 0.0f;
 float camera_lock_x = 0.0f;
+float invincibilityTimer = 0.0f;
+bool isInvincible = false;
 int victoire = 0;
+
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 6, 6, 6, 0, 0, 6, 6, 0, 0, 6, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 7, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 10, 10, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 6, 6, 6, 0, 0, 6, 6, 6, 0, 0, 0, 6, 6, 0, 15, 6, 0, 6, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0, 12, 13, 0, 0, 0 },
@@ -43,7 +49,7 @@ int map[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 10, 10, 0, 0, 0, 0, 0, 0, 7, 0, 0, 10, 1, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 15, 0, 0, 0, 0, 18, 18, 0, 0, 0, 00, 0, 18, 18, 18, 18, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 15, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 1, 1, 1, 1, 1, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 4, 5, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 15, 0, 0, 0, 0, 0, 0, 0, 18, 18, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 1, 1, 0, 0, 0, 10, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 2, 3, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 0, 0, 0, 11, 0, 0, 0 },
+    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 1, 1, 0, 0, 0, 10, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 2, 3, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 0, 0, 0, 11, 0, 0, 0 },
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 1, 2, 3, 1, 1, 1, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 8, 8, 8, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 8, 8, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 1, 8, 8, 1, 8, 8, 1, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 8, 8, 8, 8, 8, 8, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 9, 9, 9, 9, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 9, 9, 9, 9, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -83,11 +89,62 @@ void initSounds() {
     Mix_VolumeChunk(sonFinJeu, 128);
 }
 
-bool is_solid_tile(float x, float y) {
+bool is_solid_tile(float x, float y, bool isInvincible) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
-    return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
-        (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9 && (map[row][col] != 10) && (map[row][col] != 15));
+    if (player.isRespawning) {
+        return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
+            (map[row][col] == 1 || map[row][col] == 7 || map[row][col] == 18);  // Uniquement sol et bloc 7
+    }
+
+    if (!isInvincible) {
+        return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9) && (map[row][col] != 10) && (map[row][col] != 15) && (map[row][col] != 16);
+    }
+    else {
+        return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0) && (map[row][col] != 10) && (map[row][col] != 15) && (map[row][col] != 16);
+    }
+}
+
+bool is_ground_near(float x, float y) {
+    // Vérifie 2 blocs en dessous de la position donnée
+    int col = (int)(x / BLOCK_SIZE);
+    int row1 = (int)((y + BLOCK_SIZE) / BLOCK_SIZE);
+    int row2 = (int)((y + 2 * BLOCK_SIZE) / BLOCK_SIZE);
+
+    return (row1 < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH && map[row1][col] != 0) ||
+        (row2 < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH && map[row2][col] != 0);
+}
+
+bool canEnemyMoveForward(Ennemi* enemy) {
+    int direction = enemy->velX > 0 ? 1 : -1; // 1 = droite, -1 = gauche
+
+    // Position du bloc "devant" l'ennemi (au niveau des pieds)
+    int frontX = (int)((enemy->x + (direction * enemy->width)) / BLOCK_SIZE);
+    int frontY = (int)((enemy->y + enemy->height) / BLOCK_SIZE);
+
+    // Position du bloc "en dessous du bloc devant" (pour éviter les trous)
+    int belowFrontX = frontX;
+    if (enemy->velX > 0 ? 1 : -1) belowFrontX = frontX - 1;
+    else belowFrontX = frontX + 1;
+    int belowFrontY = frontY + 1; // 1 bloc sous l'ennemi
+
+    // Vérifie si le bloc devant est valide (pas de lave/vide)
+    if (frontX < 0 || frontX >= MAP_WIDTH || frontY < 0 || frontY >= MAP_HEIGHT)
+        return false; // Hors limites → stop
+
+    if (map[frontY][frontX] == 0 || map[frontY][frontX] == 7 || map[frontY][frontX] == 8 || map[frontY][frontX] == 9) {
+        return false; // Lave (7) ou vide (0) → stop
+    }
+
+    // Vérifie si le bloc en dessous du bloc devant est solide
+    if (belowFrontY >= MAP_HEIGHT)
+        return false; // Vide sous l'ennemi → tombe dans le vide
+
+    if (map[belowFrontY][belowFrontX] == 0 || map[belowFrontY][belowFrontX] == 7 || map[belowFrontY][belowFrontX] == 8 || map[belowFrontY][belowFrontX] == 9) {
+        return false; // Pas de sol → l'ennemi ne peut pas avancer
+    }
+
+    return true; // Peut avancer
 }
 
 bool is_deadly_tile(float x, float y) {
@@ -131,6 +188,15 @@ bool initialize() {
     SDL_FreeSurface(itemsSurface);  
 
 
+
+    SDL_Surface* enemySurface = IMG_Load("sprite/ennemies.png");
+    if (!enemySurface) {
+        printf("Erreur surface enemy");
+        return false;
+    }
+    enemyTexture = SDL_CreateTextureFromSurface(renderer, enemySurface);
+    SDL_FreeSurface(enemySurface);
+
     TTF_Init();
     font = TTF_OpenFont("Fonts/8514oem.fon", 24);
 
@@ -172,14 +238,66 @@ bool initialize() {
     player.currentFrame = 3;
     player.isJumping = false;
     player.gravity = 0.5f;
-    player.jumpForce = -12.0f;
+    player.jumpForce = -11.5f;
     player.facingRight = true;
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
+ 
+    initializeEnemies(2);
+  
 
-    
-    return true;
+return true;
+}
+
+void initializeEnemies(int difficulte) {
+    enemyCount = 0;
+    for (int i = 0; i < MAX_ENEMIES; i++) {
+        enemies[i].isActive = false;
+    }
+
+    // position des ennemies
+    generateEnemy(400, 450);   
+    generateEnemy(1800, 450); 
+    generateEnemy(1700, 450); 
+    generateEnemy(2650, 500); 
+    generateEnemy(3400, 450);
+    generateEnemy(5500, 500);
+
+    generateEnemy(9500, 450);
+    generateEnemy(9600, 450);
+    generateEnemy(9650, 450);
+    if (difficulte == 1|| difficulte == 2) {
+        generateEnemy(9980, 450);
+        generateEnemy(10090, 450);
+        generateEnemy(7760, 250);//goumpa nuage
+    }
+    if (difficulte == 2) {
+        generateEnemy(10590, 450);
+        generateEnemy(11140, 450);
+        generateEnemy(12440, 450);
+    }
+   
+
+}
+void finDuJeu(void) {
+    float playerCenterX = player.x + 16;
+    float playerCenterY = player.y + 32;
+
+    // Convert position to map coordinates
+    int col = ((int)(playerCenterX / BLOCK_SIZE)) + 1;
+    int row = ((int)(playerCenterY / BLOCK_SIZE));
+
+    if (map[row][col] == 11) {
+        if (sonFinJeu) {
+            Mix_PauseMusic();
+            Mix_PlayChannel(-1, sonFinJeu, 0);
+            SDL_Delay(6000);
+            Mix_ResumeMusic();
+        }
+        running = false;
+        victoire = 1;
+    }
 }
 
 void collectPieces() {
@@ -197,34 +315,17 @@ void collectPieces() {
             // Check if the tile is a piece (ID 10)
             if (map[row][col] == 10) {
                 // Collect the piece
-                if (piece) {
-                    Mix_PlayChannel(-1, piece, 0);
-                }
                 map[row][col] = 0; // Remove the piece from the map
-                gameState->coins++; // Increment the score
+                gameState->coins += 10; // Increment the score
                 printf("Piece collected! Total coins: %d\n", gameState->coins);
             }
+            else if (map[row][col] == 16) {
+                map[row][col] = 0;
+                gameState->coins += 75;
+                invincibilityTimer = 5;
+                isInvincible = true;
+            }
         }
-    }
-}
-
-void finDuJeu(void) {
-    float playerCenterX = player.x + 16;
-    float playerCenterY = player.y + 32;
-
-    // Convert position to map coordinates
-    int col = ((int)(playerCenterX / BLOCK_SIZE))+1;
-    int row = ((int)(playerCenterY / BLOCK_SIZE));
-    
-    if (map[row][col] == 11) {
-        if (sonFinJeu) {
-            Mix_PauseMusic();
-            Mix_PlayChannel(-1, sonFinJeu, 0);
-            SDL_Delay(6000); 
-            Mix_ResumeMusic();
-        }
-        running = false;
-        victoire = 1;
     }
 }
 
@@ -275,6 +376,13 @@ void handleEvents() {
 // Modification de la fonction update pour corriger le problème de saut en glissant
 
 void update() {
+
+
+
+
+
+    invincibilityTimer -= 0.01;
+    if (invincibilityTimer <= 0) isInvincible = false;
 
     if (!player.isDying && !player.isRespawning &&
         (is_deadly_tile(player.x + 16, player.y + 32) ||
@@ -327,10 +435,10 @@ void update() {
 
         // Déplacement horizontal pendant le respawn
         float newX = player.x + player.velX;
-        if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
+        if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32, isInvincible)) {
             player.x = newX;
         }
-        else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
+        else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32, isInvincible)) {
             player.x = newX;
         }
 
@@ -338,7 +446,7 @@ void update() {
         player.y += 2.0f;
 
         // Fin du respawn
-        if (player.y >= SCREEN_HEIGHT - 430) {
+        if (is_ground_near(player.x + 16, player.y + 64)) {
             player.isRespawning = false;
             player.currentFrame = 3;
             player.swingOffset = 0.0f;
@@ -355,16 +463,16 @@ void update() {
     float newY = player.y + player.velY;
     gameState->distance = player.x/80;
     // Horizontale collision
-    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
+    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32, isInvincible)) {
         player.x = newX;
     }
-    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
+    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32, isInvincible)) {
         player.x = newX;
     }
 
     // Vérifie si le joueur est sur le sol avant d'appliquer la gravité
     bool wasOnGround = !player.isJumping;
-    bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1);
+    bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1, isInvincible);
 
     // Si le joueur était au sol mais ne l'est plus (glisse d'un bloc), 
     // considérer qu'il est en train de sauter/tomber
@@ -375,9 +483,8 @@ void update() {
     // Gravité
     player.velY += player.gravity;
 
-    // Verticale collision
     if (player.velY > 0) {
-        if (is_solid_tile(player.x + 16, newY + 64)) {
+        if (is_solid_tile(player.x + 16, newY + 64, isInvincible)) {
             player.y = ((int)((newY + 64) / BLOCK_SIZE)) * BLOCK_SIZE - 64;
             player.velY = 0;
             player.isJumping = false;
@@ -385,11 +492,28 @@ void update() {
         else player.y = newY;
     }
     else if (player.velY < 0) {
-        if (is_solid_tile(player.x + 16, newY)) {
-            player.y = ((int)(newY / BLOCK_SIZE) + 1) * BLOCK_SIZE;
+        int headCol = (int)((player.x + 16) / BLOCK_SIZE);
+        int headRow = (int)(newY / BLOCK_SIZE);
+        // Did we hit a question-mark block?
+        if (headRow >= 0 && headRow < MAP_HEIGHT &&
+            headCol >= 0 && headCol < MAP_WIDTH &&
+            map[headRow][headCol] == 7)
+        {
+            // Mark it used and spawn a star above it:
+            map[headRow][headCol] = 17;                // used block
+            if (headRow - 1 >= 0)
+                map[headRow - 1][headCol] = 16;            // star pops out
+            printf("Question mark block hit!\n");
+        }
+
+        // Now do the normal head collision response
+        if (is_solid_tile(player.x + 16, newY, isInvincible)) {
+            player.y = (headRow + 1) * BLOCK_SIZE;
             player.velY = 0;
         }
-        else player.y = newY;
+        else {
+            player.y = newY;
+        }
     }
 
     // Animation
@@ -447,8 +571,17 @@ void update() {
             player.currentFrame = 3; // Frame statique normale
         }
     }
-    
+    updateEnemies();
 
+    // Vérifier les collisions avec les ennemis
+    for (int i = 0; i < enemyCount; i++) {
+        if (enemies[i].isActive && checkPlayerEnemyCollision(i)) {
+            enemies[i].velX = 0;
+            enemies[i].currentFrame = 2;
+            SDL_Delay(1000);
+            enemies[i].isActive = false; // Désactive l'ennemi si écrasé
+        }
+    }
     float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
     if (target_camera_x > camera_lock_x) camera_lock_x = target_camera_x;
 
@@ -461,6 +594,105 @@ void update() {
     if (player.x > max_player_x) player.x = max_player_x;
 }
 
+void updateEnemies() {
+    for (int i = 0; i < enemyCount; i++) {
+        if (!enemies[i].isActive) continue;
+
+        // === 1. Vérifie si l'ennemi doit changer de direction ===
+        if (!canEnemyMoveForward(&enemies[i])) {
+            enemies[i].velX *= -1;
+            enemies[i].facingRight = !enemies[i].facingRight;
+        }
+
+        // === 2. Déplacement horizontal ===
+        float newX = enemies[i].x + enemies[i].velX;
+
+        // Collision avec les murs/blocs
+        bool collision = false;
+        int tileCol, tileRow;
+
+        // Vérifie à gauche ou droite selon la direction
+        if (enemies[i].velX < 0) { // Gauche
+            tileCol = (int)(newX / BLOCK_SIZE);
+            tileRow = (int)((enemies[i].y + enemies[i].height - 1) / BLOCK_SIZE);
+            collision = (tileCol >= 0 && tileRow >= 0 && is_solid_tile(newX, enemies[i].y + enemies[i].height - 1, false));
+        }
+        else if (enemies[i].velX > 0) { // Droite
+            tileCol = (int)((newX + enemies[i].width) / BLOCK_SIZE);
+            tileRow = (int)((enemies[i].y + enemies[i].height - 1) / BLOCK_SIZE);
+            collision = (tileCol < MAP_WIDTH && tileRow >= 0 && is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1, false));
+        }
+
+        // Gère les collisions
+        if (collision) {
+            enemies[i].velX *= -1;
+            enemies[i].facingRight = !enemies[i].facingRight;
+        }
+        else {
+            enemies[i].x = newX; // Applique le déplacement
+        }
+
+        // === 3. Animation ===
+        enemies[i].animationTimer++;
+        if (enemies[i].animationTimer >= ANIMATION_SPEED) {
+            enemies[i].animationTimer = 0;
+            enemies[i].currentFrame = (enemies[i].currentFrame + 1) % 2; // Alterne entre 2 frames
+        }
+    }
+}
+
+bool checkPlayerEnemyCollision(int enemyIndex) {
+    Ennemi* enemy = &enemies[enemyIndex];
+    if (!enemy->isActive) return false;
+
+    // Calculate player and enemy hitboxes
+    SDL_Rect playerRect = {
+        (int)player.x,
+        (int)player.y,
+        32,  // Player width
+        64   // Player height
+    };
+
+    SDL_Rect enemyRect = {
+        (int)enemy->x,
+        (int)enemy->y,
+        enemy->width,
+        enemy->height
+    };
+
+    // Check if player is falling onto enemy
+    if (player.velY > 0 &&
+        playerRect.x + 10 < enemyRect.x + enemyRect.w &&
+        playerRect.x + playerRect.w - 10 > enemyRect.x &&
+        playerRect.y + playerRect.h > enemyRect.y &&
+        playerRect.y + playerRect.h < enemyRect.y + 20) {
+
+        // Player jumped on enemy
+        player.velY = player.jumpForce / 1.5; // Smaller bounce
+        return true;
+    }
+
+    // Check if player collided with enemy from sides or bottom
+    if (playerRect.x + 10 < enemyRect.x + enemyRect.w &&
+        playerRect.x + playerRect.w - 10 > enemyRect.x &&
+        playerRect.y < enemyRect.y + enemyRect.h &&
+        playerRect.y + playerRect.h > enemyRect.y) {
+
+        // Player hit enemy - reset position
+        player.x = 100;
+        player.y = SCREEN_HEIGHT - 480;
+        player.velY = 0;
+        player.isJumping = false;
+        if (isInvincible == 0) {
+            gameState->lives--;
+        }
+        if (gameState->lives <= 0) {
+            running = false; // Arrête le jeu si le joueur n'a plus de vies
+        }
+    }
+
+    return false;
+}
 
 
 void renderMap() {
@@ -492,6 +724,38 @@ void renderMap() {
                     SDL_RenderCopy(renderer, tileTexture, &src, &dst);
                 }
             }
+        }
+    }
+}
+
+// Version corrigée de renderEnemies() :
+void renderEnemies() {
+    for (int i = 0; i < enemyCount; i++) {
+        if (!enemies[i].isActive) continue;
+
+        if (enemies[i].x + enemies[i].width > camera_x &&
+            enemies[i].x < camera_x + SCREEN_WIDTH) {
+
+            SDL_Rect srcRect;
+            if (enemies[i].currentFrame == 0) {
+                srcRect = (SDL_Rect){ 27, 12, 20, 17 }; // marche goumpa 1
+            }
+            else if (enemies[i].currentFrame == 1) {
+                srcRect = (SDL_Rect){ 54, 12, 19, 17 }; // marche goumpa 2
+            }
+            else if(enemies[i].currentFrame == 2) {
+                srcRect = (SDL_Rect){ 78, 20, 20, 9 }; // écrasé
+            }
+
+            SDL_Rect dstRect = {
+                (int)(enemies[i].x - camera_x),
+                (int)enemies[i].y,
+                enemies[i].width,
+                enemies[i].height
+            };
+
+            SDL_RendererFlip flip = enemies[i].facingRight==false ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+            SDL_RenderCopyEx(renderer, enemyTexture, &srcRect, &dstRect, 0, NULL, flip);
         }
     }
 }
@@ -578,6 +842,14 @@ void renderMario() {
         SDL_Rect dstWithSwing = dstRect;
         dstWithSwing.x += (int)player.swingOffset;
         SDL_RenderCopyEx(renderer, currentTexture, &srcRect, &dstRect, 0, NULL, flip);
+    }
+    if (isInvincible) {
+        SDL_SetTextureColorMod(currentTexture, 255, 255, 0); // Change color to yellow
+        SDL_SetTextureAlphaMod(currentTexture, 128); // Set transparency
+    }
+    else {
+        SDL_SetTextureColorMod(currentTexture, 255, 255, 255); // Reset color to white
+        SDL_SetTextureAlphaMod(currentTexture, 255); // Reset transparency
     }
 }
 
@@ -688,6 +960,32 @@ void renderHUD() {
 
 }
 
+
+
+void generateEnemy(float x, float y) {
+    if (enemyCount < MAX_ENEMIES) {
+        Ennemi* enemy = &enemies[enemyCount];
+        enemy->x = x;
+        enemy->y = y - enemy->height; // Ajustez selon la hauteur des plateformes
+        enemy->velX = -1.5f;
+      
+        enemy->isActive = true;
+        enemy->texture = enemyTexture;
+        enemy->facingRight = false;
+        enemy->width = 50;
+        enemy->height = 50;
+        enemy->currentFrame = 0;
+        enemy->animationTimer = 0;
+        enemyCount++;
+    }
+}
+
+
+
+
+
+
+
 void saveGameWithPseudo(char* pseudo) {
     char saveFilePath[255];
     snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
@@ -760,6 +1058,7 @@ void render(int* choixPerso) {
     renderMap();
     renderMario();
     renderHUD(); 
+    renderEnemies();
 
     SDL_RenderPresent(renderer);
 }

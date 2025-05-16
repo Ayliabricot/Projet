@@ -17,6 +17,7 @@
 #define VIEW_WIDTH 44
 #define ANIMATION_SPEED 10
 #define SAVE_FILE "save.txt"  // Nouvelle constante pour le fichier de sauvegarde
+#define MAX_ENEMIES 20 
 
 typedef struct {
     float x, y;
@@ -45,10 +46,7 @@ typedef struct {
     int y;
 } Personnage;
 
-typedef struct {
-    int x;
-    int y;
-} Ennemi;
+
 
 typedef struct {
     int lives;
@@ -59,6 +57,27 @@ typedef struct {
     int distance;
 } GameState;
 
+typedef struct {
+    float x, y;
+    float velX;
+    bool isActive;
+    SDL_Texture* texture;
+    bool facingRight;
+    int width;
+    int height;
+    int currentFrame;       // Frame actuelle de l'animation
+    int animationTimer;     // Compteur pour changer de frame
+    int totalFrames;   // Nombre total de frames dans l'animation
+ 
+} Ennemi;
+
+
+// Enemy functions
+void initializeEnemies();
+void generateEnemy(float x, float y);
+void updateEnemies();
+void renderEnemies();
+bool checkPlayerEnemyCollision(int enemyIndex);
 
 
 
@@ -74,7 +93,8 @@ extern float camera_lock_x;
 extern int map[MAP_HEIGHT][MAP_WIDTH];
 extern Partie* currentPartie;
 
-bool is_solid_tile(float x, float y);
+bool is_solid_tile(float x, float y, bool isInvincible);
+bool canEnemyMoveForward(Ennemi* enemy);
 bool initialize();
 void handleEvents();
 void update();

@@ -16,7 +16,7 @@
 #include <stdbool.h>
 #include "jeu.h"
 
-void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[], Mix_Music* musique) {
+void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
 	int resultat;
 	Ecran* ecran = definirEcran();
 	Ecran* nouveauEcran = definirEcran();
@@ -35,7 +35,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			contourEcran(ecran);
 			SetConsoleOutputCP(1252);
 			SetConsoleCP(1252);
-			afficherMenu(ecran, touche, choix,option,tableau,nbParties,argc,argv, musique);
+			afficherMenu(ecran, touche, choix,option,tableau,nbParties,argc,argv);
 			while (1) {
 				if (_kbhit()) {
 					tailleEcran(nouveauEcran);
@@ -45,7 +45,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 					}
 					touche = _getch();
 
-					afficherMenu(ecran, touche, choix, option,tableau,nbParties, argc, argv,musique);
+					afficherMenu(ecran, touche, choix, option,tableau,nbParties, argc, argv);
 				}
 			}
 		}
@@ -72,6 +72,8 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			system("cls");
 			Ecran* ecran = definirEcran();
 			afficherSavePartie( ecran, tableau);
+			system("cls");
+			*choix = -1;
 			//chargerPartieUNIQUE = 1;
 			/*system("cls");*/
 			//lancerJeu(argc, argv);
@@ -90,6 +92,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			system("cls");
 		}
 		while (*choix == 5) {
+			
 			resultat=lancerJeu(argc, argv);
 			
 			char opti[4] = "oui";

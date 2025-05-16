@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 		return 1;
 	}
 
-	Mix_Music* musique = Mix_LoadMUS("music/noCopr.mp3");
+	Mix_Music* musique = Mix_LoadMUS("music/Super Mario Bros (NES) Music - Overworld Theme.mp3");
 	if (!musique) {
 		fprintf(stderr, "Erreur chargement musique : %s\n", Mix_GetError());
 		return 1;
@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 	*nbParties = 0;
 	*choix = -1;
 
-	lancer_ecran(choix, option, tableau, nbParties,argc,argv,musique);
+	lancer_ecran(choix, option, tableau, nbParties,argc,argv);
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);
