@@ -66,9 +66,9 @@ void demanderPseudo(Ecran* ecran, Partie* partie) {
     strncpy_s(partie->pseudo, sizeof(partie->pseudo), pseudo, sizeof(partie->pseudo) - 1);
     partie->pseudo[sizeof(partie->pseudo) - 1] = '\0';
 
-    FILE* file = fopen("pseudo.txt", "w");
+    FILE* file = fopen("pseudo.txt", "a");
     if (file) {
-        fprintf(file, "%s", pseudo);
+        fprintf(file, " %s", pseudo);
         fclose(file);
     }
 
@@ -132,4 +132,19 @@ void afficherSavePartie(Ecran* ecran, Partie* partie) {
         }
 
     }
+}
+
+void affichageScore(Ecran* ecran) {
+    while (1) {
+        if (!ecran) {
+            printf("probleme d'allocation");
+            return;
+        }
+        SetConsoleOutputCP(GetOEMCP());
+        SetConsoleCP(GetOEMCP());
+        contourEcran(ecran);
+        SetConsoleOutputCP(1252);
+        SetConsoleCP(1252);
+
+        afficherTexte(ecran->largeur / 2 - 21 / 2, ecran->hauteur / 4, "TABLEAU DES SCORES :");
 }

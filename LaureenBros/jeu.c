@@ -193,7 +193,7 @@ bool initialize() {
     SDL_Surface* itemsSurface = IMG_Load("sprite/health.png");
     if (!itemsSurface) return printf("Erreur surface items");
     itemsTexture = SDL_CreateTextureFromSurface(renderer, itemsSurface);
-    SDL_FreeSurface(itemsSurface);  
+    SDL_FreeSurface(itemsSurface);
 
 
 
@@ -224,7 +224,7 @@ bool initialize() {
     player.swingOffset = 0.0f;
     player.parachuteYOffset = 0.0f;
     player.deathTimer = 0.0f;
-   
+
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
     gameState = malloc(sizeof(GameState));
@@ -251,11 +251,11 @@ bool initialize() {
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
- 
-    initializeEnemies(2);
-  
 
-return true;
+    initializeEnemies(2);
+
+
+    return true;
 }
 
 void initializeEnemies(int difficulte) {
@@ -265,27 +265,27 @@ void initializeEnemies(int difficulte) {
     }
 
     // position des ennemies
-    generateEnemy(400, 450);   
-    generateEnemy(1800, 450); 
-    generateEnemy(1700, 450); 
-    generateEnemy(2650, 500); 
+    generateEnemy(400, 450);
+    generateEnemy(1800, 450);
+    generateEnemy(1700, 450);
+    generateEnemy(2650, 500);
     generateEnemy(3400, 450);
     generateEnemy(5500, 500);
 
     generateEnemy(9500, 450);
     generateEnemy(9600, 450);
     generateEnemy(9650, 450);
-    if (difficulte == 1|| difficulte == 2) {
+    if (difficulte == 1 || difficulte == 2) {
         generateEnemy(9980, 450);
         generateEnemy(10090, 450);
-       
+        
     }
     if (difficulte == 2) {
         generateEnemy(10590, 450);
         generateEnemy(11140, 450);
         generateEnemy(12440, 450);
     }
-   
+
 
 }
 void finDuJeu(void) {
@@ -333,7 +333,6 @@ void collectPieces() {
             else if (map[row][col] == 16) {
                 map[row][col] = 0;
                 gameState->coins += 75;
-                
                 invincibilityTimer = 5;
                 isInvincible = true;
             }
@@ -426,7 +425,7 @@ void update() {
                 if (player.goomba == false) {
                     player.x -= 400;
                 }
-                player.y = SCREEN_HEIGHT-800;
+                player.y = SCREEN_HEIGHT - 800;
                 camera_lock_x -= 400;
                 camera_x = camera_lock_x;
                 player.currentFrame = 12;
@@ -475,7 +474,7 @@ void update() {
 
     float newX = player.x + player.velX;
     float newY = player.y + player.velY;
-    gameState->distance = player.x/80;
+    gameState->distance = player.x / 80;
     // Horizontale collision
     if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32, isInvincible)) {
         player.x = newX;
@@ -598,7 +597,7 @@ void update() {
             }
             enemies[i].velX = 0;
             enemies[i].currentFrame = 2;
-          
+
             enemies[i].isActive = false; // Désactive l'ennemi si écrasé
         }
     }
@@ -704,9 +703,7 @@ bool checkPlayerEnemyCollision(int enemyIndex) {
         player.velY = 0;
         player.isJumping = false;
         if (isInvincible == 0) {
-           
-            player.isDying = true;
-            player.goomba = true;
+            gameState->lives--;
         }
         if (gameState->lives <= 0) {
             running = false; // Arrête le jeu si le joueur n'a plus de vies
@@ -731,7 +728,7 @@ void renderMap() {
             if (tile_col >= 0 && tile_col < MAP_WIDTH) {
                 int tile_index = map[row][tile_col];
                 if (tile_index == 2 || tile_index == 3) {
-                    if (row>=10) {
+                    if (row >= 10) {
                         SDL_Rect src = { 1 * tile_width, 0, tile_width, tile_height };
                         SDL_Rect dst = { col * BLOCK_SIZE - offset_x, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE };
                         SDL_RenderCopy(renderer, tileTexture, &src, &dst);
@@ -765,7 +762,7 @@ void renderEnemies() {
             else if (enemies[i].currentFrame == 1) {
                 srcRect = (SDL_Rect){ 54, 12, 19, 17 }; // marche goumpa 2
             }
-            else if(enemies[i].currentFrame == 2) {
+            else if (enemies[i].currentFrame == 2) {
                 srcRect = (SDL_Rect){ 78, 20, 20, 9 }; // écrasé
             }
 
@@ -776,7 +773,7 @@ void renderEnemies() {
                 enemies[i].height
             };
 
-            SDL_RendererFlip flip = enemies[i].facingRight==false ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+            SDL_RendererFlip flip = enemies[i].facingRight == false ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
             SDL_RenderCopyEx(renderer, enemyTexture, &srcRect, &dstRect, 0, NULL, flip);
         }
     }
@@ -787,7 +784,7 @@ void renderMario() {
     // Définition des rectangles source
 
 
-   
+
     SDL_Texture* currentTexture = player.texture; // Utilise la texture courante du joueur
 
     // Pour les animations de mort/respawn, utiliser deathTexture
@@ -831,7 +828,7 @@ void renderMario() {
     case 9: srcRect = frame9; break;
     case 10: srcRect = frame10; break;
     case 11: srcRect = frame11; break;
-    case 12:srcRect = frame12;break;
+    case 12:srcRect = frame12; break;
     default: srcRect = frame3; break;
     }
 
@@ -887,7 +884,7 @@ void renderHUD() {
     // 2. Afficher les vies (cœurs)
     int MAX_LIVES = 3; // Nombre max de vies affichables
     for (int i = 0; i < MAX_LIVES; i++) {
-      
+
         if (i == 0) {
             SDL_Rect lifeRect = { SCREEN_WIDTH * 0.825  , 10, 25, 25 };
             if (i < gameState->lives) {
@@ -929,9 +926,9 @@ void renderHUD() {
             }
         }
         // Choisir entre vie pleine ou vide
-   
+
     }
- 
+
 
     // 4. Afficher le nombre de pièces (avec SDL_ttf)
     char coinText[10];
@@ -953,7 +950,7 @@ void renderHUD() {
 
     textSurface = TTF_RenderText_Solid(font, worldText, white);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    textRect = (SDL_Rect){ SCREEN_WIDTH*0.168, 13.5, textSurface->w, textSurface->h };
+    textRect = (SDL_Rect){ SCREEN_WIDTH * 0.168, 13.5, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -964,7 +961,7 @@ void renderHUD() {
 
     textSurface = TTF_RenderText_Solid(font, saveName, white);
     textTexture = SDL_CreateTextureFromSurface(renderer, textSurface);
-    textRect = (SDL_Rect){SCREEN_WIDTH*0.54, 13.5, textSurface->w, textSurface->h };
+    textRect = (SDL_Rect){ SCREEN_WIDTH * 0.54, 13.5, textSurface->w, textSurface->h };
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
@@ -990,7 +987,7 @@ void generateEnemy(float x, float y) {
         enemy->x = x;
         enemy->y = y - enemy->height; // Ajustez selon la hauteur des plateformes
         enemy->velX = -1.5f;
-      
+
         enemy->isActive = true;
         enemy->texture = enemyTexture;
         enemy->facingRight = false;
@@ -1001,6 +998,9 @@ void generateEnemy(float x, float y) {
         enemyCount++;
     }
 }
+
+
+
 
 
 
@@ -1025,7 +1025,7 @@ void saveGameWithPseudo(char* pseudo) {
 
 void loadGameWithPseudo(char* pseudo) {
     char saveFilePath[255];
-    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save%s.txt", pseudo);
+    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
 
     FILE* file = fopen(saveFilePath, "r");
     if (!file) {
@@ -1082,7 +1082,7 @@ void render(int* choixPerso) {
 
     renderMap();
     renderMario();
-    renderHUD(); 
+    renderHUD();
     renderEnemies();
 
     SDL_RenderPresent(renderer);
@@ -1125,7 +1125,7 @@ int lancerJeu(int argc, char* argv[]) {
     }
 
     cleanup();
-	system("cls");
+    system("cls");
     return victoire;
 }
 
@@ -1137,14 +1137,6 @@ void cleanupSounds(void) {
     if (saut) {
         Mix_FreeChunk(saut);
         saut = NULL;
-    }
-    if (ecrase) {
-        Mix_FreeChunk(ecrase);
-        ecrase = NULL;
-    }
-    if (objet) {
-        Mix_FreeChunk(objet);
-        objet = NULL;
     }
     if (sonFinJeu) {
         Mix_FreeChunk(sonFinJeu);
