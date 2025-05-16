@@ -84,6 +84,11 @@ void initSounds() {
 bool is_solid_tile(float x, float y, bool isInvincible) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
+    if (player.isRespawning) {
+        return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
+            (map[row][col] == 1 || map[row][col] == 7);  // Uniquement sol et bloc 7
+    }
+
     if (!isInvincible) {
         return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9) && (map[row][col] != 10) && (map[row][col] != 15) && (map[row][col] != 16);
     }
