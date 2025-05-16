@@ -8,7 +8,6 @@
 
 Ecran* definirEcran() {
     Ecran* ecran = malloc(sizeof(Ecran));
-    ecran = NULL;
 }
 
 void tailleEcran(Ecran* ecran) {
