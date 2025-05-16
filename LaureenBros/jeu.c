@@ -36,6 +36,7 @@ float camera_x = 0.0f;
 float camera_lock_x = 0.0f;
 float invincibilityTimer = 0.0f;
 bool isInvincible = false;
+int victoire = 0;
 
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -221,6 +222,25 @@ void initializeEnemies(int difficulte) {
     }
    
 
+}
+void finDuJeu(void) {
+    float playerCenterX = player.x + 16;
+    float playerCenterY = player.y + 32;
+
+    // Convert position to map coordinates
+    int col = ((int)(playerCenterX / BLOCK_SIZE)) + 1;
+    int row = ((int)(playerCenterY / BLOCK_SIZE));
+
+    if (map[row][col] == 11) {
+        if (sonFinJeu) {
+            Mix_PauseMusic();
+            Mix_PlayChannel(-1, sonFinJeu, 0);
+            SDL_Delay(6000);
+            Mix_ResumeMusic();
+        }
+        running = false;
+        victoire = 1;
+    }
 }
 
 void collectPieces() {
