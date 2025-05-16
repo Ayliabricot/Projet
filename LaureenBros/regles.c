@@ -74,13 +74,5 @@ int afficher_regles(Ecran* ecran) {
 				break;
 			}
 		}
-	
-		//afficherTexte(ecran->largeur / 2 - 18 / 2, ecran->hauteur / 2 + 2, "oui");
-
-		//afficherTexte(ecran->largeur / 2 + 4, ecran->hauteur / 2 + 2, "non");\n'oui'. Quitter...\n"
-
-
-
 		return -1;
 }
-

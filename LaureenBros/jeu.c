@@ -23,6 +23,7 @@ SDL_Texture* textTexture = NULL;
 SDL_Texture* deathTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
+Mix_Chunk* sonFinJeu = NULL;
 
 
 Sprite player;
@@ -30,6 +31,7 @@ Sprite chateau;
 bool running = true;
 float camera_x = 0.0f;
 float camera_lock_x = 0.0f;
+int victoire = 0;
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 6, 6, 6, 0, 0, 6, 6, 0, 0, 6, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 7, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 10, 10, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 6, 6, 6, 0, 0, 6, 6, 6, 0, 0, 0, 6, 6, 0, 15, 6, 0, 6, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0, 12, 13, 0, 0, 0 },
@@ -64,6 +66,13 @@ void initSounds() {
         return;
     }
     Mix_VolumeChunk(saut, 30);
+
+    sonFinJeu = Mix_LoadWAV("music/sonFinJeu.mp3");
+    if (!sonFinJeu) {
+        printf("Erreur chargement son fin jeu: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(sonFinJeu, 128);
 }
 
 bool is_solid_tile(float x, float y) {
@@ -191,11 +200,37 @@ void collectPieces() {
     }
 }
 
+void finDuJeu(void) {
+    float playerCenterX = player.x + 16;
+    float playerCenterY = player.y + 32;
+
+    // Convert position to map coordinates
+    int col = ((int)(playerCenterX / BLOCK_SIZE))+1;
+    int row = ((int)(playerCenterY / BLOCK_SIZE));
+    
+    if (map[row][col] == 11) {
+        if (sonFinJeu) {
+            Mix_PauseMusic();
+            Mix_PlayChannel(-1, sonFinJeu, 0);
+            SDL_Delay(6000); 
+            Mix_ResumeMusic();
+        }
+        running = false;
+        victoire = 1;
+    }
+}
+
 void handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
-            running = false;
+            if (victoire == 1) {
+                running = false;
+            }
+            else {
+                victoire = 2;
+                running = false;
+            }
         if (event.type == SDL_KEYDOWN) {
             if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_z) && !player.isJumping) {
                 if (saut) {
@@ -269,6 +304,7 @@ void update() {
             else {
                 // Game Over
                 running = false;
+                victoire = 0;
             }
         }
         return; // Skip other updates while dying
@@ -304,6 +340,7 @@ void update() {
         return; // on skippe le reste du update (physique classique)
     }
 
+    finDuJeu();
     collectPieces();
 
     float newX = player.x + player.velX;
@@ -730,7 +767,6 @@ void cleanup() {
     TTF_CloseFont(font);
     TTF_Quit();
     free(gameState);
-    SDL_Quit();
 }
 
 int lancerJeu(int argc, char* argv[]) {
@@ -758,7 +794,7 @@ int lancerJeu(int argc, char* argv[]) {
 
     cleanup();
 	system("cls");
-    return 0;
+    return victoire;
 }
 
 void cleanupSounds(void) {
@@ -769,5 +805,9 @@ void cleanupSounds(void) {
     if (saut) {
         Mix_FreeChunk(saut);
         saut = NULL;
+    }
+    if (sonFinJeu) {
+        Mix_FreeChunk(sonFinJeu);
+        sonFinJeu = NULL;
     }
 }

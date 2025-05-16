@@ -153,6 +153,7 @@
     <ClCompile Include="placementTexteDefFCT.c" />
     <ClCompile Include="ceQuiDoitEtreFree.c" />
     <ClCompile Include="regles.c" />
+    <ClCompile Include="resultats.c" />
     <ClCompile Include="save.c" />
   </ItemGroup>
   <ItemGroup>
