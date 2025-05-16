@@ -24,6 +24,8 @@ SDL_Texture* deathTexture = NULL;
 SDL_Texture* enemyTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
+Mix_Chunk* ecrase = NULL;
+Mix_Chunk* objet = NULL;
 Mix_Chunk* sonFinJeu = NULL;
 
 
@@ -72,6 +74,20 @@ void initSounds() {
         return;
     }
     Mix_VolumeChunk(saut, 30);
+
+    ecrase = Mix_LoadWAV("music/ecrase.mp3");
+    if (!ecrase) {
+        printf("Erreur chargement son ecrase: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(ecrase, 128);
+
+    objet = Mix_LoadWAV("music/objet.mp3");
+    if (!objet) {
+        printf("Erreur chargement son objet: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(ecrase, 128);
 
     sonFinJeu = Mix_LoadWAV("music/sonFinJeu.mp3");
     if (!sonFinJeu) {
@@ -307,6 +323,9 @@ void collectPieces() {
             // Check if the tile is a piece (ID 10)
             if (map[row][col] == 10) {
                 // Collect the piece
+                if (piece) {
+                    Mix_PlayChannel(-1, piece, 0);
+                }
                 map[row][col] = 0; // Remove the piece from the map
                 gameState->coins += 10; // Increment the score
                 printf("Piece collected! Total coins: %d\n", gameState->coins);
@@ -314,6 +333,7 @@ void collectPieces() {
             else if (map[row][col] == 16) {
                 map[row][col] = 0;
                 gameState->coins += 75;
+                
                 invincibilityTimer = 5;
                 isInvincible = true;
             }
@@ -494,6 +514,9 @@ void update() {
             map[headRow][headCol] == 7)
         {
             // Mark it used and spawn a star above it:
+            if (objet) {
+                Mix_PlayChannel(-1, objet, 0);
+            }
             map[headRow][headCol] = 17;                // used block
             if (headRow - 1 >= 0)
                 map[headRow - 1][headCol] = 16;            // star pops out
@@ -570,6 +593,9 @@ void update() {
     // Vérifier les collisions avec les ennemis
     for (int i = 0; i < enemyCount; i++) {
         if (enemies[i].isActive && checkPlayerEnemyCollision(i)) {
+            if (ecrase) {
+                Mix_PlayChannel(-1, ecrase, 0);
+            }
             enemies[i].velX = 0;
             enemies[i].currentFrame = 2;
           
@@ -1108,6 +1134,14 @@ void cleanupSounds(void) {
     if (saut) {
         Mix_FreeChunk(saut);
         saut = NULL;
+    }
+    if (ecrase) {
+        Mix_FreeChunk(ecrase);
+        ecrase = NULL;
+    }
+    if (objet) {
+        Mix_FreeChunk(objet);
+        objet = NULL;
     }
     if (sonFinJeu) {
         Mix_FreeChunk(sonFinJeu);
