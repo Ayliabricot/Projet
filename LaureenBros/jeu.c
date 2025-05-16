@@ -23,6 +23,7 @@ SDL_Texture* textTexture = NULL;
 SDL_Texture* deathTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
+Mix_Chunk* ecrase = NULL;
 Mix_Chunk* sonFinJeu = NULL;
 
 
@@ -66,6 +67,13 @@ void initSounds() {
         return;
     }
     Mix_VolumeChunk(saut, 30);
+
+    ecrase = Mix_LoadWAV("music/ecrase.mp3");
+    if (!ecrase) {
+        printf("Erreur chargement son ecrase: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(ecrase, 128);
 
     sonFinJeu = Mix_LoadWAV("music/sonFinJeu.mp3");
     if (!sonFinJeu) {
@@ -805,6 +813,10 @@ void cleanupSounds(void) {
     if (saut) {
         Mix_FreeChunk(saut);
         saut = NULL;
+    }
+    if (ecrase) {
+        Mix_FreeChunk(ecrase);
+        ecrase = NULL;
     }
     if (sonFinJeu) {
         Mix_FreeChunk(sonFinJeu);
