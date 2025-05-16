@@ -33,6 +33,9 @@ bool running = true;
 int enemyCount = 0;
 float camera_x = 0.0f;
 float camera_lock_x = 0.0f;
+float invincibilityTimer = 0.0f;
+bool isInvincible = false;
+
 int map[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
     { 0, 0, 6, 6, 6, 0, 0, 6, 6, 0, 0, 6, 0, 0, 15, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 7, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 10, 10, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 6, 6, 6, 0, 0, 6, 6, 6, 0, 0, 0, 6, 6, 0, 15, 6, 0, 6, 0, 0, 6, 6, 0, 0, 6, 0, 0, 0, 0, 12, 13, 0, 0, 0 },
@@ -69,11 +72,15 @@ void initSounds() {
     Mix_VolumeChunk(saut, 30);
 }
 
-bool is_solid_tile(float x, float y) {
+bool is_solid_tile(float x, float y, bool isInvincible) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
-    return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
-        (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9 && (map[row][col] != 10) && (map[row][col] != 15));
+    if (!isInvincible) {
+        return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0) && (map[row][col] != 8) && (map[row][col] != 9) && (map[row][col] != 10) && (map[row][col] != 15) && (map[row][col] != 16);
+    }
+    else {
+        return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) && (map[row][col] != 0) && (map[row][col] != 10) && (map[row][col] != 15) && (map[row][col] != 16);
+    }
 }
 
 bool is_deadly_tile(float x, float y) {
@@ -166,15 +173,14 @@ bool initialize() {
     player.animationTimer = player.idleTimer = 5;
     player.currentFrame = 3;
     player.isJumping = false;
-    player.gravity = 0.1f;
-    player.jumpForce = -80.0f;
+    player.gravity = 0.5f;
+    player.jumpForce = -11.5f;
     player.facingRight = true;
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
-
-
-    initializeEnemies(1);
+ 
+    initializeEnemies(2);
   
 
 return true;
@@ -224,12 +230,15 @@ void collectPieces() {
             // Check if the tile is a piece (ID 10)
             if (map[row][col] == 10) {
                 // Collect the piece
-                if (piece) {
-                    Mix_PlayChannel(-1, piece, 0);
-                }
                 map[row][col] = 0; // Remove the piece from the map
-                gameState->coins++; // Increment the score
+                gameState->coins += 10; // Increment the score
                 printf("Piece collected! Total coins: %d\n", gameState->coins);
+            }
+            else if (map[row][col] == 16) {
+                map[row][col] = 0;
+                gameState->coins += 75;
+                invincibilityTimer = 5;
+                isInvincible = true;
             }
         }
     }
@@ -268,7 +277,7 @@ void handleEvents() {
         player.facingRight = false;
     }
     if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
-        player.velX = 50;
+        player.velX = 4;
         player.facingRight = true;
     }
 }
@@ -276,6 +285,8 @@ void handleEvents() {
 // Modification de la fonction update pour corriger le problème de saut en glissant
 
 void update() {
+    invincibilityTimer -= 0.01;
+    if (invincibilityTimer <= 0) isInvincible = false;
 
     if (!player.isDying && !player.isRespawning &&
         (is_deadly_tile(player.x + 16, player.y + 32) ||
@@ -327,10 +338,10 @@ void update() {
 
         // Déplacement horizontal pendant le respawn
         float newX = player.x + player.velX;
-        if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
+        if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32, isInvincible)) {
             player.x = newX;
         }
-        else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
+        else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32, isInvincible)) {
             player.x = newX;
         }
 
@@ -354,16 +365,16 @@ void update() {
     float newY = player.y + player.velY;
     gameState->distance = player.x/80;
     // Horizontale collision
-    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32)) {
+    if (player.velX > 0 && !is_solid_tile(newX + 32, player.y + 32, isInvincible)) {
         player.x = newX;
     }
-    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32)) {
+    else if (player.velX < 0 && !is_solid_tile(newX, player.y + 32, isInvincible)) {
         player.x = newX;
     }
 
     // Vérifie si le joueur est sur le sol avant d'appliquer la gravité
     bool wasOnGround = !player.isJumping;
-    bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1);
+    bool isOnGround = is_solid_tile(player.x + 16, player.y + 64 + 1, isInvincible);
 
     // Si le joueur était au sol mais ne l'est plus (glisse d'un bloc), 
     // considérer qu'il est en train de sauter/tomber
@@ -374,9 +385,8 @@ void update() {
     // Gravité
     player.velY += player.gravity;
 
-    // Verticale collision
     if (player.velY > 0) {
-        if (is_solid_tile(player.x + 16, newY + 64)) {
+        if (is_solid_tile(player.x + 16, newY + 64, isInvincible)) {
             player.y = ((int)((newY + 64) / BLOCK_SIZE)) * BLOCK_SIZE - 64;
             player.velY = 0;
             player.isJumping = false;
@@ -384,11 +394,28 @@ void update() {
         else player.y = newY;
     }
     else if (player.velY < 0) {
-        if (is_solid_tile(player.x + 16, newY)) {
-            player.y = ((int)(newY / BLOCK_SIZE) + 1) * BLOCK_SIZE;
+        int headCol = (int)((player.x + 16) / BLOCK_SIZE);
+        int headRow = (int)(newY / BLOCK_SIZE);
+        // Did we hit a question-mark block?
+        if (headRow >= 0 && headRow < MAP_HEIGHT &&
+            headCol >= 0 && headCol < MAP_WIDTH &&
+            map[headRow][headCol] == 7)
+        {
+            // Mark it used and spawn a star above it:
+            map[headRow][headCol] = 17;                // used block
+            if (headRow - 1 >= 0)
+                map[headRow - 1][headCol] = 16;            // star pops out
+            printf("Question mark block hit!\n");
+        }
+
+        // Now do the normal head collision response
+        if (is_solid_tile(player.x + 16, newY, isInvincible)) {
+            player.y = (headRow + 1) * BLOCK_SIZE;
             player.velY = 0;
         }
-        else player.y = newY;
+        else {
+            player.y = newY;
+        }
     }
 
     // Animation
@@ -483,7 +510,7 @@ void updateEnemies() {
             if (tileCol >= 0 && tileRow >= 0) {
                 int tile = map[tileRow][tileCol];
                 int tileAbove = (tileRow > 0) ? map[tileRow - 1][tileCol] : 0;
-                leftCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX, enemies[i].y + enemies[i].height - 1);
+                leftCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX, enemies[i].y + enemies[i].height - 1, isInvincible);
             }
         }
 
@@ -494,14 +521,14 @@ void updateEnemies() {
             if (tileCol < MAP_WIDTH && tileRow >= 0) {
                 int tile = map[tileRow][tileCol];
                 int tileAbove = (tileRow > 0) ? map[tileRow - 1][tileCol] : 0;
-                rightCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1);
+                rightCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1, isInvincible);
             }
         }
 
         // Vérifier le bord des plateformes
         tileCol = (int)((enemies[i].x + enemies[i].width / 2) / BLOCK_SIZE);
         tileRow = (int)((enemies[i].y + enemies[i].height + 5) / BLOCK_SIZE);
-        bool groundCollision = is_solid_tile((enemies[i].x + enemies[i].width / 2), (enemies[i].y + enemies[i].height + 5));
+        bool groundCollision = is_solid_tile((enemies[i].x + enemies[i].width / 2), (enemies[i].y + enemies[i].height + 5), isInvincible);
 
         if (leftCollision || rightCollision || !groundCollision) {
             enemies[i].velX *= -1;
@@ -562,7 +589,9 @@ bool checkPlayerEnemyCollision(int enemyIndex) {
         player.y = SCREEN_HEIGHT - 480;
         player.velY = 0;
         player.isJumping = false;
-        gameState->lives--;
+        if (isInvincible == 0) {
+            gameState->lives--;
+        }
         if (gameState->lives <= 0) {
             running = false; // Arrête le jeu si le joueur n'a plus de vies
         }
@@ -719,6 +748,14 @@ void renderMario() {
         SDL_Rect dstWithSwing = dstRect;
         dstWithSwing.x += (int)player.swingOffset;
         SDL_RenderCopyEx(renderer, currentTexture, &srcRect, &dstRect, 0, NULL, flip);
+    }
+    if (isInvincible) {
+        SDL_SetTextureColorMod(currentTexture, 255, 255, 0); // Change color to yellow
+        SDL_SetTextureAlphaMod(currentTexture, 128); // Set transparency
+    }
+    else {
+        SDL_SetTextureColorMod(currentTexture, 255, 255, 255); // Reset color to white
+        SDL_SetTextureAlphaMod(currentTexture, 255); // Reset transparency
     }
 }
 
