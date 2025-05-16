@@ -332,13 +332,7 @@ void collectPieces() {
             else if (map[row][col] == 16) {
                 map[row][col] = 0;
                 gameState->coins += 75;
-                Mix_PauseMusic();
-                if (sonFinJeu) {
-                    Mix_PauseMusic();
-                    Mix_PlayChannel(-1, sonFinJeu, 0);
-                    SDL_Delay(6000);
-                    Mix_ResumeMusic();
-                }
+                
                 invincibilityTimer = 5;
                 isInvincible = true;
             }
