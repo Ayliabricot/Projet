@@ -24,8 +24,9 @@ SDL_Texture* deathTexture = NULL;
 SDL_Texture* enemyTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
-Ennemi enemies[MAX_ENEMIES];
 
+
+Ennemi enemies[MAX_ENEMIES];
 Sprite player;
 Sprite chateau;
 bool running = true;
@@ -42,7 +43,7 @@ int map[MAP_HEIGHT][MAP_WIDTH] = {
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 10, 10, 0, 0, 0, 0, 0, 0, 7, 0, 0, 10, 1, 0, 0, 6, 6, 6, 6, 6, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 0, 0, 0, 15, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 1, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 15, 0, 0, 0, 0, 18, 18, 0, 0, 0, 00, 0, 18, 18, 18, 18, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 15, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 6, 0, 0, 0, 1, 1, 1, 1, 1, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0 },
     { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 4, 5, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 15, 0, 0, 0, 0, 0, 0, 0, 18, 18, 0, 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0 },
-    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 1, 1, 0, 0, 0, 10, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 2, 3, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 0, 0, 0, 11, 0, 0, 0 },
+    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 1, 1, 0, 0, 0, 10, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 2, 3, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 0, 0, 0, 0, 11, 0, 0, 0 },
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 1, 2, 3, 1, 1, 1, 8, 8, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 8, 8, 8, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 8, 8, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 1, 8, 8, 1, 8, 8, 1, 8, 8, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 8, 8, 8, 8, 8, 8, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 9, 9, 9, 9, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ,0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
     { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 1, 1, 9, 9, 9, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 1, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 9, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 9, 9, 9, 9, 9, 9, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 1, 1, 1, 2, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -165,31 +166,47 @@ bool initialize() {
     player.animationTimer = player.idleTimer = 5;
     player.currentFrame = 3;
     player.isJumping = false;
-    player.gravity = 0.5f;
-    player.jumpForce = -12.0f;
+    player.gravity = 0.1f;
+    player.jumpForce = -80.0f;
     player.facingRight = true;
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
 
 
-    initializeEnemies();
+    initializeEnemies(1);
+  
 
 return true;
 }
 
-void initializeEnemies() {
+void initializeEnemies(int difficulte) {
     enemyCount = 0;
     for (int i = 0; i < MAX_ENEMIES; i++) {
         enemies[i].isActive = false;
     }
 
     // Add enemies at specific positions
-    generateEnemy(400, 450);  // First platform
-    generateEnemy(800, 450);  // Middle area
-    generateEnemy(1200, 350); // Higher platform
+    generateEnemy(400, 450);  // 
     generateEnemy(1800, 450); // Further in the level
-    generateEnemy(2400, 450); // Even further
+    generateEnemy(1700, 450); // Further in the level
+    generateEnemy(2650, 500); // Even further
+    generateEnemy(3400, 450);
+    generateEnemy(5500, 500);
+    generateEnemy(9500, 450);
+    generateEnemy(9600, 450);
+    generateEnemy(9650, 450);
+    if (difficulte == 1|| difficulte == 2) {
+        generateEnemy(9980, 450);
+        generateEnemy(10090, 450);
+    }
+    if (difficulte == 2) {
+        generateEnemy(10590, 450);
+        generateEnemy(11140, 450);
+        generateEnemy(12440, 450);
+    }
+   
+
 }
 
 void collectPieces() {
@@ -251,7 +268,7 @@ void handleEvents() {
         player.facingRight = false;
     }
     if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
-        player.velX = 4;
+        player.velX = 50;
         player.facingRight = true;
     }
 }
@@ -429,8 +446,14 @@ void update() {
             player.currentFrame = 3; // Frame statique normale
         }
     }
-    
+    updateEnemies();
 
+    // Vérifier les collisions avec les ennemis
+    for (int i = 0; i < enemyCount; i++) {
+        if (enemies[i].isActive && checkPlayerEnemyCollision(i)) {
+            enemies[i].isActive = false; // Désactive l'ennemi si écrasé
+        }
+    }
     float target_camera_x = player.x + 16 - SCREEN_WIDTH / 2;
     if (target_camera_x > camera_lock_x) camera_lock_x = target_camera_x;
 
@@ -447,26 +470,52 @@ void updateEnemies() {
     for (int i = 0; i < enemyCount; i++) {
         if (!enemies[i].isActive) continue;
 
-        // Move enemy
         float newX = enemies[i].x + enemies[i].velX;
 
-        // Check collision with walls/ground
-        bool leftCollision = is_solid_tile(newX, enemies[i].y + enemies[i].height - 1);
-        bool rightCollision = is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1);
-        bool groundCollision = is_solid_tile(enemies[i].x + enemies[i].width / 2, enemies[i].y + enemies[i].height + 5);
+        // Vérification des collisions à gauche/droite
+        bool leftCollision = false, rightCollision = false;
+        int tileCol, tileRow;
 
-        // Change direction if hitting a wall or reaching edge of platform
+        // Collision à gauche
+        if (enemies[i].velX < 0) {
+            tileCol = (int)(newX / BLOCK_SIZE);
+            tileRow = (int)((enemies[i].y + enemies[i].height - 1) / BLOCK_SIZE);
+            if (tileCol >= 0 && tileRow >= 0) {
+                int tile = map[tileRow][tileCol];
+                int tileAbove = (tileRow > 0) ? map[tileRow - 1][tileCol] : 0;
+                leftCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX, enemies[i].y + enemies[i].height - 1);
+            }
+        }
+
+        // Collision à droite
+        if (enemies[i].velX > 0) {
+            tileCol = (int)((newX + enemies[i].width) / BLOCK_SIZE);
+            tileRow = (int)((enemies[i].y + enemies[i].height - 1) / BLOCK_SIZE);
+            if (tileCol < MAP_WIDTH && tileRow >= 0) {
+                int tile = map[tileRow][tileCol];
+                int tileAbove = (tileRow > 0) ? map[tileRow - 1][tileCol] : 0;
+                rightCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1);
+            }
+        }
+
+        // Vérifier le bord des plateformes
+        tileCol = (int)((enemies[i].x + enemies[i].width / 2) / BLOCK_SIZE);
+        tileRow = (int)((enemies[i].y + enemies[i].height + 5) / BLOCK_SIZE);
+        bool groundCollision = is_solid_tile((enemies[i].x + enemies[i].width / 2), (enemies[i].y + enemies[i].height + 5));
+
         if (leftCollision || rightCollision || !groundCollision) {
-            enemies[i].velX = -enemies[i].velX;
+            enemies[i].velX *= -1;
             enemies[i].facingRight = !enemies[i].facingRight;
         }
         else {
             enemies[i].x = newX;
         }
 
-        // Check if player jumped on enemy
-        if (checkPlayerEnemyCollision(i)) {
-            enemies[i].isActive = false; // Enemy is defeated
+        // Animation
+        enemies[i].animationTimer++;
+        if (enemies[i].animationTimer >= ANIMATION_SPEED) {
+            enemies[i].animationTimer = 0;
+            enemies[i].currentFrame = enemies[i].currentFrame == 0 ? 1 : 0;
         }
     }
 }
@@ -513,6 +562,10 @@ bool checkPlayerEnemyCollision(int enemyIndex) {
         player.y = SCREEN_HEIGHT - 480;
         player.velY = 0;
         player.isJumping = false;
+        gameState->lives--;
+        if (gameState->lives <= 0) {
+            running = false; // Arrête le jeu si le joueur n'a plus de vies
+        }
     }
 
     return false;
@@ -552,16 +605,24 @@ void renderMap() {
     }
 }
 
+// Version corrigée de renderEnemies() :
 void renderEnemies() {
     for (int i = 0; i < enemyCount; i++) {
         if (!enemies[i].isActive) continue;
 
-        // Only render enemies that are visible on screen
         if (enemies[i].x + enemies[i].width > camera_x &&
             enemies[i].x < camera_x + SCREEN_WIDTH) {
-            SDL_Rect frameA = {27,12,20,17};// marche goumpa 1
-            SDL_Rect frameB = { 54,12,19,17 };//marche goumpa 2
-            SDL_Rect frameC = { 78,20,20,9 };
+
+            SDL_Rect srcRect;
+            if (enemies[i].currentFrame == 0) {
+                srcRect = (SDL_Rect){ 27, 12, 20, 17 }; // marche goumpa 1
+            }
+            else if (enemies[i].currentFrame == 1) {
+                srcRect = (SDL_Rect){ 54, 12, 19, 17 }; // marche goumpa 2
+            }
+            else {
+                srcRect = (SDL_Rect){ 78, 20, 20, 9 }; // écrasé
+            }
 
             SDL_Rect dstRect = {
                 (int)(enemies[i].x - camera_x),
@@ -570,8 +631,8 @@ void renderEnemies() {
                 enemies[i].height
             };
 
-            SDL_RendererFlip flip = enemies[i].facingRight ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
-            SDL_RenderCopyEx(renderer, enemies[i].texture, NULL, &dstRect, 0, NULL, flip);
+            SDL_RendererFlip flip = enemies[i].facingRight==false ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+            SDL_RenderCopyEx(renderer, enemyTexture, &srcRect, &dstRect, 0, NULL, flip);
         }
     }
 }
@@ -770,23 +831,23 @@ void renderHUD() {
 
 
 
-
 void generateEnemy(float x, float y) {
     if (enemyCount < MAX_ENEMIES) {
         Ennemi* enemy = &enemies[enemyCount];
         enemy->x = x;
-        enemy->y = y;
-        enemy->velX = -1.5f; // Start moving left
+        enemy->y = y - enemy->height; // Ajustez selon la hauteur des plateformes
+        enemy->velX = -1.5f;
+      
         enemy->isActive = true;
         enemy->texture = enemyTexture;
         enemy->facingRight = false;
-        enemy->width = 50;   // Size of the enemy block
+        enemy->width = 50;
         enemy->height = 50;
+        enemy->currentFrame = 0;
+        enemy->animationTimer = 0;
         enemyCount++;
     }
 }
-
-
 
 
 
@@ -866,6 +927,7 @@ void render(int* choixPerso) {
     renderMap();
     renderMario();
     renderHUD(); 
+    renderEnemies();
 
     SDL_RenderPresent(renderer);
 }

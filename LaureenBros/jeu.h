@@ -67,7 +67,8 @@ typedef struct {
     int height;
     int currentFrame;       // Frame actuelle de l'animation
     int animationTimer;     // Compteur pour changer de frame
-    int totalFrames;        // Nombre total de frames dans l'animation
+    int totalFrames;   // Nombre total de frames dans l'animation
+ 
 } Ennemi;
 
 
