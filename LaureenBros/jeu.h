@@ -39,6 +39,7 @@ typedef struct {
     float swingOffset;    // Décalage oscillation parachute
     float parachuteYOffset;
     float deathTimer;
+    bool goomba;
 } Sprite;
 
 typedef struct {

@@ -262,7 +262,7 @@ void initializeEnemies(int difficulte) {
     if (difficulte == 1|| difficulte == 2) {
         generateEnemy(9980, 450);
         generateEnemy(10090, 450);
-        generateEnemy(7760, 250);//goumpa nuage
+       
     }
     if (difficulte == 2) {
         generateEnemy(10590, 450);
@@ -403,7 +403,9 @@ void update() {
                 player.isRespawning = true;
                 player.respawnTimer = 0.0f;
                 // Respawn 5 blocs avant la position actuelle
-                player.x -= 400;
+                if (player.goomba == false) {
+                    player.x -= 400;
+                }
                 player.y = SCREEN_HEIGHT-800;
                 camera_lock_x -= 400;
                 camera_x = camera_lock_x;
@@ -570,7 +572,7 @@ void update() {
         if (enemies[i].isActive && checkPlayerEnemyCollision(i)) {
             enemies[i].velX = 0;
             enemies[i].currentFrame = 2;
-            SDL_Delay(1000);
+          
             enemies[i].isActive = false; // Désactive l'ennemi si écrasé
         }
     }
@@ -676,7 +678,9 @@ bool checkPlayerEnemyCollision(int enemyIndex) {
         player.velY = 0;
         player.isJumping = false;
         if (isInvincible == 0) {
-            gameState->lives--;
+           
+            player.isDying = true;
+            player.goomba = true;
         }
         if (gameState->lives <= 0) {
             running = false; // Arrête le jeu si le joueur n'a plus de vies
