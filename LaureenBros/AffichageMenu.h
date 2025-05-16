@@ -10,9 +10,9 @@
 
 int chargerPartieUNIQUE;
 
-void afficherMenu(Ecran* ecran,  int touche,  int* choix, char option[5][40],Partie** tableau, int* nbParties, int argc, char* argv[], Mix_Music* musique);
+void afficherMenu(Ecran* ecran,  int touche,  int* choix, char option[5][40],Partie** tableau, int* nbParties, int argc, char* argv[]);
 void definirChoix(int touche, int* choix);
-void lancer_ecran(int* choix, char option[5][40],Partie** tableau, int* nbParties, int argc, char* argv[], Mix_Music* musique);
+void lancer_ecran(int* choix, char option[5][40],Partie** tableau, int* nbParties, int argc, char* argv[]);
 
 int afficher_regles(Ecran* ecran);
 

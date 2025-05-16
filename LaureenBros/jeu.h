@@ -94,6 +94,7 @@ extern int map[MAP_HEIGHT][MAP_WIDTH];
 extern Partie* currentPartie;
 
 bool is_solid_tile(float x, float y, bool isInvincible);
+bool canEnemyMoveForward(Ennemi* enemy);
 bool initialize();
 void handleEvents();
 void update();

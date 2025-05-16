@@ -97,6 +97,48 @@ bool is_solid_tile(float x, float y, bool isInvincible) {
     }
 }
 
+bool is_ground_near(float x, float y) {
+    // Vérifie 2 blocs en dessous de la position donnée
+    int col = (int)(x / BLOCK_SIZE);
+    int row1 = (int)((y + BLOCK_SIZE) / BLOCK_SIZE);
+    int row2 = (int)((y + 2 * BLOCK_SIZE) / BLOCK_SIZE);
+
+    return (row1 < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH && map[row1][col] != 0) ||
+        (row2 < MAP_HEIGHT && col >= 0 && col < MAP_WIDTH && map[row2][col] != 0);
+}
+
+bool canEnemyMoveForward(Ennemi* enemy) {
+    int direction = enemy->velX > 0 ? 1 : -1; // 1 = droite, -1 = gauche
+
+    // Position du bloc "devant" l'ennemi (au niveau des pieds)
+    int frontX = (int)((enemy->x + (direction * enemy->width)) / BLOCK_SIZE);
+    int frontY = (int)((enemy->y + enemy->height) / BLOCK_SIZE);
+
+    // Position du bloc "en dessous du bloc devant" (pour éviter les trous)
+    int belowFrontX = frontX;
+    if (enemy->velX > 0 ? 1 : -1) belowFrontX = frontX - 1;
+    else belowFrontX = frontX + 1;
+    int belowFrontY = frontY + 1; // 1 bloc sous l'ennemi
+
+    // Vérifie si le bloc devant est valide (pas de lave/vide)
+    if (frontX < 0 || frontX >= MAP_WIDTH || frontY < 0 || frontY >= MAP_HEIGHT)
+        return false; // Hors limites → stop
+
+    if (map[frontY][frontX] == 0 || map[frontY][frontX] == 7 || map[frontY][frontX] == 8 || map[frontY][frontX] == 9) {
+        return false; // Lave (7) ou vide (0) → stop
+    }
+
+    // Vérifie si le bloc en dessous du bloc devant est solide
+    if (belowFrontY >= MAP_HEIGHT)
+        return false; // Vide sous l'ennemi → tombe dans le vide
+
+    if (map[belowFrontY][belowFrontX] == 0 || map[belowFrontY][belowFrontX] == 7 || map[belowFrontY][belowFrontX] == 8 || map[belowFrontY][belowFrontX] == 9) {
+        return false; // Pas de sol → l'ennemi ne peut pas avancer
+    }
+
+    return true; // Peut avancer
+}
+
 bool is_deadly_tile(float x, float y) {
     int col = (int)(x / BLOCK_SIZE);
     int row = (int)(y / BLOCK_SIZE);
@@ -206,19 +248,21 @@ void initializeEnemies(int difficulte) {
         enemies[i].isActive = false;
     }
 
-    // Add enemies at specific positions
-    generateEnemy(400, 450);  // 
-    generateEnemy(1800, 450); // Further in the level
-    generateEnemy(1700, 450); // Further in the level
-    generateEnemy(2650, 500); // Even further
+    // position des ennemies
+    generateEnemy(400, 450);   
+    generateEnemy(1800, 450); 
+    generateEnemy(1700, 450); 
+    generateEnemy(2650, 500); 
     generateEnemy(3400, 450);
     generateEnemy(5500, 500);
+
     generateEnemy(9500, 450);
     generateEnemy(9600, 450);
     generateEnemy(9650, 450);
     if (difficulte == 1|| difficulte == 2) {
         generateEnemy(9980, 450);
         generateEnemy(10090, 450);
+        generateEnemy(7760, 250);//goumpa nuage
     }
     if (difficulte == 2) {
         generateEnemy(10590, 450);
@@ -324,6 +368,11 @@ void handleEvents() {
 // Modification de la fonction update pour corriger le problème de saut en glissant
 
 void update() {
+
+
+
+
+
     invincibilityTimer -= 0.01;
     if (invincibilityTimer <= 0) isInvincible = false;
 
@@ -389,7 +438,7 @@ void update() {
         player.y += 2.0f;
 
         // Fin du respawn
-        if (player.y >= SCREEN_HEIGHT - 430) {
+        if (is_ground_near(player.x + 16, player.y + 64)) {
             player.isRespawning = false;
             player.currentFrame = 3;
             player.swingOffset = 0.0f;
@@ -519,6 +568,9 @@ void update() {
     // Vérifier les collisions avec les ennemis
     for (int i = 0; i < enemyCount; i++) {
         if (enemies[i].isActive && checkPlayerEnemyCollision(i)) {
+            enemies[i].velX = 0;
+            enemies[i].currentFrame = 2;
+            SDL_Delay(1000);
             enemies[i].isActive = false; // Désactive l'ennemi si écrasé
         }
     }
@@ -538,52 +590,45 @@ void updateEnemies() {
     for (int i = 0; i < enemyCount; i++) {
         if (!enemies[i].isActive) continue;
 
+        // === 1. Vérifie si l'ennemi doit changer de direction ===
+        if (!canEnemyMoveForward(&enemies[i])) {
+            enemies[i].velX *= -1;
+            enemies[i].facingRight = !enemies[i].facingRight;
+        }
+
+        // === 2. Déplacement horizontal ===
         float newX = enemies[i].x + enemies[i].velX;
 
-        // Vérification des collisions à gauche/droite
-        bool leftCollision = false, rightCollision = false;
+        // Collision avec les murs/blocs
+        bool collision = false;
         int tileCol, tileRow;
 
-        // Collision à gauche
-        if (enemies[i].velX < 0) {
+        // Vérifie à gauche ou droite selon la direction
+        if (enemies[i].velX < 0) { // Gauche
             tileCol = (int)(newX / BLOCK_SIZE);
             tileRow = (int)((enemies[i].y + enemies[i].height - 1) / BLOCK_SIZE);
-            if (tileCol >= 0 && tileRow >= 0) {
-                int tile = map[tileRow][tileCol];
-                int tileAbove = (tileRow > 0) ? map[tileRow - 1][tileCol] : 0;
-                leftCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX, enemies[i].y + enemies[i].height - 1, isInvincible);
-            }
+            collision = (tileCol >= 0 && tileRow >= 0 && is_solid_tile(newX, enemies[i].y + enemies[i].height - 1, false));
         }
-
-        // Collision à droite
-        if (enemies[i].velX > 0) {
+        else if (enemies[i].velX > 0) { // Droite
             tileCol = (int)((newX + enemies[i].width) / BLOCK_SIZE);
             tileRow = (int)((enemies[i].y + enemies[i].height - 1) / BLOCK_SIZE);
-            if (tileCol < MAP_WIDTH && tileRow >= 0) {
-                int tile = map[tileRow][tileCol];
-                int tileAbove = (tileRow > 0) ? map[tileRow - 1][tileCol] : 0;
-                rightCollision = (tile == 8 && tileAbove == 0) || is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1, isInvincible);
-            }
+            collision = (tileCol < MAP_WIDTH && tileRow >= 0 && is_solid_tile(newX + enemies[i].width, enemies[i].y + enemies[i].height - 1, false));
         }
 
-        // Vérifier le bord des plateformes
-        tileCol = (int)((enemies[i].x + enemies[i].width / 2) / BLOCK_SIZE);
-        tileRow = (int)((enemies[i].y + enemies[i].height + 5) / BLOCK_SIZE);
-        bool groundCollision = is_solid_tile((enemies[i].x + enemies[i].width / 2), (enemies[i].y + enemies[i].height + 5), isInvincible);
-
-        if (leftCollision || rightCollision || !groundCollision) {
+        // Gère les collisions
+        if (collision) {
             enemies[i].velX *= -1;
             enemies[i].facingRight = !enemies[i].facingRight;
         }
         else {
-            enemies[i].x = newX;
+            enemies[i].x = newX; // Applique le déplacement
         }
 
-        // Animation
+        // === 3. Animation ===
         enemies[i].animationTimer++;
         if (enemies[i].animationTimer >= ANIMATION_SPEED) {
             enemies[i].animationTimer = 0;
-            enemies[i].currentFrame = enemies[i].currentFrame == 0 ? 1 : 0;
+            enemies[i].currentFrame = (enemies[i].currentFrame + 1) % 2; // Alterne entre 2 frames
         }
     }
 }
@@ -690,7 +735,7 @@ void renderEnemies() {
             else if (enemies[i].currentFrame == 1) {
                 srcRect = (SDL_Rect){ 54, 12, 19, 17 }; // marche goumpa 2
             }
-            else {
+            else if(enemies[i].currentFrame == 2) {
                 srcRect = (SDL_Rect){ 78, 20, 20, 9 }; // écrasé
             }
 

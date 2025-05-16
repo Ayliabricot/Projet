@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 	*nbParties = 0;
 	*choix = -1;
 
-	lancer_ecran(choix, option, tableau, nbParties,argc,argv,musique);
+	lancer_ecran(choix, option, tableau, nbParties,argc,argv);
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);
