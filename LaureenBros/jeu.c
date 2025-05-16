@@ -86,7 +86,7 @@ bool is_solid_tile(float x, float y, bool isInvincible) {
     int row = (int)(y / BLOCK_SIZE);
     if (player.isRespawning) {
         return (col >= 0 && col < MAP_WIDTH && row >= 0 && row < MAP_HEIGHT) &&
-            (map[row][col] == 1 || map[row][col] == 7);  // Uniquement sol et bloc 7
+            (map[row][col] == 1 || map[row][col] == 7 || map[row][col] == 18);  // Uniquement sol et bloc 7
     }
 
     if (!isInvincible) {
