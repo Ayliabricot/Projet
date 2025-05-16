@@ -98,6 +98,7 @@ bool initialize();
 void handleEvents();
 void update();
 void collectPieces();
+void finDuJeu(void);
 void renderMario();
 void renderMap();
 void render(int* choixPerso);

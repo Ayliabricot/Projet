@@ -10,15 +10,19 @@
 #include "quitterJeu.h"
 #include "gererParties.h"
 #include <SDL.h>
+#include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include <SDL_image.h>
 #include <stdbool.h>
 #include "jeu.h"
 
-void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
+void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[], Mix_Music* musique) {
+	int resultat;
 	Ecran* ecran = definirEcran();
 	Ecran* nouveauEcran = definirEcran();
 	int touche = 0;
 	chargerPartieUNIQUE = 0;
+
 	while (1) {
 
 		while (*choix == -1) {
@@ -31,7 +35,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			contourEcran(ecran);
 			SetConsoleOutputCP(1252);
 			SetConsoleCP(1252);
-			afficherMenu(ecran, touche, choix,option,tableau,nbParties,argc,argv);
+			afficherMenu(ecran, touche, choix,option,tableau,nbParties,argc,argv, musique);
 			while (1) {
 				if (_kbhit()) {
 					tailleEcran(nouveauEcran);
@@ -41,7 +45,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 					}
 					touche = _getch();
 
-					afficherMenu(ecran, touche, choix, option,tableau,nbParties, argc, argv);
+					afficherMenu(ecran, touche, choix, option,tableau,nbParties, argc, argv,musique);
 				}
 			}
 		}
@@ -62,8 +66,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			*choix = choisirDifficulteContain(ecran, tableau[*nbParties]);
 			*nbParties = *nbParties + 1;
 			system("cls");
-			lancerJeu(argc, argv);
-			*choix = -1;
+			*choix = 5;
 		}
 		while (*choix == 2) {
 			system("cls");
@@ -86,6 +89,13 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 				Ecran* ecran = definirEcran();
 				*choix = quitterJeuContain(ecran, opti);
 			}
+			system("cls");
+		}
+		while (*choix == 5) {
+			resultat=lancerJeu(argc, argv);
+			
+			char opti[4] = "oui";
+			*choix = jeuFiniContain(ecran, opti, resultat);
 			system("cls");
 		}
 	}

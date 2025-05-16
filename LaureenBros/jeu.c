@@ -24,6 +24,7 @@ SDL_Texture* deathTexture = NULL;
 SDL_Texture* enemyTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
+Mix_Chunk* sonFinJeu = NULL;
 
 
 Ennemi enemies[MAX_ENEMIES];
@@ -70,6 +71,13 @@ void initSounds() {
         return;
     }
     Mix_VolumeChunk(saut, 30);
+
+    sonFinJeu = Mix_LoadWAV("music/sonFinJeu.mp3");
+    if (!sonFinJeu) {
+        printf("Erreur chargement son fin jeu: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(sonFinJeu, 128);
 }
 
 bool is_solid_tile(float x, float y, bool isInvincible) {
@@ -248,7 +256,13 @@ void handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
-            running = false;
+            if (victoire == 1) {
+                running = false;
+            }
+            else {
+                victoire = 2;
+                running = false;
+            }
         if (event.type == SDL_KEYDOWN) {
             if ((event.key.keysym.sym == SDLK_SPACE || event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_z) && !player.isJumping) {
                 if (saut) {
@@ -324,6 +338,7 @@ void update() {
             else {
                 // Game Over
                 running = false;
+                victoire = 0;
             }
         }
         return; // Skip other updates while dying
@@ -359,6 +374,7 @@ void update() {
         return; // on skippe le reste du update (physique classique)
     }
 
+    finDuJeu();
     collectPieces();
 
     float newX = player.x + player.velX;
@@ -980,7 +996,6 @@ void cleanup() {
     TTF_CloseFont(font);
     TTF_Quit();
     free(gameState);
-    SDL_Quit();
 }
 
 int lancerJeu(int argc, char* argv[]) {
@@ -1008,7 +1023,7 @@ int lancerJeu(int argc, char* argv[]) {
 
     cleanup();
 	system("cls");
-    return 0;
+    return victoire;
 }
 
 void cleanupSounds(void) {
@@ -1019,5 +1034,9 @@ void cleanupSounds(void) {
     if (saut) {
         Mix_FreeChunk(saut);
         saut = NULL;
+    }
+    if (sonFinJeu) {
+        Mix_FreeChunk(sonFinJeu);
+        sonFinJeu = NULL;
     }
 }

@@ -10,7 +10,7 @@
 
 
 
-void afficherMenu(Ecran* ecran, int touche, int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
+void afficherMenu(Ecran* ecran, int touche, int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[], Mix_Music* musique) {
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());
 
@@ -26,7 +26,7 @@ void afficherMenu(Ecran* ecran, int touche, int* choix, char option[5][40],Parti
 		definirChoix(touche, choix);
 	}
 	else if (touche == 13) {
-		lancer_ecran(choix,option,tableau,nbParties,argc,argv);
+		lancer_ecran(choix,option,tableau,nbParties,argc,argv,musique);
 	}
 
 	for (int a = 1; a < ecran->largeur - 1; a++) {

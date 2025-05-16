@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
 	*nbParties = 0;
 	*choix = -1;
 
-	lancer_ecran(choix, option, tableau, nbParties,argc,argv);
+	lancer_ecran(choix, option, tableau, nbParties,argc,argv,musique);
 
 	for (int i = 0; i < *nbParties; i++) {
 		free(tableau[i]);
@@ -69,6 +69,7 @@ int main(int argc, char* argv[]) {
 	Mix_FreeMusic(musique);
 	cleanupSounds();
 	Mix_CloseAudio();
+	SDL_Quit();
 	return 0;
 }
 
