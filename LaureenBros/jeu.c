@@ -25,6 +25,7 @@ SDL_Texture* enemyTexture = NULL;
 Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
 Mix_Chunk* ecrase = NULL;
+Mix_Chunk* objet = NULL;
 Mix_Chunk* sonFinJeu = NULL;
 
 
@@ -77,6 +78,13 @@ void initSounds() {
     ecrase = Mix_LoadWAV("music/ecrase.mp3");
     if (!ecrase) {
         printf("Erreur chargement son ecrase: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(ecrase, 128);
+
+    objet = Mix_LoadWAV("music/objet.mp3");
+    if (!objet) {
+        printf("Erreur chargement son objet: %s\n", Mix_GetError());
         return;
     }
     Mix_VolumeChunk(ecrase, 128);
@@ -270,7 +278,6 @@ void initializeEnemies(int difficulte) {
     if (difficulte == 1|| difficulte == 2) {
         generateEnemy(9980, 450);
         generateEnemy(10090, 450);
-        generateEnemy(7760, 250);//goumpa nuage
     }
     if (difficulte == 2) {
         generateEnemy(10590, 450);
@@ -315,6 +322,9 @@ void collectPieces() {
             // Check if the tile is a piece (ID 10)
             if (map[row][col] == 10) {
                 // Collect the piece
+                if (piece) {
+                    Mix_PlayChannel(-1, piece, 0);
+                }
                 map[row][col] = 0; // Remove the piece from the map
                 gameState->coins += 10; // Increment the score
                 printf("Piece collected! Total coins: %d\n", gameState->coins);
@@ -322,6 +332,13 @@ void collectPieces() {
             else if (map[row][col] == 16) {
                 map[row][col] = 0;
                 gameState->coins += 75;
+                Mix_PauseMusic();
+                if (sonFinJeu) {
+                    Mix_PauseMusic();
+                    Mix_PlayChannel(-1, sonFinJeu, 0);
+                    SDL_Delay(6000);
+                    Mix_ResumeMusic();
+                }
                 invincibilityTimer = 5;
                 isInvincible = true;
             }
@@ -364,11 +381,11 @@ void handleEvents() {
     player.velX = 0;
 
     if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]) {
-        player.velX = -4;
+        player.velX = -5;
         player.facingRight = false;
     }
     if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
-        player.velX = 4;
+        player.velX = 5;
         player.facingRight = true;
     }
 }
@@ -500,6 +517,9 @@ void update() {
             map[headRow][headCol] == 7)
         {
             // Mark it used and spawn a star above it:
+            if (objet) {
+                Mix_PlayChannel(-1, objet, 0);
+            }
             map[headRow][headCol] = 17;                // used block
             if (headRow - 1 >= 0)
                 map[headRow - 1][headCol] = 16;            // star pops out
@@ -576,9 +596,11 @@ void update() {
     // Vérifier les collisions avec les ennemis
     for (int i = 0; i < enemyCount; i++) {
         if (enemies[i].isActive && checkPlayerEnemyCollision(i)) {
+            if (ecrase) {
+                Mix_PlayChannel(-1, ecrase, 0);
+            }
             enemies[i].velX = 0;
             enemies[i].currentFrame = 2;
-            SDL_Delay(1000);
             enemies[i].isActive = false; // Désactive l'ennemi si écrasé
         }
     }
@@ -1116,6 +1138,10 @@ void cleanupSounds(void) {
     if (ecrase) {
         Mix_FreeChunk(ecrase);
         ecrase = NULL;
+    }
+    if (objet) {
+        Mix_FreeChunk(objet);
+        objet = NULL;
     }
     if (sonFinJeu) {
         Mix_FreeChunk(sonFinJeu);
