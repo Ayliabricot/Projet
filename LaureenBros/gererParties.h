@@ -16,5 +16,6 @@ typedef struct {
 Partie** creerTableau(void);
 Partie* nouvelle_partie(void);
 void demanderPseudo(Ecran* ecran, Partie* partie);
+int affichageScore(Ecran *ecran);
 
 #endif

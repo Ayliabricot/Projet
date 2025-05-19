@@ -134,7 +134,7 @@ void afficherSavePartie(Ecran* ecran, Partie* partie) {
     }
 }
 
-void affichageScore(Ecran* ecran) {
+int affichageScore(Ecran* ecran) {
     while (1) {
         if (!ecran) {
             printf("probleme d'allocation");
@@ -143,9 +143,122 @@ void affichageScore(Ecran* ecran) {
         SetConsoleOutputCP(GetOEMCP());
         SetConsoleCP(GetOEMCP());
         contourEcran(ecran);
+        SetConsoleOutputCP(65001);
+        SetConsoleCP(65001);
+
+
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 - 2, "╔══════════════════════════════════════════╗");
+     
+
+        afficherTexte(ecran->largeur / 2 - 45 / 2, ecran->hauteur / 4, "║            TABLEAU DES SCORES :          ║");
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 +2 , "╚══════════════════════════════════════════╝");
+
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 4, "════════════════════════════════════════════");
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 5, "║ 🏆 │ Pseudo              │ Score         ║");
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 6, "────────────────────────────────────────────");
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 7, "║ 🥇 │                     │               ║");
+        char pseudoA[50] = "hugo";
+        char scoreA[20] = "2070";
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 7, pseudoA);
+        afficherTexte(ecran->largeur / 2 +7, ecran->hauteur / 4 + 7,scoreA);
+
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 8, "║ 🥈 │                     │               ║");
+        char pseudoB[50] = "Aylia";
+        char scoreB[20] = "2050";
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 8, pseudoB);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 8, scoreB);
+
+
+        char pseudo3[50] = "Celian";
+        char score3[20] = "1000";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 9, "║ 🥉 │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 9, pseudo3);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 9, score3);
+
+        // Ligne 4
+        char pseudo4[50] = "Lina";
+        char score4[20] = "980";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 10, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 10, pseudo4);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 10, score4);
+
+        // Ligne 5
+        char pseudo5[50] = "Jade";
+        char score5[20] = "930";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 11, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 11, pseudo5);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 11, score5);
+
+        // Ligne 6
+        char pseudo6[50] = "Noah";
+        char score6[20] = "880";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 12, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 12, pseudo6);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 12, score6);
+
+        // Ligne 7
+        char pseudo7[50] = "Sasha";
+        char score7[20] = "860";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 13, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 13, pseudo7);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 13, score7);
+
+        // Ligne 8
+        char pseudo8[50] = "Ethan";
+        char score8[20] = "820";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 14, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 14, pseudo8);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 14, score8);
+
+        // Ligne 9
+        char pseudo9[50] = "Léo";
+        char score9[20] = "800";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 15, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 15, pseudo9);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 15, score9);
+
+        // Ligne 10
+        char pseudo10[50] = "Mia";
+        char score10[20] = "750";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 16, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 16, pseudo10);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 16, score10);
+
+        // Ligne 11
+        char pseudo11[50] = "Nina";
+        char score11[20] = "730";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 17, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 17, pseudo11);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 17, score11);
+
+        // Ligne 12
+        char pseudo12[50] = "Tom";
+        char score12[20] = "710";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 18, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 18, pseudo12);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 18, score12);
+
+        // Ligne 13
+        char pseudo13[50] = "Inès";
+        char score13[20] = "690";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 19, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 19, pseudo13);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 19, score13);
+
+        // Ligne 14
+        char pseudo14[50] = "Loris";
+        char score14[20] = "670";
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 20, "║ 🎖️ │                     │               ║");
+        afficherTexte(ecran->largeur / 2 - 30 / 2, ecran->hauteur / 4 + 20, pseudo14);
+        afficherTexte(ecran->largeur / 2 + 7, ecran->hauteur / 4 + 20, score14);
+
+        afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 21, "════════════════════════════════════════════");
         SetConsoleOutputCP(1252);
         SetConsoleCP(1252);
-        afficherTexte(ecran->largeur / 2 - 40 / 2, ecran->hauteur / 4-2, "╔══════════════════════════════════════════╗");
-        afficherTexte(ecran->largeur / 2 - 21 / 2, ecran->hauteur / 4, "TABLEAU DES SCORES :");
+        if (_kbhit()) {
+            return 5;
+        }
     }
+    
 }
+
