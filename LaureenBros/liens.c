@@ -18,6 +18,7 @@
 
 void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties, int argc, char* argv[]) {
 	int resultat;
+	int index=0;
 	Ecran* ecran = definirEcran();
 	Ecran* nouveauEcran = definirEcran();
 	int touche = 0;
@@ -64,6 +65,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			system("cls");
 			ecran = definirEcran();
 			*choix = choisirDifficulteContain(ecran, tableau[*nbParties]);
+			index = *nbParties;
 			*nbParties = *nbParties + 1;
 			system("cls");
 			*choix = 5;
@@ -75,7 +77,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			
 			chargerPartieUNIQUE = 1;
 			system("cls");
-			lancerJeu(argc, argv);
+			lancerJeu(argc, argv, tableau[index]);
 			*choix = -1;
 			
 		}
@@ -92,7 +94,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 		}
 		while (*choix == 5) {
 			
-			resultat=lancerJeu(argc, argv);
+			resultat=lancerJeu(argc, argv, tableau[index]);
 			
 			char opti[4] = "oui";
 			*choix = jeuFiniContain(ecran, opti, resultat);

@@ -74,9 +74,9 @@ typedef struct {
 
 
 // Enemy functions
-void initializeEnemies();
-void generateEnemy(float x, float y);
-void updateEnemies();
+void initializeEnemies(Partie* partie);
+void generateEnemy(float x, float y, Partie* partie);
+void updateEnemies(Partie* partie);
 void renderEnemies();
 bool checkPlayerEnemyCollision(int enemyIndex);
 
@@ -96,9 +96,9 @@ extern Partie* currentPartie;
 
 bool is_solid_tile(float x, float y, bool isInvincible);
 bool canEnemyMoveForward(Ennemi* enemy);
-bool initialize();
-void handleEvents();
-void update();
+bool initialize(Partie* partie);
+void handleEvents(Partie* partie);
+void update(Partie* partie);
 void collectPieces();
 void finDuJeu(void);
 void renderMario();
@@ -106,7 +106,7 @@ void renderMap();
 void render(int* choixPerso);
 void renderHUD();
 void cleanup();
-int lancerJeu(int argc, char* argv[]);
+int lancerJeu(int argc, char* argv[], Partie* partie);
 
 // Nouvelles fonctions pour la sauvegarde
 void saveGame();

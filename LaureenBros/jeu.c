@@ -162,7 +162,7 @@ bool is_deadly_tile(float x, float y) {
         (map[row][col] == 8 || map[row][col] == 9);
 }
 
-bool initialize() {
+bool initialize(Partie* partie) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) return false;
 
     window = SDL_CreateWindow("Mario Fusion", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -246,44 +246,58 @@ bool initialize() {
     player.currentFrame = 3;
     player.isJumping = false;
     player.gravity = 0.5f;
-    player.jumpForce = -11.5f;
+    if (partie->difficulte == 0) {
+        player.jumpForce = -11.5f;
+    }
+    else if (partie->difficulte == 1 || partie->difficulte == 2) {
+        player.jumpForce = -11.00f;
+    }
     player.facingRight = true;
     player.isIdleAnimating = false;
     player.lookAlternate = false;
     player.wasMoving = false;
 
-    initializeEnemies(2);
+    initializeEnemies(partie);
 
 
     return true;
 }
 
-void initializeEnemies(int difficulte) {
+void initializeEnemies(Partie * partie) {
     enemyCount = 0;
     for (int i = 0; i < MAX_ENEMIES; i++) {
         enemies[i].isActive = false;
     }
 
     // position des ennemies
-    generateEnemy(400, 450);
-    generateEnemy(1800, 450);
-    generateEnemy(1700, 450);
-    generateEnemy(2650, 500);
-    generateEnemy(3400, 450);
-    generateEnemy(5500, 500);
+    generateEnemy(500, 450, partie);
+    generateEnemy(1800, 450, partie);
+    generateEnemy(1700, 450, partie);
+    generateEnemy(2650, 500, partie);
+    generateEnemy(3400, 450, partie);
+    generateEnemy(5500, 500, partie);
 
-    generateEnemy(9500, 450);
-    generateEnemy(9600, 450);
-    generateEnemy(9650, 450);
-    if (difficulte == 1 || difficulte == 2) {
-        generateEnemy(9980, 450);
-        generateEnemy(10090, 450);
+    generateEnemy(9500, 450, partie);
+    generateEnemy(9600, 450, partie);
+    generateEnemy(9650, 450, partie);
+    if (partie->difficulte == 1 ||partie-> difficulte == 2) {
+        generateEnemy(9980, 450, partie);
+        generateEnemy(10090, 450, partie);
+        generateEnemy(1750, 450, partie);
+        generateEnemy(2600, 500, partie);
+        generateEnemy(300, 450, partie);
         
     }
-    if (difficulte == 2) {
-        generateEnemy(10590, 450);
-        generateEnemy(11140, 450);
-        generateEnemy(12440, 450);
+    if (partie->difficulte == 2) {
+        generateEnemy(450, 450, partie);
+       
+        generateEnemy(10590, 450, partie);
+        generateEnemy(11140, 450, partie);
+        generateEnemy(9990, 450, partie);
+        generateEnemy(10990, 450, partie);
+        generateEnemy(11800, 450, partie);
+        generateEnemy(11990, 450, partie);
+        generateEnemy(10690, 450, partie);
     }
 
 
@@ -340,7 +354,7 @@ void collectPieces() {
     }
 }
 
-void handleEvents() {
+void handleEvents(Partie* partie) {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE))
@@ -375,18 +389,28 @@ void handleEvents() {
     player.velX = 0;
 
     if (keystate[SDL_SCANCODE_LEFT] || keystate[SDL_SCANCODE_A]) {
-        player.velX = -4;
+        if (partie->difficulte == 0) {
+            player.velX = -4;
+        }
+        else if (partie->difficulte == 1 || partie->difficulte == 2) {
+            player.velX = -6;
+        }
         player.facingRight = false;
     }
     if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_D]) {
-        player.velX = 4;
+        if (partie->difficulte == 0) {
+            player.velX = 4;
+        }
+        else if (partie->difficulte == 1 || partie->difficulte == 2) {
+            player.velX = 6;
+        }
         player.facingRight = true;
     }
 }
 
 // Modification de la fonction update pour corriger le problème de saut en glissant
 
-void update() {
+void update(Partie *partie) {
 
 
 
@@ -587,7 +611,7 @@ void update() {
             player.currentFrame = 3; // Frame statique normale
         }
     }
-    updateEnemies();
+    updateEnemies(partie);
 
     // Vérifier les collisions avec les ennemis
     for (int i = 0; i < enemyCount; i++) {
@@ -613,7 +637,7 @@ void update() {
     if (player.x > max_player_x) player.x = max_player_x;
 }
 
-void updateEnemies() {
+void updateEnemies(Partie* partie) {
     for (int i = 0; i < enemyCount; i++) {
         if (!enemies[i].isActive) continue;
 
@@ -695,11 +719,12 @@ bool checkPlayerEnemyCollision(int enemyIndex) {
     if (playerRect.x + 10 < enemyRect.x + enemyRect.w &&
         playerRect.x + playerRect.w - 10 > enemyRect.x &&
         playerRect.y < enemyRect.y + enemyRect.h &&
-        playerRect.y + playerRect.h > enemyRect.y) {
+        playerRect.y + playerRect.h > enemyRect.y &&!isInvincible) {
 
         // Player hit enemy - reset position
-        player.x = 100;
-        player.y = SCREEN_HEIGHT - 480;
+        //player.x = 100;
+        //player.y = SCREEN_HEIGHT - 480;
+        player.isDying = true;
         player.velY = 0;
         player.isJumping = false;
         if (isInvincible == 0) {
@@ -981,12 +1006,12 @@ void renderHUD() {
 
 
 
-void generateEnemy(float x, float y) {
+void generateEnemy(float x, float y, Partie * p) {
     if (enemyCount < MAX_ENEMIES) {
         Ennemi* enemy = &enemies[enemyCount];
         enemy->x = x;
         enemy->y = y - enemy->height; // Ajustez selon la hauteur des plateformes
-        enemy->velX = -1.5f;
+        enemy->velX = -1.5f-p->difficulte;
 
         enemy->isActive = true;
         enemy->texture = enemyTexture;
@@ -1101,8 +1126,8 @@ void cleanup() {
     free(gameState);
 }
 
-int lancerJeu(int argc, char* argv[]) {
-    if (!initialize()) {
+int lancerJeu(int argc, char* argv[], Partie* partie) { 
+    if (!initialize(partie)) {
         printf("Échec de l'initialisation. Appuyez sur une touche pour continuer...\n");
         getchar(); // Attendre que l'utilisateur voie le message
         cleanup();
@@ -1118,8 +1143,8 @@ int lancerJeu(int argc, char* argv[]) {
         float delta_time = (current_time - last_time) / 1000.0f;
         last_time = current_time;
 
-        handleEvents();
-        update();
+        handleEvents(partie);
+        update(partie);
         render(0);
         SDL_Delay(16); //60fps
     }
