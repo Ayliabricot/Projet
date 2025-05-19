@@ -145,7 +145,7 @@ void affichageScore(Ecran* ecran) {
         contourEcran(ecran);
         SetConsoleOutputCP(1252);
         SetConsoleCP(1252);
-
+        afficherTexte(ecran->largeur / 2 - 40 / 2, ecran->hauteur / 4-2, "╔══════════════════════════════════════════╗");
         afficherTexte(ecran->largeur / 2 - 21 / 2, ecran->hauteur / 4, "TABLEAU DES SCORES :");
     }
 }

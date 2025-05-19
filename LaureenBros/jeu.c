@@ -1099,7 +1099,27 @@ void loadGameWithPseudo(char* pseudo) {
 
         return;
     }
+
+
+ float x, y, camLock;
+ int score;
+ if (fscanf_s(file, "%f %f %f %d", &x, &y, &camLock, &score) == 4) {
+    player.x = x;
+    player.y = y;
+    camera_lock_x = camLock;
+    camera_x = camera_lock_x;
+    currentPartie->score = score; // Load the score
+    printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n");
+        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
+            pseudo, player.x, player.y, camera_lock_x, currentPartie->score);
+ }
+ else {
+    printf("Erreur lors de la lecture de la sauvegarde pour %s\n", pseudo);
+  }
+
+ fclose(file);
 }
+
 // Update the existing save and load functions to use the new ones
 void saveGame() {
     if (currentPartie != NULL) {
