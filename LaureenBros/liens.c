@@ -93,9 +93,9 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			system("cls");
 		}
 		while (*choix == 5) {
-			
+			Mix_ResumeMusic();
 			resultat=lancerJeu(argc, argv, tableau[index]);
-			
+			Mix_PauseMusic();
 			char opti[4] = "oui";
 			*choix = jeuFiniContain(ecran, opti, resultat);
 			system("cls");

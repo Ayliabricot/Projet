@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
 	}
 	Mix_VolumeMusic(50);
 	Mix_PlayMusic(musique, -1);
+	Mix_PauseMusic();
 
 	initSounds();
 	
