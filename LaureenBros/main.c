@@ -64,7 +64,15 @@ int main(int argc, char* argv[]) {
 	tableau = NULL;
 	free(choix);
 	choix = NULL;
+	free(ecran);
+	ecran = NULL;
+	for (int i = 0; i < nbParties; i++)
+	{
+		free(tableau[i]);
+		tableau[i] = NULL;
+	}
 
+	free(tableau);
 	afficherCurseur();
 	Mix_FreeMusic(musique);
 	cleanupSounds();
