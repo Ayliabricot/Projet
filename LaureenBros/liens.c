@@ -11,6 +11,7 @@
 #include "gererParties.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
+#include <tchar.h>
 #include <SDL_mixer.h>
 #include <SDL_image.h>
 #include <stdbool.h>
@@ -71,10 +72,8 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			*choix = 5;
 		}
 		while (*choix == 2) {
-			system("cls");
 			Ecran* ecran = definirEcran();
-			afficherSavePartie( ecran, tableau);
-			
+			ecran = definirEcran();
 			chargerPartieUNIQUE = 1;
 			system("cls");
 			lancerJeu(argc, argv, tableau[index]);

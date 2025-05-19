@@ -7,6 +7,7 @@
 #include <string.h>
 #include <time.h>
 #include <direct.h>
+
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <SDL_mixer.h>
@@ -246,6 +247,11 @@ bool initialize(Partie* partie) {
     player.parachuteYOffset = 0.0f;
     player.deathTimer = 0.0f;
 
+    camera_x = 0.0f;
+    camera_lock_x = 0.0f;
+    player.x = 100;
+    player.y = SCREEN_HEIGHT - 480;
+
     player.x = 100;
     player.y = SCREEN_HEIGHT - 480;
     gameState = malloc(sizeof(GameState));
@@ -292,7 +298,8 @@ void initializeEnemies(Partie * partie) {
     enemyCount = 0;
     for (int i = 0; i < MAX_ENEMIES; i++) {
         enemies[i].isActive = false;
-    }
+
+    // Regénérer les ennemis avec des Y cohérents
 
     // position des ennemies
     generateEnemy(600, 450, partie);
@@ -1102,16 +1109,16 @@ void loadGameWithPseudo(char* pseudo) {
 
 
  float x, y, camLock;
- int score;
- if (fscanf_s(file, "%f %f %f %d", &x, &y, &camLock, &score) == 4) {
+ int score, vies;
+ if (fscanf_s(file, "%f %f %f %d %d", &x, &y, &camLock, &score, &vies) == 5) {
     player.x = x;
     player.y = y;
     camera_lock_x = camLock;
     camera_x = camera_lock_x;
     currentPartie->score = score; // Load the score
-    printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n");
-        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
-            pseudo, player.x, player.y, camera_lock_x, currentPartie->score);
+    currentPartie->vies = vies;
+        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d  vie : %d\n",
+            pseudo, player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies);
  }
  else {
     printf("Erreur lors de la lecture de la sauvegarde pour %s\n", pseudo);
