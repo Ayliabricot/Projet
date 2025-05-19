@@ -1083,10 +1083,23 @@ void saveGameWithPseudo(char* pseudo) {
     fprintf(file, "%.2f %.2f %.2f %d %d\n", player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies);
     fclose(file);
 
-    printf("Jeu sauvegardé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d\n",
+   
         printf("Jeu sauvegardé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d vies : %d\n",pseudo, player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies);
 }
 
+
+
+void loadGameWithPseudo(char* pseudo) {
+    char saveFilePath[255];
+    snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
+
+    FILE* file = fopen(saveFilePath, "r");
+    if (!file) {
+        printf("Aucune sauvegarde trouvée pour %s, utilisation des valeurs par défaut\n", pseudo);
+
+        return;
+    }
+}
 // Update the existing save and load functions to use the new ones
 void saveGame() {
     if (currentPartie != NULL) {
