@@ -95,7 +95,7 @@ void initSounds() {
         printf("Erreur chargement son etoile: %s\n", Mix_GetError());
         return;
     }
-    Mix_VolumeChunk(ecrase, 128);
+    Mix_VolumeChunk(sonEtoile, 70);
 
     sonFinJeu = Mix_LoadWAV("music/sonFinJeu.mp3");
     if (!sonFinJeu) {
@@ -341,7 +341,7 @@ void collectPieces() {
                 map[row][col] = 0;
                 gameState->coins += 75;
                 
-                invincibilityTimer = 4.50;
+                invincibilityTimer = 4.70;
                 isInvincible = true;
                 Mix_PauseMusic();
                 if (sonEtoile) {
