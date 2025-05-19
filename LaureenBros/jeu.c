@@ -26,6 +26,7 @@ Mix_Chunk* piece = NULL;
 Mix_Chunk* saut = NULL;
 Mix_Chunk* ecrase = NULL;
 Mix_Chunk* objet = NULL;
+Mix_Chunk* sonEtoile = NULL;
 Mix_Chunk* sonFinJeu = NULL;
 
 
@@ -88,6 +89,13 @@ void initSounds() {
         return;
     }
     Mix_VolumeChunk(ecrase, 128);
+
+    sonEtoile = Mix_LoadWAV("music/sonEtoile.mp3");
+    if (!sonEtoile) {
+        printf("Erreur chargement son etoile: %s\n", Mix_GetError());
+        return;
+    }
+    Mix_VolumeChunk(sonEtoile, 70);
 
     sonFinJeu = Mix_LoadWAV("music/sonFinJeu.mp3");
     if (!sonFinJeu) {
@@ -347,8 +355,13 @@ void collectPieces() {
             else if (map[row][col] == 16) {
                 map[row][col] = 0;
                 gameState->coins += 75;
-                invincibilityTimer = 5;
+                
+                invincibilityTimer = 4.70;
                 isInvincible = true;
+                Mix_PauseMusic();
+                if (sonEtoile) {
+                    Mix_PlayChannel(-1, sonEtoile, 0);
+                }
             }
         }
     }
@@ -417,7 +430,10 @@ void update(Partie *partie) {
 
 
     invincibilityTimer -= 0.01;
-    if (invincibilityTimer <= 0) isInvincible = false;
+    if (invincibilityTimer <= 0) {
+        isInvincible = false;
+        Mix_ResumeMusic();
+    }
 
     if (!player.isDying && !player.isRespawning &&
         (is_deadly_tile(player.x + 16, player.y + 32) ||
@@ -1162,6 +1178,18 @@ void cleanupSounds(void) {
     if (saut) {
         Mix_FreeChunk(saut);
         saut = NULL;
+    }
+    if (ecrase) {
+        Mix_FreeChunk(ecrase);
+        ecrase = NULL;
+    }
+    if (objet) {
+        Mix_FreeChunk(objet);
+        objet = NULL;
+    }
+    if (sonEtoile) {
+        Mix_FreeChunk(sonEtoile);
+        sonEtoile = NULL;
     }
     if (sonFinJeu) {
         Mix_FreeChunk(sonFinJeu);
