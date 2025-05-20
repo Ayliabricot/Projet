@@ -114,8 +114,8 @@ int lancerJeu(int argc, char* argv[], Partie* partie);
 // Nouvelles fonctions pour la sauvegarde
 void saveGame();
 void loadGame();
-void saveGameWithPseudo(char* pseudo,  Partie* partie); // Declare save function
-void loadGameWithPseudo(char* pseudo,  Partie* partie);
+void saveGameWithPseudo(char* pseudo); // Declare save function
+void loadGameWithPseudo(char* pseudo);
 
 void cleanupSounds(void);
 
