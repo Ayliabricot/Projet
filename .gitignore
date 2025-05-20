@@ -1,8 +1,8 @@
 # Ignore les fichiers de build de Visual Studio
-*.exe
+
 *.obj
 *.log
-*.dll
+
 *.pdb
 *.ilk
 *.idb
