@@ -303,7 +303,9 @@ void initializeEnemies(Partie * partie) {
     // Regénérer les ennemis avec des Y cohérents
 
     // position des ennemies
-    generateEnemy(600, 450, partie);
+
+     generateEnemy(9 * BLOCK_SIZE, 9 * BLOCK_SIZE , partie);
+    //generateEnemy(600, 450, partie);
     generateEnemy(1800, 450, partie);
     generateEnemy(1700, 450, partie);
     generateEnemy(2650, 500, partie);
@@ -682,13 +684,13 @@ void updateEnemies(Partie* partie) {
     for (int i = 0; i < enemyCount; i++) {
         if (!enemies[i].isActive) continue;
 
-        // === 1. Vérifie si l'ennemi doit changer de direction ===
+        //   Vérifie si l'ennemi doit changer de direction
         if (!canEnemyMoveForward(&enemies[i])) {
             enemies[i].velX *= -1;
             enemies[i].facingRight = !enemies[i].facingRight;
         }
 
-        // === 2. Déplacement horizontal ===
+        // Déplacement horizontal 
         float newX = enemies[i].x + enemies[i].velX;
 
         // Collision avec les murs/blocs
@@ -811,7 +813,6 @@ void renderMap() {
     }
 }
 
-// Version corrigée de renderEnemies() :
 void renderEnemies() {
     for (int i = 0; i < enemyCount; i++) {
         if (!enemies[i].isActive) continue;
@@ -1053,6 +1054,7 @@ void renderHUD() {
 
 void generateEnemy(float x, float y, Partie * p) {
     if (enemyCount < MAX_ENEMIES) {
+
         Ennemi* enemy = &enemies[enemyCount];
         enemy->x = x;
         enemy->y = y - enemy->height; // Ajustez selon la hauteur des plateformes
@@ -1129,7 +1131,7 @@ void loadGameWithPseudo(char* pseudo) {
  fclose(file);
 }
 
-// Update the existing save and load functions to use the new ones
+
 void saveGame() {
     if (currentPartie != NULL) {
         saveGameWithPseudo(currentPartie->pseudo);

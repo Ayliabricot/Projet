@@ -76,6 +76,7 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			ecran = definirEcran();
 			chargerPartieUNIQUE = 1;
 			system("cls");
+			loadGame();
 			lancerJeu(argc, argv, tableau[index]);
 			*choix = -1;
 			
