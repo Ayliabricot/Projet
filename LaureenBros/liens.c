@@ -81,10 +81,11 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 			
 		}
 		while (*choix == 3) {
+			Ecran* ecran = definirEcran();
 			system("cls");
-			affichageScore(ecran);
+			int result = affichageScore(ecran);
+			*choix = result; // Utiliser la valeur retournée pour naviguer
 			system("cls");
-			*choix = -1;
 		}
 		while (*choix == 4) {
 			char opti[4] = "oui";

@@ -91,7 +91,7 @@ void floatToString(float value, char* buffer, int bufferSize) {
 
 int affichageScore(Ecran* ecran) {
     while (1) {
-        while (1) {
+        
             if (!ecran) {
                 printf("probleme d'allocation");
                 return -1;
@@ -270,12 +270,17 @@ int affichageScore(Ecran* ecran) {
             afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 20, "════════════════════════════════════════════");
             SetConsoleOutputCP(1252);
             SetConsoleCP(1252);
-            if (_kbhit()) {
-                return 5;
+            while (1) {
+                if (_kbhit()) {
+                    int key = _getch();
+                    if (key == 27) { // 27 = Code ASCII pour ESC
+                        return -1; // Retour au menu
+                    }
+                }
+                Sleep(100); // Réduit la charge CPU
             }
-            break;
-        }
-        break;
+
+            FindClose(hFind);
     }
     return 0;
 }

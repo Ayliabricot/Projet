@@ -295,10 +295,11 @@ bool initialize(Partie* partie) {
 }
 
 void initializeEnemies(Partie * partie) {
-    enemyCount = 0;
+   
     for (int i = 0; i < MAX_ENEMIES; i++) {
         enemies[i].isActive = false;
-
+    }
+     enemyCount = 0;
     // Regénérer les ennemis avec des Y cohérents
 
     // position des ennemies
@@ -1076,7 +1077,7 @@ void generateEnemy(float x, float y, Partie * p) {
 
 
 
-void saveGameWithPseudo(char* pseudo) {
+void saveGameWithPseudo(char* pseudo, Partie * partie) {
     char saveFilePath[255];
     snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
 
@@ -1087,16 +1088,16 @@ void saveGameWithPseudo(char* pseudo) {
     }
 
     // Save player position, camera lock, and score
-    fprintf(file, "%.2f %.2f %.2f %d %d\n", player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies);
+    fprintf(file, "%.2f %.2f %.2f %d %d %d \n", player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies, partie->difficulte);
     fclose(file);
 
    
-        printf("Jeu sauvegardé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d vies : %d\n",pseudo, player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies);
+        printf("Jeu sauvegardé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d vies : %d, difficulte : %d\n",pseudo, player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies, partie->difficulte);
 }
 
 
 
-void loadGameWithPseudo(char* pseudo) {
+void loadGameWithPseudo(char* pseudo, Partie* partie) {
     char saveFilePath[255];
     snprintf(saveFilePath, sizeof(saveFilePath), "saves/save_%s.txt", pseudo);
 
@@ -1109,16 +1110,17 @@ void loadGameWithPseudo(char* pseudo) {
 
 
  float x, y, camLock;
- int score, vies;
- if (fscanf_s(file, "%f %f %f %d %d", &x, &y, &camLock, &score, &vies) == 5) {
+ int score, vies, difficult;
+ if (fscanf_s(file, "%f %f %f %d %d, %d ", &x, &y, &camLock, &score, &vies, &difficult) == 5) {
     player.x = x;
     player.y = y;
     camera_lock_x = camLock;
     camera_x = camera_lock_x;
     currentPartie->score = score; // Load the score
     currentPartie->vies = vies;
-        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d  vie : %d\n",
-            pseudo, player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies);
+    partie->difficulte = difficult;
+        printf("Jeu chargé pour %s - Position: (%.2f, %.2f), Camera lock: %.2f, Score: %d  vie : %d difficulte : %d\n",
+            pseudo, player.x, player.y, camera_lock_x, currentPartie->score, currentPartie->vies,partie->difficulte);
  }
  else {
     printf("Erreur lors de la lecture de la sauvegarde pour %s\n", pseudo);
