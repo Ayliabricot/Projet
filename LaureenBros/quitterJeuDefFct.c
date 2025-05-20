@@ -84,10 +84,17 @@ int quitterJeuContain(Ecran* ecran, char opti[4]) {
 	SetConsoleCP(GetOEMCP());
 	system("cls");
 	int valeur;
+	Ecran* nouveauEcran = definirEcran();
 	valeur=quitterJeu(ecran, 0, opti);
+
 	while (1) {
 		int touche;
 		if (_kbhit()) {
+			tailleEcran(nouveauEcran);
+			if (nouveauEcran->hauteur != ecran->hauteur || nouveauEcran->largeur != ecran->largeur) {
+				system("cls");
+				contourEcran(ecran);
+			}
 			touche = _getch();
 
 			valeur=quitterJeu(ecran, touche, opti);

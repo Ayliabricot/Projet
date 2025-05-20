@@ -26,7 +26,7 @@ int choisir(Ecran* ecran, int touche, char opti[4], int resultat) {
 		afficherTexte(ecran->largeur / 2 - 8, ecran->hauteur / 2 - 2, "Vous avez \x1b[34mquitté\x1b[0m");
 	}
 
-	afficherTexte(ecran->largeur / 2 - 8, ecran->hauteur / 2 - 1, "Voulez-vous quitter?");
+	afficherTexte(ecran->largeur / 2 - 10, ecran->hauteur / 2 - 1, "Voulez-vous quitter?");
 	
 	SetConsoleOutputCP(GetOEMCP());
 	SetConsoleCP(GetOEMCP());

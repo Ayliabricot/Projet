@@ -83,8 +83,9 @@ void lancer_ecran(int* choix, char option[5][40],Partie** tableau,int* nbParties
 		while (*choix == 3) {
 			Ecran* ecran = definirEcran();
 			system("cls");
-			int result = affichageScore(ecran);
-			*choix = result; // Utiliser la valeur retournée pour naviguer
+			*choix = affichageScore(ecran);
+			//afficherTexte(ecran->largeur / 2 - 15, ecran->hauteur - 6, "Pressez une touche pour sortir");
+			
 			system("cls");
 		}
 		while (*choix == 4) {

@@ -162,6 +162,7 @@ int affichageScore(Ecran* ecran) {
             SetConsoleOutputCP(65001);
             SetConsoleCP(65001);
 
+            afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 - 5, "   (Pressez echap pour retourner au menu)   ");
             afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 - 3, "╔══════════════════════════════════════════╗");
             afficherTexte(ecran->largeur / 2 - 45 / 2, ecran->hauteur / 4 - 1, "║            TABLEAU DES SCORES :          ║");
             afficherTexte(ecran->largeur / 2 - 44 / 2, ecran->hauteur / 4 + 1, "╚══════════════════════════════════════════╝");
@@ -277,7 +278,6 @@ int affichageScore(Ecran* ecran) {
                         return -1; // Retour au menu
                     }
                 }
-                Sleep(100); // Réduit la charge CPU
             }
 
             FindClose(hFind);
